@@ -156,6 +156,8 @@ function restartMode(nextMode) {
   go(start, practice ? 'دورك. اختار القطعة والمربع من غير ما تشوف النقلات الجاية.' : '');
 }
 function recordMistake(san) {
+  const reviewing=mistakes.find(m=>mistakeKey(m)===reviewTarget);
+  if(reviewing){reviewing.san=san;renderReview();return;}
   const origin={id:state.id,first:state.first,color:state.color};
   const prefix=activeLine.moves.slice(0,ply);
   const entry={origin,activeId,line:activeLine.id,ply,prefix,san};
