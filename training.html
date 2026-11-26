@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#20211e" />
+<title>رُخ | مسار التدريب ومدرّب الافتتاحيات</title>
+<style>
+:root{color-scheme:dark;--bg:#111817;--wood:#18211f;--surface:#1e2927;--surface2:#25322e;--stroke:#46584b;--text:#f3f0e8;--muted:#abbab1;--gold:#e2bd75;--gold2:#a98b59;--ok:#86c8a0;--bad:#dc947e;--light:#dfd5ba;--dark:#718776}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% -10%,#283931 0,transparent 45%),linear-gradient(150deg,#121b1a,#161817);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;min-height:100vh}button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}
+header{border-bottom:1px solid #3b4c41;background:#151e1cf0;position:sticky;top:0;z-index:4;backdrop-filter:blur(16px)}.top{max-width:1160px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:26px;font-weight:900;letter-spacing:-.3px;color:var(--gold)}.brand small{font-size:12px;color:var(--muted);font-weight:500;display:block}.tag{border:1px solid #67765f;border-radius:100px;padding:7px 10px;color:var(--gold);font-size:12px}
+main{max-width:1160px;margin:auto;padding:25px 20px 65px}.hero{padding:24px 26px;background:linear-gradient(135deg,#29372e,#1c2626);border:1px solid #6670506b;border-radius:24px;position:relative;overflow:hidden}.hero:after{content:'♞';position:absolute;left:22px;top:-29px;font-size:170px;color:#cfb07819;pointer-events:none}.eyebrow{color:var(--gold);letter-spacing:.3px;font-size:13px;font-weight:800}.hero h1{font-size:clamp(25px,4vw,37px);margin:9px 0 10px}.hero p{margin:0;line-height:1.85;max-width:770px;color:#d2d8d1;font-size:14px}.tabs{display:flex;gap:8px;margin:20px 0 12px;flex-wrap:wrap}.tab{border:1px solid #516156;border-radius:12px;padding:11px 16px;background:#222c29;color:#c7d0c8}.tab.active{background:var(--gold);color:#171c19;border-color:var(--gold);font-weight:800}
+.layout{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(330px,.98fr);gap:17px;align-items:start}.card{background:linear-gradient(145deg,#212b28,#1c2524);border:1px solid #44544a;border-radius:21px;padding:19px;box-shadow:0 16px 48px #0002}.bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.title{font-size:19px;font-weight:800;margin:0}.note{font-size:13px;color:var(--muted);line-height:1.8}.meta{color:var(--gold);font-size:12px;font-weight:800}.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:15px 0}.chip{border:1px solid #536658;border-radius:100px;padding:8px 14px;background:#26342f;color:#cedbd0;font-size:13px}.chip.active{background:#d3b477;color:#1b221e;border-color:transparent;font-weight:800}.progress{height:6px;border-radius:100px;background:#3e4d43;overflow:hidden;margin:13px 0 19px}.progress span{display:block;height:100%;background:linear-gradient(90deg,#8ea785,var(--gold));transition:width .3s}
+.board-container{max-width:455px;margin:auto}.board{direction:ltr;display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:8px solid #4c3d2e;outline:1px solid #9c8055;border-radius:8px;overflow:hidden;box-shadow:0 16px 34px #0007;user-select:none}.square{display:flex;align-items:center;justify-content:center;position:relative;font-family:Georgia,'Times New Roman',serif;font-size:clamp(24px,5.1vw,52px);line-height:1;aspect-ratio:1;white-space:nowrap}.square.light{background:#e9debc;color:#222}.square.dark{background:#7d977f;color:#181f1c}.square.last{box-shadow:inset 0 0 0 999px #e6bf5b59}.square.answer{box-shadow:inset 0 0 0 999px #62c69670}.square .coord{position:absolute;bottom:2px;right:3px;font:600 10px system-ui;color:#2c4238;opacity:.8}.square.dark .coord{color:#ece8ca}.piece.white{color:#fffdf4;text-shadow:0 2px 2px #101410,0 0 2px #131313,1px 1px 2px #222;filter:drop-shadow(0 1px 0 #111)}.piece.black{color:#19211d;text-shadow:0 1px 2px #eff3de,0 0 1px #010101}.movelist{direction:ltr;text-align:center;margin:14px auto 0;font:700 14px ui-monospace,SFMono-Regular,Consolas,monospace;color:#f0d199;line-height:1.8;overflow-wrap:anywhere}.tinytext{display:flex;align-items:center;justify-content:center;gap:9px;color:#b4c6b9;font-size:12px;margin:12px 0 0}
+.question{font-size:22px;line-height:1.5;margin:8px 0 4px}.why{font-size:13px;color:#b6c6b7;line-height:1.8}.answers{display:grid;gap:10px;margin-top:16px}.answer-btn{padding:14px;border-radius:14px;background:#293a33;border:1px solid #58705c;color:#faf5e6;text-align:right;display:flex;align-items:flex-start;gap:12px;transition:.15s}.answer-btn:hover{border-color:var(--gold);background:#35463c}.answer-btn:disabled{cursor:default}.answer-btn.correct{border-color:var(--ok);background:#254639}.answer-btn.alternate{border-color:#c9ae6e;background:#45402c}.answer-btn.incorrect{border-color:var(--bad);background:#492d2a}.move{font:800 17px ui-monospace,SFMono-Regular,Consolas,monospace;direction:ltr;min-width:74px;text-align:center;letter-spacing:-.5px}.choice-desc{font-size:13px;line-height:1.5;color:#d4dbd2}.feedback{border-radius:14px;padding:15px;margin-top:13px;border:1px solid #728367;background:#27362e;line-height:1.85}.feedback strong{color:var(--gold)}.hide{display:none!important}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.primary,.secondary{border-radius:12px;padding:12px 17px;border:1px solid var(--gold);background:var(--gold);color:#16201b;font-weight:900}.secondary{background:transparent;border-color:#637567;color:#dfe9dd}.primary:disabled{opacity:.4;cursor:default}.intro{background:#17201d;border:1px solid #394c3d;border-radius:12px;padding:11px 13px;color:#bdc9c0;font-size:12px;line-height:1.8;margin-top:15px}.hint{color:#e2cd9d;font-size:13px;margin-top:10px;line-height:1.7}.statline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#c2cbbf;font-size:13px;margin-top:11px}.statline b{color:var(--gold)}
+.library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.library-item{background:#283631;border:1px solid #4b6053;border-radius:14px;padding:17px}.library-item h3{margin:0 0 5px;font-size:16px}.library-item small{color:#d1b87d}.library-item p{font-size:13px;color:#c2cec3;line-height:1.65;margin:10px 0 0}.foot{color:#aabbac;font-size:12px;line-height:1.8;margin:25px 0 0}.empty{padding:30px;background:#25322b;border:1px solid #4a6150;border-radius:14px;text-align:center}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.card{padding:15px}.board-container{max-width:435px}.hero{padding:19px 17px}.hero:after{font-size:120px;top:-15px;left:0}.hero h1{position:relative;z-index:1}.hero p{position:relative;z-index:1}.library{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){main{padding:17px 11px 40px}.top{padding:10px 12px}.brand{font-size:22px}.brand small{font-size:10px}.tag{font-size:10px}.card{border-radius:16px;padding:12px}.board{border-width:6px}.square{font-size:clamp(27px,9vw,44px)}.library{grid-template-columns:1fr}.hero h1{font-size:25px}.question{font-size:19px}.move{font-size:15px}}
+
+.link-button{display:inline-flex;align-items:center;text-align:center;text-decoration:none;white-space:nowrap}
+.overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}.overview .card{padding:16px}.overview b{display:block;color:var(--gold);font-size:27px;line-height:1.5}.overview small{color:var(--muted)}
+.week-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.week-tile{text-align:right;min-width:0;background:#26342e;border:1px solid #46574a;border-radius:15px;color:#eee9de;padding:14px;line-height:1.65}.week-tile strong{display:block;font-size:14px}.week-tile .meta{display:block}.week-tile span{display:block;font-size:12px;color:#b8c9b7;margin:3px 0}.week-tile.selected{border-color:var(--gold);box-shadow:inset 0 0 0 1px #cdaa6b}.week-tile.done{background:#254638;border-color:#5e986f}
+.week-task{background:#283730;padding:13px;border:1px solid #526354;border-radius:12px;margin:8px 0;display:flex;gap:10px;align-items:flex-start;cursor:pointer;line-height:1.55}.week-task input{accent-color:#d6b572;width:19px;height:19px;flex:none;margin-top:2px}.week-task small{display:block;color:#bdc9be;margin-top:3px}.quiz-item{border-top:1px solid #485949;padding:15px 0 4px}.quiz-item strong{line-height:1.7}.quiz-choices{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.quiz-choices button{background:#314137;border:1px solid #5e705f;color:#f4f2e9;border-radius:10px;padding:9px 11px;font-size:13px}.quiz-choices button.selected{border-color:var(--gold);background:#574b2f}.quiz-choices button:disabled{opacity:.8;cursor:default}.quiz-review{font-size:13px;color:#e8d0a4;margin:7px 0 0;line-height:1.8}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.form-grid label{display:flex;flex-direction:column;gap:7px;font-size:13px;color:#dedfd5}.form-grid .wide{grid-column:1/-1}.form-grid input,.form-grid select,.form-grid textarea{width:100%;font:inherit;font-size:16px;background:#15211b;color:#eee9df;border:1px solid #526558;border-radius:10px;padding:11px;resize:vertical}.form-grid input:focus,.form-grid select:focus,.form-grid textarea:focus{outline:2px solid var(--gold2)}.game-card{margin-top:12px;padding:12px;background:#26342e;border:1px solid #4d6255;border-radius:12px;line-height:1.75}.game-card .bar{gap:6px}.game-card p{font-size:13px;color:#d7dfd5;margin:7px 0}.game-card strong{color:#f0d49a}.game-card button{font-size:12px;padding:7px 10px}
+@media(max-width:850px){.week-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.overview{gap:6px}.overview .card{padding:10px}.overview b{font-size:22px}.week-grid{gap:7px}.week-tile{padding:10px}.tab{padding:9px 10px;font-size:13px}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.quiz-choices{flex-direction:column}.quiz-choices button{text-align:right}}
+
+#view-exam [hidden]{display:none!important}
+.exam-heading{margin:0 0 16px}.exam-heading p{margin:.35rem 0 0}
+#examBoard{margin-top:.8rem}
+#examBoard .square{border:0;padding:0;min-width:0}
+#examBoard img{width:83%;height:83%;pointer-events:none}
+#examBoard .exam-selected{outline:3px solid #ffdc80;outline-offset:-3px;z-index:1}
+#examBoard button:focus-visible{outline:3px solid #1b4f59;outline-offset:-3px;z-index:1}
+#examStatus:not(:empty){margin-top:.7rem}
+#examResults{scroll-margin-top:86px}
+
+.trainer-heading{grid-column:1/-1}
+.trainer-heading .filters{margin:.6rem 0}
+.trainer-heading .progress{margin:.5rem 0}
+#plan-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+#view-trainer .board{grid-template:repeat(8,minmax(0,1fr))/repeat(8,minmax(0,1fr))}
+.trainer-piece{width:90%;height:90%;object-fit:contain;pointer-events:none}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.tab{min-height:44px;line-height:1.2}
+.hero:after{display:none}
+@media(max-width:600px){
+ header{position:static}
+ .tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:12px 0}
+ #view-trainer{gap:10px}
+ .hero h1{margin:0 0 4px}
+}
+</style>
+<link rel="stylesheet" href="club.css?v=58"></head>
+<body>
+<header><div class="top"><div class="brand">♜ رُخ <small>ROOK · CHESS ACADEMY</small></div><a class="secondary link-button" href="./#home">الرئيسية</a></div></header>
+<main>
+  <section class="hero"><h1 lang="en">Training Room</h1><p>اختار افتتاح تدرسه، جرّب ردّك على الرقعة، أو كمّل خطة الأسبوع.</p></section>
+  <div class="tabs" role="group" aria-label="أقسام التدريب"><button class="tab active" id="tab-library" onclick="location.hash='library'">Opening Library</button><button class="tab" id="tab-trainer" onclick="location.hash='trainer'">Response Trainer</button><button class="tab" id="tab-exam" onclick="location.hash='exam'">Opening Test</button><button class="tab" id="tab-plan" onclick="location.hash='plan'">8-Week Plan</button></div>
+  <section id="view-trainer" class="layout">
+    <div class="trainer-heading">      <div class="bar"><h2 class="title">Response Trainer</h2><span id="counter" class="meta"></span></div>
+      <div class="filters" role="group" aria-label="اختيار اللون"><button class="chip active" data-filter="all" onclick="setFilter('all')">الكل</button><button class="chip" data-filter="white" onclick="setFilter('white')">بالأبيض</button><button class="chip" data-filter="black" onclick="setFilter('black')">بالأسود</button></div>
+      <div class="progress" aria-hidden="true"><span id="progress-fill" style="width:0%"></span></div>
+      <div class="meta" id="scenario-type"></div>
+      <h2 id="scenario-title" lang="en" dir="ltr" class="question"></h2>
+      <div class="why" id="scenario-context"></div>
+    </div>
+    <div class="card">
+      <div class="bar"><h2 class="title" lang="en">Position</h2><span class="meta" id="turn-label">دور الأبيض</span></div>
+      <div class="board-container"><div class="board" id="board" aria-label="رقعة الشطرنج"></div><div id="move-list" class="movelist"></div><div class="tinytext"><span>♙ الأبيض يبدأ من أسفل</span><span>·</span><span>الرقعة توضح وضع السؤال</span></div></div>
+
+    </div>
+    <div class="card">
+      <h3 class="title" lang="en">Choose Your Move</h3><div class="answers" id="answers"></div>
+      <div class="hint hide" id="hint"></div>
+      <div class="feedback hide" id="feedback" role="status" aria-live="polite"></div>
+      <div class="actions"><button class="secondary" id="hint-btn" onclick="showHint()">💡 تلميح</button><button class="primary" id="next-btn" onclick="nextScenario()">الموقف التالي ←</button><button class="secondary" onclick="resetScenario()">إعادة الموقف</button></div>
+      <div class="intro">مهم: التدريب بيقارن بين ردود عملية مختارة للوضع، ومش بيدّعي إن فيه نقلة صحيحة واحدة دائمًا. في مباراة حقيقية لازم تفحص تهديدات الخصم وتحسب النقلات القانونية.</div>
+      <div class="statline"><span>✓ إجابات موصى بها: <b id="stat-good">0</b></span><span>↻ جُرّبت: <b id="stat-attempted">0</b></span></div>
+    </div>
+  </section>
+  <section id="view-exam" class="hide" aria-labelledby="examTitle">
+    <div class="bar exam-heading">
+      <div><h2 class="title" id="examTitle" lang="en">Mixed Opening Test</h2><p class="note">١٠ مواقف، ٥ بكل لون. العب نقلة تكمّل الهدف، واختار فكرتها قبل ما يظهر اسم الافتتاح.</p></div>
+    </div>
+    <div id="examPlay" class="layout">
+      <div class="card">
+        <div class="bar"><h3 class="title" id="examSide"></h3><span id="examCount" class="meta"></span></div>
+        <div class="board-container"><div class="board" id="examBoard" aria-label="رقعة اختبار الافتتاحيات"></div><p class="movelist" id="examLast"></p></div>
+      </div>
+      <div class="card">
+        <p class="meta" id="examStep"></p>
+        <p class="question" id="examGoal"></p>
+        <div class="answers" id="examReasons" role="group" aria-label="تفسير النقلة"></div>
+        <div id="examStatus" class="why" role="status"></div>
+        <div id="examFeedback" class="feedback" hidden>
+          <h3 class="title" lang="en" id="examName"></h3>
+          <p id="examVerdict"></p><p id="examIdea"></p><p id="examExplanation"></p>
+          <a id="examLesson" class="secondary link-button">افتح الدرس</a>
+        </div>
+        <div class="actions"><button id="examNext" class="primary" type="button" hidden>الموقف التالي</button></div>
+      </div>
+    </div>
+    <div class="card" id="examResults" hidden>
+      <div class="bar"><h3 class="title">نتيجة الجولة</h3><button class="primary" id="examRestart" type="button">ابدأ جولة جديدة</button></div>
+      <p id="examScore" role="status"></p><div class="library" id="examReviewList"></div>
+    </div>
+  </section>
+
+  <section id="view-library" class="card hide"><h2 class="title">الافتتاحيات الأساسية</h2><div class="library" id="library"></div></section>
+
+  <section id="view-plan" class="hide">
+    <div class="card bar" style="margin-bottom:15px"><div><div class="eyebrow">TRAINING ROADMAP</div><h2 class="title" style="margin:8px 0">خطة تطوير الشطرنج · ٨ أسابيع</h2><p class="note">مش مطلوب تخلّص كل الدروس من جديد. ركّز على المهارة، طبّقها على الرقعة، وراجع أخطاءك بعد اللعب.</p></div></div>
+    <div class="overview" id="plan-overview"></div>
+    <div class="week-grid" id="week-grid"></div>
+    <div class="card" id="week-detail" style="margin-top:15px"></div>
+  </section>
+  <p class="foot">تقدّمك في الخطة بيتحفظ على المتصفح ده.</p>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const library=[
+ ['Sicilian Defense','1.e4 c5 · قارن بين Open Sicilian وAlapin وNajdorf'],
+ ['Italian Game','1.e4 e5 2.Nf3 Nc6 3.Bc4 · قارن بين ...Bc5 و...Nf6'],
+ ['Ruy López','1.e4 e5 2.Nf3 Nc6 3.Bb5 · قارن بين الرجوع بالفيل وتبديله وبرلين'],
+ ['Scotch Game','1.e4 e5 2.Nf3 Nc6 3.d4 · افتح المركز وقارن بين ...Nf6 و...Bc5'],
+ ['Queen’s Gambit','1.d4 d5 2.c4 · قارن بين القبول والرفض وSlav وTarrasch'],
+ ['French Defense','1.e4 e6 · قارن بين Classical وAdvance وExchange'],
+ ['Caro–Kann Defense','1.e4 c6 · قارن بين Classical وAdvance وExchange وPanov'],
+ ['Scorpion–Horus Gambit','1.e4 c6 2.Nc3 d5 3.d3 dxe4 4.Bg5 · قارن بين قبول البيدق والتطوير أولًا و...h6'],
+ ['Scandinavian Defense','1.e4 d5 · قارن بين ...Qa5 و...Qd6 و...Nf6'],
+ ['Pirc Defense','قارن Classical وAustrian و150 Attack'],
+ ['Modern Defense','قارن التوسع على جناح الوزير وتحدّي المركز والتحوّل إلى Pirc'],
+ ['London System','1.d4 d5 2.Bf4 · قارن بين الإعداد الكلاسيكي وJobava وخطط الأسود'],
+ ['Englund Gambit','1.d4 e5 · اتدرّب على تفادي فخ الوزير والقبول والرفض']
+];
+// Each prefix uses coordinate moves (UCI) from the initial chess position. Recommended answers are practical choices, not unique engine best moves.
+const scenarios=[
+ {side:'white',topic:'Italian Game',title:'Black plays ...a6 instead of ...Bc5',context:'وصلت إلى الإيطالي. الأسود لعب ...a6؛ هل لازم تغيّر خطتك؟',prefix:['e2e4','e7e5','g1f3','b8c6','f1c4','a7a6'],moves:'1.e4 e5 2.Nf3 Nc6 3.Bc4 a6',hint:'لا يوجد تهديد مباشر. الملك ما زال في المركز.',choices:[['O-O','التبييت مع الحفاظ على خطة الإيطالي','good','التبييت هنا قانوني ومناسب: الفيل خرج من f1 والحصان من g1، فتؤمّن الملك دون الانشغال بنقلة جناحية.','e1g1'],['Qh5','هجوم مبكر بالوزير','poor','تحريك الوزير للهجوم المبكر قد يضيّع وقت تطوير بلا سبب واضح. الأفضل تأمين الملك وتطوير القطع.'],['a4','ردّ جناحي فورًا','alt','قد تكون a4 مفيدة في بعض الخطط، لكنها ليست ضرورية الآن؛ التبييت أبسط للتدريب.']]},
+ {side:'white',topic:'Philidor Defense',title:'Black plays ...d6 after 2.Nf3',context:'بعد 1.e4 e5 2.Nf3 d6، الأسود يدافع عن بيدقه بدل ...Nc6.',prefix:['e2e4','e7e5','g1f3','d7d6'],moves:'1.e4 e5 2.Nf3 d6',hint:'فكّر في دفع البيدق d2 للوسط.',choices:[['d4','تحدّي مركز الأسود','good','3.d4 نقلة مركزية طبيعية ضد دفاع فيليدور، تطوّر خطتك بدل حفظ نقلات الإيطالي بالقوة.','d2d4'],['Bc4','تطوير الفيل','alt','3.Bc4 نقلة قابلة للعب أيضًا، لكنها ليست الطريقة الوحيدة أو الأكثر مباشرة لاستغلال مرونة المركز.'],['h4','تقدّم جناحي مبكر','poor','لا حاجة للهجوم ببيدق جناحي قبل إكمال تطوير القطع.']]},
+ {side:'white',topic:'Early Queen Moves',title:'Black brings the queen to h4',context:'بعد 1.e4 e5 2.Nf3 Qh4، الوزير الأسود دخل في نطاق حصانك.',prefix:['e2e4','e7e5','g1f3','d8h4'],moves:'1.e4 e5 2.Nf3 Qh4?',hint:'من f3، الحصان يتحرك على شكل حرف L. ما المربعات التي يهاجمها؟',choices:[['Nxh4','الحصان يأخذ الوزير مجانًا','good','الحصان على f3 يهاجم h4 مباشرة؛ 3.Nxh4 يكسب الوزير. قبل كل شيء افحص القطع المعلّقة.','f3h4'],['d3','تطوير مركزك أولًا','poor','نقلة طبيعية في أوضاع أخرى، لكنها تتجاهل هنا فرصة الفوز بالوزير المهاجَم.'],['Bc4','تطوير الفيل','poor','تطوير الفيل جيد عمومًا، لكن رؤية تكتيك فوري أعلى أولوية من التطوير.']]},
+ {side:'white',topic:'Scandinavian Defense',title:'Black answers 1.e4 with ...d5',context:'ده مش إيطالي. الافتتاح اتغيّر إلى إسكندنافي.',prefix:['e2e4','d7d5'],moves:'1.e4 d5',hint:'بيدق e4 يقدر يأخذ d5.',choices:[['exd5','أخذ بيدق المركز','good','2.exd5 رد رئيسي ومعروف ضد الدفاع الإسكندنافي؛ انتبه أن الأسود يستطيع استرداد البيدق في خطوط متعددة.','e4d5'],['Nc3','تطوير الحصان','alt','2.Nc3 رد قابل للعب لكنه يقود لبنية مختلفة. مش كل اختلاف عن الخط الأساسي خطأ.'],['h3','نقلة انتظار','poor','تفوّت فرصة واضحة للضغط على مركز الأسود.']]},
+ {side:'white',topic:'Sicilian Defense',title:'Black answers 1.e4 with ...c5',context:'لو بدأت 1.e4 ورد الأسود 1...c5، إنت دخلت الصقلي.',prefix:['e2e4','c7c5'],moves:'1.e4 c5',hint:'في ألاپين، تدعم دفع d4 مستقبلًا ببيدق c.',choices:[['c3','نظام ألاپين Alapin','good','2.c3 إعداد مبسّط للصقلي؛ هدفك تدعم d4 وتبني مركزًا قويًا.','c2c3'],['Nf3','تطوير طبيعي','alt','2.Nf3 اختيار رئيسي جدًا في الصقلي أيضًا، لكنه قد يقود لنظرية أشمل بعد d4.'],['Qh5','خروج مبكر بالوزير','poor','الوزير المبكر سهل المطاردة؛ الأفضل بناء المركز.']]},
+ {side:'white',topic:'French Defense',title:'Black answers 1.e4 with ...e6',context:'الأسود ينوي غالبًا ...d5؛ إنت مش في الإيطالي.',prefix:['e2e4','e7e6'],moves:'1.e4 e6',hint:'اشغل المركز ببيدق تاني.',choices:[['d4','استحوذ على المركز','good','2.d4 خطوة أساسية ضد الفرنسي؛ بعد ...d5 تختار هيكلًا مثل e5 أو Nc3 حسب الخطة.','d2d4'],['Nf3','تطوير طبيعي','alt','2.Nf3 ممكن، لكن d4 هو الرد الأكثر مباشرة وشيوعًا.'],['a3','نقلة جناحية','poor','ما فيش داعي لتأجيل السيطرة على المركز.']]},
+ {side:'black',topic:'Against 1.e4',title:'How should Black answer 1.e4?',context:'عايز رد بسيط وقوي تبني عليه خطة واضحة بالأسود.',prefix:['e2e4'],moves:'1.e4',hint:'رد بمنافسة البيدق في المركز.',choices:[['...e5','مركز كلاسيكي مفتوح','good','1...e5 رد سليم وشائع ضد e4؛ بعده طوّر ...Nc6 و...Nf6 حسب ردود الأبيض.','e7e5'],['...c5','الدفاع الصقلي','alt','1...c5 دفاع قوي جدًا أيضًا، لكنه يحتاج دراسة بنى ومواقف مختلفة.'],['...h5','دفع جانبي دون داعٍ','poor','لا تعالج افتتاح المركز ببيدق جانبي بلا خطة واضحة.']]},
+ {side:'black',topic:'Early Queen Attack',title:'White brings the queen to h5',context:'بعد 1.e4 e5 2.Qh5، الأبيض يضغط على بيدق e5.',prefix:['e2e4','e7e5','d1h5'],moves:'1.e4 e5 2.Qh5',hint:'في حصان ممكن يطلع ويحمي e5.',choices:[['...Nc6','تطوير الحصان وحماية e5','good','2...Nc6 يحمي بيدق e5 ويطوّر الحصان. راقب تهديدات Qxf7 وBc4 في النقلات القادمة.','b8c6'],['...g6','مهاجمة الوزير فورًا','poor','2...g6?? يضعف القطر ويمكن أن يسمح بـQxe5+؛ ما تطردش الوزير من غير حساب.'],['...Nf6','مهاجمة الوزير','alt','2...Nf6 نقلة قابلة للعب لكنها لا تحمي e5 بالطريقة المباشرة نفسها وقد تؤدي لخط مختلف.']]},
+ {side:'black',topic:'London System',title:'White plays 2.Bf4 after 1.d4 d5',context:'ده نظام لندن؛ الأبيض طوّر الفيل بدري.',prefix:['d2d4','d7d5','c1f4'],moves:'1.d4 d5 2.Bf4',hint:'طوّر حصان الملك ونافس على المربعات المركزية.',choices:[['...Nf6','تطوير الحصان','good','2...Nf6 رد متين؛ تكمل ...e6 و...c5 حسب بنية الوضع.','g8f6'],['...c5','ضغط مبكر على d4','alt','2...c5 رد جيد ومباشر أيضًا ويضغط على المركز، لكنه يقود لإيقاع مختلف.'],['...h6','نقلة انتظار','poor','ممكن لاحقًا تكون مفيدة، لكن مفيش داعي تبدأ بها بدل التطوير المركزي.']]},
+ {side:'black',topic:'Queen’s Gambit',title:'White offers the c4 pawn',context:'بعد 1.d4 d5 2.c4، ده Queen’s Gambit.',prefix:['d2d4','d7d5','c2c4'],moves:'1.d4 d5 2.c4',hint:'ممكن ترفض الجامبيت وتحافظ على d5.',choices:[['...e6','رفض جامبيت الوزير','good','2...e6 يدعم d5 ويختار Queen’s Gambit Declined، وهو دفاع كلاسيكي متين.','e7e6'],['...dxc4','قبول الجامبيت','alt','2...dxc4 دفاع معروف وقابل للعب، لكن لا تتعلّق بالبيدق وتنسى التطوير.'],['...f6','دعم المركز ببيدق f','poor','2...f6 يضعف الملك ويعطّل تطوير الحصان غالبًا؛ ابتعد عنه في البداية.']]},
+ {side:'black',topic:'King’s Gambit',title:'White offers the f4 pawn',context:'بعد 1.e4 e5 2.f4، إنت أمام King’s Gambit.',prefix:['e2e4','e7e5','f2f4'],moves:'1.e4 e5 2.f4',hint:'تقدر ترفض الجامبيت وتطوّر قطعة نشطة.',choices:[['...Bc5','رفض جامبيت الملك بفيل نشط','good','2...Bc5 دفاع معروف يرفض عرض البيدق ويستغل المربعات الداكنة مع استمرار التطوير.','f8c5'],['...exf4','قبول الجامبيت','alt','2...exf4 هو الرد الكلاسيكي المشهور أيضًا؛ قابل للعب لو عارف كيف تدير ضغط الأبيض.'],['...Qh4+','كشّ مبكر بالوزير','poor','الوزير المبكر قد يتعرّض للطرد، خصوصًا مع 3.g3؛ الكش مش معناه أفضل نقلة.']]},
+ {side:'black',topic:'Scorpion–Horus Gambit',title:'White develops the bishop to g5',context:'الأبيض ساب بيدق d3 معروض عشان يطوّر الفيل. إزاي تقبل العرض وتكمّل تطويرك؟',prefix:['e2e4','c7c6','b1c3','d7d5','d2d3','d5e4','c1g5'],moves:'1.e4 c6 2.Nc3 d5 3.d3 dxe4 4.Bg5',hint:'بيدقك على e4 يقدر ياخد على d3. احسب رد الأبيض بالفيل.',choices:[['...exd3','قبول العرض على d3','good','بعد 4...exd3 5.Bxd3، الأسود معاه بيدق زيادة ويقدر يطوّر الحصان بـ5...Nf6. خليك منتبه للفيل على g5.','e4d3'],['...Nf6','تطوير حصان الملك','alt','رد ممكن. الأبيض يقدر يسترد بيدق e4، فاحسب التبادل قبل ما تقرّر.','g8f6']]},
+ {side:'black',topic:'Scotch Game',title:'White opens the center with 3.d4',context:'الأبيض لعب 3.d4 بدل تطوير الفيل. قبل ما تطوّر قطعة، شوف لو تقدر تحسم التوتر في المركز.',prefix:['e2e4','e7e5','g1f3','b8c6','d2d4'],moves:'1.e4 e5 2.Nf3 Nc6 3.d4',hint:'بيدق e5 يقدر ياخد على d4. احسب الأبيض هيسترد بإيه.',choices:[['...exd4','حسم التوتر في المركز','good','الرد اللي بنتدرّب عليه هو 3...exd4. بعد 4.Nxd4، تقدر تقارن بين ...Nf6 اللي يهاجم e4 و...Bc5 اللي يضغط على d4.','e5d4'],['...d6','دعم e5 ببيدق','alt','نقلة قانونية تحافظ على e5، لكنها تسيب الأبيض يختار إمتى يفتح المركز. جرّب الفرع المباشر الأول.','d7d6']]},
+ {side:'black',topic:'Sicilian Defense · Alapin',title:'White prepares d4 with 2.c3',context:'إنت بالأسود والأبيض عايز يساند d4 ببيدق c3. قارن بين كسر المركز فورًا ومهاجمة e4 بقطعة.',prefix:['e2e4','c7c5','c2c3'],moves:'1.e4 c5 2.c3',hint:'بيدق d7 يقدر ينافس على e4، وحصان g8 عنده مربع يهاجم نفس البيدق.',choices:[['...d5','تحدّي المركز ببيدق','good','بعد ...d5، الخط اللي بندرسه هو exd5 Qxd5. بعدها شوف إزاي تطوّر من غير ما الأبيض يكسب وقت بمهاجمة الوزير.','d7d5'],['...Nf6','الضغط على e4 بتطوير قطعة','alt','ده رد معروف كمان. لو الأبيض لعب e5، ممكن ترد بـ...Nd5 وتضغط على مركزه بعد كده.','g8f6']]},
+ {side:'black',topic:'French Defense · Advance Variation',title:'White gains space with 3.e5',context:'بيدق d4 هو اللي بيدعم e5. إزاي تجبر الأبيض يراجع شكل مركزه؟',prefix:['e2e4','e7e6','d2d4','d7d5','e4e5'],moves:'1.e4 e6 2.d4 d5 3.e5',hint:'في بيدق من الجنب يقدر يهاجم d4 فورًا.',choices:[['...c5','الضغط على قاعدة السلسلة','good','البيدق على c5 يهاجم d4. لو الأبيض دعم المركز بـc3، طوّر حصانك لـc6 عشان تزود الضغط.','c7c5'],['...Nc6','تطوير الحصان قبل الكسر','alt','نقلة قانونية، لكن الحصان على c6 بيسد طريق بيدق c7. لو هدفك ...c5 فورًا، ابدأ بالبيدق.','b8c6']]},
+ {side:'black',topic:'Caro–Kann Defense · Advance Variation',title:'White closes the center with 3.e5',context:'مركز الأبيض اتقفل. قبل ...e6، شوف لو فيه قطعة لسه تقدر تخرج برّه سلسلة بيادقك.',prefix:['e2e4','c7c6','d2d4','d7d5','e4e5'],moves:'1.e4 c6 2.d4 d5 3.e5',hint:'راجع قطر الفيل من c8 عبر d7 وe6.',choices:[['...Bf5','تطوير الفيل قبل ...e6','good','طلّعت فيل c8 خارج السلسلة. بعد ...e6 تقدر تكمّل التطوير وتفكّر في كسر ...c5.','c8f5'],['...c5','تحدّي المركز فورًا','alt','بديل قابل للعب يضغط مباشرة على d4. ده بيغيّر ترتيب الخطة، فراجع وضع الفيل لو قفلت قطره بعدين.','c6c5']]},
+ {side:'black',topic:'London System · Queen Pressure',title:'Black can pressure b2',context:'إنت بالأسود. بعد ضغط ...c5 على المركز وتطوير الحصان، شوف إزاي تضيف تهديدًا على جناح الوزير.',prefix:['d2d4','d7d5','c1f4','g8f6','e2e3','c7c5','c2c3','b8c6','b1d2'],moves:'1.d4 d5 2.Bf4 Nf6 3.e3 c5 4.c3 Nc6 5.Nd2',hint:'وزير d8 يقدر يوصل لـb6 عبر c7 بعد ما بيدق c اتحرك.',choices:[['...Qb6','الضغط على b2 بالوزير','good','...Qb6 يهاجم b2. لو الأبيض قابل الوزير بـQb3، قرّر هل التبديل يخدمك وقيّم عمود a بعد axb3.','d8b6'],['...Bf5','تطوير فيل c8','alt','نقلة تطوير قانونية. لو الهدف تمرين ضغط فوري على b2، جرّب نقلة الوزير.','c8f5']]},
+ {side:'white',topic:'Queen’s Gambit Accepted',title:'Recover the c4 pawn with development',context:'الأسود قبل الجامبيت، والأبيض فتح قطر الفيل بـe3. اختار نقلة تطوير من غير ما تسيب قطعة للأخذ.',prefix:['d2d4','d7d5','c2c4','d5c4','g1f3','g8f6','e2e3','e7e6'],moves:'1.d4 d5 2.c4 dxc4 3.Nf3 Nf6 4.e3 e6',hint:'الفيل على f1 يقدر ياخد البيدق على c4 عبر e2 وd3.',choices:[['Bxc4','استرداد البيدق بتطوير الفيل','good','طوّرت الفيل واسترديت البيدق. راقب ...c5 اللي ينافس d4 بدل ما تفترض إن الصراع في الوسط انتهى.','f1c4'],['Bd3','وضع الفيل على d3','poor','بيدق c4 هيقدر ياخد الفيل على d3. راجع هجمات البيادق حتى لو مربع التطوير يبدو طبيعيًا.','f1d3']]},
+ {side:'black',topic:'Early Flank Moves',title:'White plays 3.a3 in an open position',context:'بعد 1.e4 e5 2.Nf3 Nc6 3.a3، الأبيض لم يهدد المركز.',prefix:['e2e4','e7e5','g1f3','b8c6','a2a3'],moves:'1.e4 e5 2.Nf3 Nc6 3.a3',hint:'استغل الوقت لتطوّر قطعة غير نشطة.',choices:[['...Nf6','تطوير الحصان والضغط على e4','good','3...Nf6 نقلة طبيعية تطور الحصان وتضغط على بيدق e4؛ لا تقلّد نقلة الجناح بلا داعٍ.','g8f6'],['...a6','مجاراة نقلة الأبيض','alt','3...a6 يمكن لعبها، لكنها أقل مباشرة من مواصلة التطوير.'],['...Qh4','إخراج الوزير إلى مربع مهدَّد','poor','الحصان الأبيض من f3 يستطيع أخذ الوزير على h4. تجنّب الوقوع في نفس الفخ.']]}
+];
+let filter='all', index=0, chosen=false, revealed=false, answerUci=null;
+let stats;try{stats=JSON.parse(localStorage.getItem('rook_response_demo_v1'))||{good:0,attempted:0}}catch{stats={good:0,attempted:0}};
+function save(){try{localStorage.setItem('rook_response_demo_v1',JSON.stringify(stats))}catch{}}
+function initial(){const b={};const order=['R','N','B','Q','K','B','N','R'];const files='abcdefgh';for(let i=0;i<8;i++){b[files[i]+'1']='w'+order[i];b[files[i]+'2']='wP';b[files[i]+'7']='bP';b[files[i]+'8']='b'+order[i];}return b;}
+function apply(b,move){const from=move.slice(0,2),to=move.slice(2,4),p=b[from];if(!p)throw Error('Missing piece for '+move);if(move==='e1g1'){b['h1']=undefined;b['f1']='wR';}if(move==='e8g8'){b['h8']=undefined;b['f8']='bR';}if(move==='e1c1'){b['a1']=undefined;b['d1']='wR';}if(move==='e8c8'){b['a8']=undefined;b['d8']='bR';}b[to]=p;delete b[from];return to;}
+function current(){return list()[index]}
+function list(){return scenarios.filter(s=>filter==='all'||s.side===filter)}
+function renderBoard(){const sc=current(),b=initial();let last='';for(const m of sc.prefix)last=apply(b,m);if(answerUci)last=apply(b,answerUci);const html=[];for(let r=8;r>=1;r--)for(let f=0;f<8;f++){const sq='abcdefgh'[f]+r;const p=b[sq];let classes='square '+(((8-r)+f)%2===0?'light':'dark');if(sq===last)classes+=' last';if(answerUci&&sq===answerUci.slice(2,4))classes+=' answer';html.push(`<div class="${classes}" aria-label="${sq}${p?' قطعة '+p:''}">${p ? `<img class="trainer-piece" src="pieces/${p}.svg" alt="" draggable="false">` : ''}${(f===7||r===1)?`<span class="coord">${f===7?r:'abcdefgh'[f]}</span>`:''}</div>`);} $('board').innerHTML=html.join(''); $('turn-label').textContent=answerUci?'النقلة المختارة':(sc.side==='white'?'دور الأبيض':'دور الأسود');}
+function show(){const arr=list();if(index>=arr.length)index=0;const sc=current();chosen=false;revealed=false;answerUci=null;$('scenario-title').textContent=sc.title;$('scenario-type').textContent=sc.topic+' · '+(sc.side==='white'?'تدرّب بالأبيض':'تدرّب بالأسود');$('scenario-context').textContent=sc.context;$('move-list').textContent=sc.moves;$('hint').classList.add('hide');$('feedback').classList.add('hide');$('hint-btn').disabled=false;$('counter').textContent=(index+1)+' / '+arr.length;$('progress-fill').style.width=((index+1)/arr.length*100)+'%';$('next-btn').textContent=index===arr.length-1?'ابدأ جولة جديدة ↺':'الموقف التالي ←';$('answers').innerHTML='';sc.choices.forEach((choice,i)=>{const btn=document.createElement('button');btn.className='answer-btn';btn.innerHTML=`<span class="move">${choice[0]}</span><span class="choice-desc">${choice[1]}</span>`;btn.addEventListener('click',()=>choose(i));$('answers').append(btn)});renderBoard();updateStats();}
+function choose(n){if(chosen)return;const sc=current();const choice=sc.choices[n];chosen=true;revealed=true;stats.attempted++;if(choice[2]==='good')stats.good++;save();answerUci=choice[4]||null;renderBoard();[...$('answers').children].forEach((el,i)=>{el.disabled=true;const type=sc.choices[i][2];if(i===n)el.classList.add(type==='good'?'correct':type==='alt'?'alternate':'incorrect');if(type==='good')el.style.borderColor='#8cbd8f';});$('feedback').classList.remove('hide');const status=choice[2]==='good'?'✓ رد موصى به':choice[2]==='alt'?'◈ بديل مقبول':'↻ جرّب تفكيرًا أفضل';$('feedback').innerHTML=`<strong>${status}</strong><div>${choice[3]}</div>${choice[2]!=='good'?`<div style="margin-top:8px;color:#d4deb8">الاختيار المبسّط في هذا التدريب: <b dir="ltr">${sc.choices.find(x=>x[2]==='good')[0]}</b></div>`:''}`;$('hint-btn').disabled=true;updateStats();}
+function showHint(){if(chosen)return;$('hint').textContent='💡 '+current().hint;$('hint').classList.remove('hide')}
+function nextScenario(){index=(index+1)%list().length;show();}
+function resetScenario(){show()}
+function setFilter(x){filter=x;index=0;document.querySelectorAll('[data-filter]').forEach(el=>el.classList.toggle('active',el.dataset.filter===filter));show()}
+function updateStats(){$('stat-good').textContent=stats.good;$('stat-attempted').textContent=stats.attempted}
+function selectTab(tab){for(const name of ['trainer','library','exam','plan']){$('view-'+name).classList.toggle('hide',tab!==name);$('tab-'+name).classList.toggle('active',tab===name);$('tab-'+name).setAttribute('aria-pressed', String(tab===name));}if(tab==='plan')renderTraining()}
+
+const weeks=[
+ {title:'أمان القطع',english:'Piece Safety',focus:'قبل أي نقلة: افحص قطعك المهددة ومربعات الكش والأخذ والتهديد.',link:'#safety',tasks:['حل ١٢ موقفًا على الأقل من تمارين أمان القطع في رُخ','لعب ٣ مباريات Rapid 15+10 مع فحص القطع قبل كل نقلة','راجع آخر مباراة وحدّد ليه خسرت قطعة من غير مقابل'],qs:[['لو الخصم هاجم وزيرك، أول تصرف صحيح؟',['أفحص كل التهديدات والردود القانونية','ألعب النقلـة التي حفظتها','أهاجم بيدقًا آخر'],0,'الفكرة إنك تفهم قوة التهديد قبل أي رد.'],['إمتى يبقى ترك قطعة بدون حماية مشكلة؟',['دايمًا خسارة إجبارية','لما الخصم يقدر ياخدها بلا تعويض مناسب','لو كانت على مربع داكن'],1,'ممكن يكون في تضحية محسوبة، لكن لازم تتأكد من التعويض.']]},
+ {title:'التفكير والحساب',english:'Calculation',focus:'حدد النقلات المرشحة، ثم احسب أقوى رد للخصم قبل اتخاذ القرار.',link:'#tactics-lab',tasks:['المرور على دروس الحساب في مسار التأسيس','حل ١٠ مواقف مع كتابة نقلة الخصم الأقوى قبل الحل','٣ مباريات Rapid مع تفكير هادئ في النقلات الحرجة'],qs:[['بعد ما تلاقي نقلة تبدو قوية، تعمل إيه؟',['تنفذها مباشرة','تفحص أقوى رد للخصم عليها','تختار أسرع نقلة'],1,'النقلة الجيدة لازم تصمد أمام رد الخصم.'],['لما يكون عندك خياران جيدان ظاهريًا؟',['تحسب رد الخصم على كل واحد','تختار الأطول في عدد النقلات','تغير الملك مكانه'],0,'وجود نقلة مرشحة لا يغني عن مقارنة الخطوط.']]},
+ {title:'التكتيكات الأساسية',english:'Basic Tactics',focus:'تعرّف على الشوكة والتثبيت والسيخ من وضع الرقعة، مش من اسم الدرس.',link:'#tactics-lab',tasks:['حل ١٥ موقفًا مختلطًا من مختبر التكتيكات','تكرار كل خطأ حتى تفهم السبب','لعب ٣ مباريات مع البحث عن كش / أخذ / تهديد'],qs:[['الهجوم على قطعتين بحصان واحد غالبًا يُسمّى؟',['Fork','Pin','Stalemate'],0,'الشوكة Fork هجوم مزدوج على أكثر من هدف.'],['إمتى القطعة تكون مثبتة Pin؟',['لما حركتها تكشف قطعة أهم خلفها','لما تكون أعلى قيمة','لما تتحول إلى وزير'],0,'التثبيت مرتبط بخطر كشف قطعة أخرى خلف القطعة المثبتة.']]},
+ {title:'التكتيكات المتقدمة',english:'Advanced Tactics',focus:'تدرّب على اكتشاف الهجوم المكتشف وإزالة المدافع ومات الصف الأخير.',link:'#mixed-lab',tasks:['حل ١٥ موقفًا من المجموعات الأصعب في رُخ','إعادة مواقف الأخطاء دون الاطلاع على الحل أولًا','تحليل ثلاثة مواقف تكتيكية ظهرت في مبارياتك'],qs:[['الهجوم المكتشف Discovered Attack يحدث عند؟',['تراجع قطعة فتكشف هجوم قطعة وراءها','أخذ بيدق من الطرف','التبييت'],0,'تحريك القطعة الأمامية يكشف خط هجوم مخفي.'],['ما فكرة إزالة المدافع؟',['كسب وقت بالوزير','التخلص من القطعة التي تحمي هدفًا مهمًا','تغيير لون الفيل'],1,'بإزالة المدافع قد يصبح الهدف الآخر مكشوفًا.']]},
+ {title:'الافتتاحيات وردود الخصم',english:'Opening Responses',focus:'افهم ردودك بالأبيض والأسود، ولا تتمسك بالنقلة المحفوظة إذا تغيّر الوضع.',link:'#train/openings/0/learn',tasks:['مراجعة الخطوط الأساسية في رُخ بدون حذف أو تغيير','حل ١٢ موقفًا في مدرّب الردود، ٦ بالأبيض و٦ بالأسود','لعب ٣ مباريات وتسجيل أول خروج للخصم عن الخط المتوقع'],qs:[['بعد 1.e4 c5، ما اسم دفاع الأسود؟',['Italian Game','Sicilian Defense','French Defense'],1,'...c5 رد صقلي، فلا تفرض خطة الإيطالي.'],['إذا لعب الخصم نقلة خارج المحفوظ؟',['أفحص تهديده ثم ألعب حسب الوضع','أصرّ على النقلة المحفوظة','أخرج الوزير فورًا'],0,'فهم الوضع أهم من متابعة سطر محفوظ.']]},
+ {title:'منتصف اللعبة',english:'Middlegame',focus:'قيّم الملكين والمركز وأضعف قطعة قبل اختيار الخطة.',link:'#middlegame',tasks:['جرّب دروس Middlegame التفاعلية في رُخ','تحديد أضعف قطعة في ١٠ مواقف ومحاولة تحسينها','٣ مباريات مع تدوين قرار استراتيجي واحد في كل مباراة'],qs:[['لو ما فيش تكتيك مباشر، غالبًا تسأل نفسك؟',['إزاي أحسن أقل قطعة عندي نشاطًا؟','فين أحرك بيدق الطرف؟','أبادل الوزير فورًا؟'],0,'تحسين القطع خطوة عملية لبناء خطة في منتصف اللعبة.'],['هل تبديل القطع دائمًا جيد عندما تكون متقدمًا؟',['نعم','لا، يعتمد على الوضع والتعويض','فقط إذا كانت القطعة في a-file'],1,'التبسيط مفيد أحيانًا لكنه ليس قاعدة مطلقة.']]},
+ {title:'النهايات والقفلات',english:'Endgames & Checkmate',focus:'نشّط الملك، واحسب سباقات البيادق، وتجنّب الخنق أثناء الحسم.',link:'#train/endings/0/learn',tasks:['مراجعة المعارضة ومربع البيدق والنهايات الأساسية','حل ١٠ مواقف نهايات أو قفلات في رُخ','تطبيق مات الوزير أو الرخ ضد ملك منفرد على رقعة تدريب'],qs:[['في نهاية ملك وبيدق، دور الملك عادة؟',['قطعة فعالة تدعم ترقية البيدق','لا يتحرك مطلقًا','لا يقترب من المركز'],0,'الملك في النهاية يتحول لقطعة نشطة.'],['الخنق Stalemate يعني؟',['الخصم عليه كش ومات','الخصم ليس عليه كش ولا يملك نقلة قانونية','وقوع الملك في الوسط'],1,'الخنق تعادل رغم التفوق المادي.']]},
+ {title:'التطبيق وقياس التطور',english:'Review & Apply',focus:'راجع آخر كام مباراة لعبتهم، حدّد أكبر سبب لخسارة النقاط، وكرر أضعف تمارينك.',link:'#mixed-lab',tasks:['لعب ٣–٤ مباريات Rapid جادة ومراجعتها','تصنيف الأخطاء: قطع معلقة / حساب / افتتاح / نهاية','اختيار هدف واحد للدورة القادمة بناء على أخطائك الحقيقية'],qs:[['أحسن طريقة تبدأ مراجعة مباراة؟',['تبحث بنفسك عن النقلة التي غيّرت الوضع','تضغط أولًا على المحرك وتتجاهل أفكارك','تراجع الافتتاح فقط'],0,'الفحص الذاتي يبني مهارة التفكير؛ بعدها تحقق بالمحرك.'],['تقييم Rapid نزل يومًا واحدًا، هل هذا يعني توقف التعلم؟',['نعم','لا؛ نقيس جودة القرارات والأخطاء على عدة مباريات','الاختبارات أهم من المباريات دائمًا'],1,'التقييم يتقلب؛ راقب الاتجاه وجودة اللعب.']]}
+];
+const trainingKey='rook_training_companion_v2';
+let training;try{training=JSON.parse(localStorage.getItem(trainingKey))||{checks:{},quiz:{}}}catch{training={checks:{},quiz:{}}};
+training.checks ||= {}; training.quiz ||= {};
+// Display weeks chronologically, keeping their saved task and quiz keys.
+const weekOrder=[4,0,5,1,2,3,7,6];
+let activeWeek=weekOrder[0];
+function saveTraining(){try{localStorage.setItem(trainingKey,JSON.stringify(training))}catch{}}
+function esc(text){return String(text??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function weekStats(w){const a=weeks[w].tasks.map((_,i)=>!!training.checks[w+'_'+i]);const q=training.quiz[w]||{};const total=weeks[w].qs.length;return{checked:a.filter(Boolean).length,totalTasks:a.length,quizRight:Object.entries(q).filter(([i,v])=>weeks[w].qs[+i] && +v===weeks[w].qs[+i][2]).length,answered:Object.keys(q).length,quizTotal:total}}
+function selectWeek(w){activeWeek=w;renderTraining();$('week-detail').scrollIntoView({behavior:'smooth',block:'start'})}
+function checkWeek(w,i,checked){training.checks[w+'_'+i]=!!checked;saveTraining();renderTraining()}
+function answerWeekQuiz(w,i,n){training.quiz[w] ||= {};if(training.quiz[w][i]!==undefined)return;training.quiz[w][i]=n;saveTraining();renderTraining()}
+function redoWeekQuiz(w){if(!confirm('إعادة الاختبار السريع لهذا الأسبوع؟ هتفضل علامات التدريب كما هي.'))return;delete training.quiz[w];saveTraining();renderTraining()}
+function openWeekExercise(){location.hash='trainer';window.scrollTo({top:0,behavior:'smooth'})}
+function renderTraining(){
+ const aggregate=weeks.map((_,w)=>weekStats(w));const done=aggregate.filter(s=>s.checked===s.totalTasks&&s.answered===s.quizTotal&&s.quizRight===s.quizTotal).length;
+ $('plan-overview').innerHTML=`<div class="card"><b>${done} / 8</b><small>أسابيع مُنجزة: تطبيق + اختبار</small></div><div class="card"><b>${aggregate.reduce((sum,s)=>sum+s.checked,0)} / 24</b><small>مهام تدريبية تم تنفيذها</small></div>`;
+ $('week-grid').innerHTML=weekOrder.map((i,position)=>{const w=weeks[i],v=aggregate[i],finished=v.checked===3&&v.quizRight===2&&v.answered===2;return `<button class="week-tile ${activeWeek===i?'selected':''} ${finished?'done':''}" onclick="selectWeek(${i})"><span class="meta">الأسبوع ${position+1} · ${w.english}</span><strong>${w.title}</strong><span>${v.checked}/3 تطبيق · ${v.answered}/2 اختبار ${finished?'· مكتمل ✓':''}</span></button>`}).join('');
+ const w=weeks[activeWeek],stats=aggregate[activeWeek];
+ $('week-detail').innerHTML=`<div class="bar"><div><span class="eyebrow">WEEK ${String(weekOrder.indexOf(activeWeek)+1).padStart(2,'0')} / 08</span><h2 class="title" style="margin:7px 0">${w.title} <span style="color:var(--gold);font-size:13px;direction:ltr;display:inline-block">${w.english}</span></h2></div><span class="meta">${stats.checked}/3 مهام منفذة</span></div><p class="note">${w.focus}</p><h3 style="margin:18px 0 10px;font-size:17px">تطبيقات الأسبوع</h3>${w.tasks.map((t,i)=>`<label class="week-task"><input type="checkbox" ${training.checks[activeWeek+'_'+i]?'checked':''} onchange="checkWeek(${activeWeek},${i},this.checked)"><span>${esc(t)}${i===0?'<small>العلامة هنا متابعة ذاتية، لا تستبدل نجاحك داخل رُخ.</small>':''}</span></label>`).join('')}<div class="actions"><a href="./${w.link}" class="secondary link-button">اذهب للقسم في رُخ ↗</a>${activeWeek===6?'<a class="secondary link-button" href="./#train/mates/0/learn">تدرّب على الكش مات</a>':''}${activeWeek===4?'<button class="primary" onclick="openWeekExercise()">تمرّن على الردود غير المتوقعة ←</button>':''}</div><div class="bar" style="margin-top:22px"><h3 style="margin:0;font-size:17px">اختبار مراجعة سريع</h3><span class="meta">${stats.quizRight}/2 إجابات صحيحة</span></div><p class="note">سؤالان لفحص الفهم. اجتياز الاختبار لا يعني وحده إتقان اللعب العملي.</p>${w.qs.map((q,i)=>{const selected=training.quiz[activeWeek]?.[i];return `<div class="quiz-item"><strong>${i+1}. ${esc(q[0])}</strong><div class="quiz-choices">${q[1].map((choice,j)=>`<button type="button" class="${selected===j?'selected':''}" ${selected!==undefined?'disabled':''} onclick="answerWeekQuiz(${activeWeek},${i},${j})">${esc(choice)}</button>`).join('')}</div>${selected!==undefined?`<p class="quiz-review">${selected===q[2]?'✓ إجابة موصى بها':'↻ راجع الفكرة'} — ${esc(q[3])}</p>`:''}</div>`}).join('')}<div class="bar" style="margin-top:14px"><span class="note">${stats.answered===2?(stats.quizRight===2?'✓ مراجعة المفاهيم مكتملة.':'راجع التفسيرات وأعد الاختبار عند الحاجة.'):'أجب عن السؤالين، ثم طبّق الفكرة في مباراة.'}</span><button class="secondary" onclick="redoWeekQuiz(${activeWeek})">إعادة الاختبار ↺</button></div>`;
+}
+$('library').innerHTML=library.map((item,i)=>`<article class="library-item"><h3 lang="en" dir="ltr">${item[0]}</h3><p>${item[1]}</p><a class="secondary link-button" href="./#train/openings/${[3,0,1,9,6,4,5,8,10,11,12,2,7][i]}/learn">افتح الدرس</a></article>`).join('');
+function routeTab(){
+ const tab=location.hash.slice(1);
+ selectTab(['trainer','library','exam','plan'].includes(tab)?tab:'library');
+}
+window.addEventListener('hashchange',routeTab);
+show();
+routeTab();
+</script>
+<script type="module" src="opening-exam.js?v=58"></script>
+<script type="module">
+import {keepView} from './refresh.js';
+keepView('training', () => ({activeWeek,filter,index}), saved => {
+  if (weeks[saved.activeWeek]) activeWeek=saved.activeWeek;
+  if (['all','white','black'].includes(saved.filter)) {
+    setFilter(saved.filter); index=saved.index; show();
+  }
+  routeTab();
+});
+</script></body>
+</html>

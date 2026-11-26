@@ -1,0 +1,23 @@
+.mastery-page > header a { color: var(--club-ink); }
+.mastery-page main { max-width: 1120px; margin-inline: auto; padding: 20px clamp(12px, 3vw, 28px) 48px; }
+.mastery-page h1 { font-size: clamp(2rem, 6vw, 3.4rem); margin-block: .25em .55em; }
+.mastery-layout { display: grid; grid-template-columns: minmax(250px, .8fr) minmax(0, 1.5fr); gap: 16px; align-items: start; }
+.mastery-page label { display: block; margin-block: 15px; }
+.mastery-page [hidden] { display: none !important; }
+.mastery-page select { display: block; width: 100%; margin-block-start: 5px; min-height: 44px; font-size: 1rem; text-align: left; }
+.mastery-page button { min-height: 44px; padding-inline: .7em; font-size: .95rem; }
+.mastery-page button[aria-pressed="true"], .mastery-page button[aria-current="step"] { background: #455335; color: #f4faec; border-color: #9dc566; }
+.mastery-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 10px; }
+#saved-openings > div, #tree-branches > div { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding-block: 7px; border-bottom: 1px solid var(--club-edge); }
+#tree-branches small { display: block; }
+#tree-branches > div > div { min-width: 0; }
+#trade-offs dd { margin: 0 0 8px; color: var(--club-muted); }
+#move-note { min-height: 3em; }
+#mastery-board { width: min(100%, 500px); margin-inline: auto; border: 3px solid #66503c; box-sizing: border-box; }
+#mastery-board button { border: 0; border-radius: 0; min-width: 0; min-height: 0; padding: 0; position: relative; touch-action: manipulation; }
+#mastery-board button:focus-visible { outline-offset: -4px; z-index: 1; }
+#mastery-board .picked { outline: 3px solid #7c5c1b; outline-offset: -3px; }
+#mastery-board .legal::after { content: ""; position: absolute; width: 25%; aspect-ratio: 1; border-radius: 50%; background: #25351380; }
+#mastery-board .tile img { width: 96%; height: 96%; object-fit: contain; }
+#move-list button { min-width: 42px; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) { .mastery-layout { grid-template-columns: minmax(0, 1fr); } }

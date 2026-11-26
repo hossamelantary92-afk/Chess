@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#20211e">
+  <title>Opening Mastery | رُخ</title>
+  <link rel="stylesheet" href="style.css?v=32">
+  <link rel="stylesheet" href="club.css?v=59">
+  <link rel="stylesheet" href="opening-mastery.css">
+</head>
+<body class="mastery-page">
+<header><a class="brand" href="index.html">♜ <span>رُخ<small>ROOK CHESS ACADEMY</small></span></a><a href="index.html">الرئيسية</a></header>
+<main>
+  <h1 lang="en">Opening Mastery</h1>
+  <div class="mastery-layout">
+    <aside class="study-panel">
+      <h2 lang="en">Opening Repertoire</h2>
+      <div id="mastery-color" class="mastery-actions" role="group" aria-label="لون اللعب">
+        <button type="button" data-color="w" lang="en">White</button>
+        <button type="button" data-color="b" lang="en">Black</button>
+      </div>
+      <label id="first-move-field">أول نقلة للأبيض<select id="first-move" dir="ltr"></select></label>
+      <label>اختار افتتاحية<select id="opening" dir="ltr"></select></label>
+      <p id="profile"></p>
+      <dl id="trade-offs"></dl>
+      <button id="save-opening" type="button" class="primary">احفظ الاختيار</button>
+      <h2 lang="en">My Opening Repertoire</h2>
+      <div id="saved-openings"></div>
+      <p id="save-status" role="status"></p>
+    </aside>
+    <section class="study-panel">
+      <h2 lang="en">Opening Tree</h2>
+      <label>اختار تفريعة<select id="opening-line" dir="ltr"></select></label>
+      <div id="mastery-board" class="study-board" aria-label="رقعة شطرنج" role="group"></div>
+      <div class="mastery-actions">
+        <button id="previous-ply" type="button" lang="en">Previous</button>
+        <button id="next-ply" type="button" lang="en">Next</button>
+        <button id="train-line" type="button" class="primary" lang="en">Train This Branch</button>
+      </div>
+      <p id="move-note" aria-live="polite"></p>
+      <div id="move-list" class="mastery-actions" dir="ltr" aria-label="نقلات الخط"></div>
+      <h3 lang="en">Responses & Variations</h3>
+      <div id="tree-branches"></div>
+      <details><summary lang="en">Opening Ideas &amp; Plans</summary><p id="line-idea"></p><p id="white-plan"></p><p id="black-plan"></p></details>
+      <a id="opening-source" rel="noopener noreferrer" target="_blank" lang="en">Opening Reference</a>
+    </section>
+  </div>
+</main>
+<script type="module" src="opening-mastery.js"></script>
+</body>
+</html>

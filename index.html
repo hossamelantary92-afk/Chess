@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#20211e"><title>رُخ | تعلّم فن الشطرنج</title><link rel="stylesheet" href="style.css?v=32"><link rel="stylesheet" href="club.css?v=59"></head><body><header><a class="brand" href="#">♜ <span>رُخ<small>ROOK CHESS ACADEMY</small></span></a><nav id="nav"></nav><button id="progress">تقدّمي</button></header><main><section class="intro">
+  <div class="hero-copy"><h1 lang="en" dir="ltr">Chess lessons</h1><p>اختار درس وجرّب نقلتك على الرقعة.</p><a class="club-cta" href="study.html">افتح الدروس</a></div>
+  <div class="hero-position" aria-hidden="true"></div>
+</section>
+<section id="homeDashboard" aria-label="تدريب الشطرنج">
+  <section class="home-summary" aria-labelledby="resumeTitle">
+    <div class="home-summary-content">
+      <h2 id="resumeTitle">جاهز لأول تدريب؟</h2>
+      <dl id="homeStats">
+        <div><dt>دروس مكتملة</dt><dd id="homeCompleted">٠</dd></div>
+        <div><dt>إجابات صحيحة</dt><dd id="homeCorrect">٠</dd></div>
+        <div><dt>الدقة</dt><dd id="homeAccuracy">—</dd></div>
+      </dl>
+    </div>
+    <button class="primary" id="resume">ابدأ التدريب</button>
+  </section>
+  <nav class="stage-jumps" aria-label="أقسام التعلّم"></nav><div id="homeCards"></div>
+  <section class="home-summary" aria-labelledby="trainingPlanTitle">
+    <div class="home-summary-content"><h2 id="trainingPlanTitle">8-Week Plan</h2><p>كل أسبوع اختار مهارة، طبّقها، واختبر فهمك.</p></div>
+    <div class="training-links"><a href="training.html#plan">خطة ٨ أسابيع</a></div>
+  </section>
+
+</section>
+<section class="workspace"><aside><div class="section-label">اختر مسارك</div><div id="paths"></div><div class="daily"><span>جلسة صغيرة. فرق كبير.</span><p>ابدأ بتدريب واحد، وكرّره لحد ما تتمكن منه.</p><div id="stats"></div></div></aside><article><div class="focus-heading"><button id="homeBack">→ الرئيسية</button><button id="changeLesson">تغيير الدرس</button></div><div class="lesson-head"><div><span class="eyebrow" id="category"></span><h2 id="title"></h2></div><span class="level">تعلّم بالتطبيق</span></div><div class="selectors" id="selectors"></div><div class="training"><div class="board-area"><div class="board-top"><span id="boardLabel">الأبيض يلعب</span><span>رقعة التدريب</span></div><div class="frame"><div class="board-surface"><div id="board" role="grid" aria-label="رقعة الشطرنج"></div><svg id="arrows" viewBox="0 0 800 800" aria-hidden="true"></svg></div></div><div id="moveCaption" aria-live="polite"></div><div id="playback"></div><div class="board-tools"><button id="flip">⟳ قلب الرقعة</button><button id="coords">إحداثيات الرقعة</button><button id="reset">↺ إعادة</button></div></div><div class="coach"><span class="eyebrow">مدرّبك على الرقعة</span><h3 id="task"></h3><p id="desc"></p><section id="pieceGlossary" hidden lang="ar" aria-labelledby="pieceGlossaryTitle">
+<h4 id="pieceGlossaryTitle">أسماء القطع واختصاراتها</h4>
+<table class="piece-glossary-table" aria-labelledby="pieceGlossaryTitle">
+<thead><tr><th scope="col">القطعة</th><th scope="col">بالإنجليزي</th><th scope="col">في النقلات</th></tr></thead>
+<tbody>
+<tr><th scope="row">الملك</th><td lang="en" dir="ltr">King</td><td><code dir="ltr">K</code></td></tr>
+<tr><th scope="row">الوزير</th><td lang="en" dir="ltr">Queen</td><td><code dir="ltr">Q</code></td></tr>
+<tr><th scope="row">الرخ</th><td lang="en" dir="ltr">Rook</td><td><code dir="ltr">R</code></td></tr>
+<tr><th scope="row">الفيل</th><td lang="en" dir="ltr">Bishop</td><td><code dir="ltr">B</code></td></tr>
+<tr><th scope="row">الحصان</th><td lang="en" dir="ltr">Knight</td><td><code dir="ltr">N</code></td></tr>
+<tr><th scope="row">البيدق</th><td lang="en" dir="ltr">Pawn</td><td>بلا حرف</td></tr>
+</tbody></table>
+<p><code dir="ltr">Bxc4+</code> يعني الفيل أخذ قطعة على <bdi>c4</bdi> وادّى كش.</p>
+<p>البيدق من غير حرف. <code dir="ltr">e4</code> يعني بيدق اتحرّك إلى <bdi>e4</bdi>، و<code dir="ltr">exd5</code> يعني بيدق عمود <bdi>e</bdi> أخذ على <bdi>d5</bdi>.</p>
+</section><div id="extra"></div><div class="feedback" id="feedback" aria-live="polite"></div><div id="actions"></div><div id="moves" dir="ltr"></div></div></div><div class="bottom-note">◈ الفهم أولًا، ثم السرعة. استخدم التلميح وقت ما تحتاج.</div></article></section><section id="gameTips" hidden aria-labelledby="gameTipsTitle">
+  <div class="focus-heading"><button type="button" class="premium-btn" id="gameTipsHome">الرئيسية</button></div>
+  <div class="lesson-head"><h2 id="gameTipsTitle">نصائح الشطرنج</h2></div>
+  <section class="unit-card" aria-labelledby="openingTipsTitle">
+    <h3 id="openingTipsTitle">الافتتاح</h3>
+    <ul class="game-tips-list">
+      <li><strong>نافس على المركز.</strong> استخدم البيادق والقطع عشان تسيطر على المربعات اللي بتسمح لك تطوّر باقي قطعك.</li>
+      <li><strong>طوّر الحصان والفيل وجهّز التبييت.</strong> افحص أمان ملكك قبل ما تفتح خطوط في المركز. طلّع الوزير بدري لو عندك سبب واضح وحسبت رد الخصم.</li>
+      <li><strong>لو الخصم خرج عن الخط اللي حافظه،</strong> افحص تهديده واختار نقلة تخدم المركز أو التطوير أو أمان الملك. ولو عرض بيدق، احسب أول رد بعد الأخذ.</li>
+    </ul>
+    <p><a href="#train/openings/3/learn">تدرّب على الافتتاحيات</a> · <a href="training.html#trainer">جرّب الردود غير المتوقعة</a></p>
+  </section>
+  <section class="unit-card" aria-labelledby="middlegameTitle">
+    <h3 id="middlegameTitle">منتصف اللعبة</h3>
+    <ol class="game-tips-list">
+      <li><strong>افهم آخر نقلة للخصم.</strong> اسأل نفسك إيه اللي اتغيّر. لو لعبت نقلة هادية، هل عنده كش خطير، أو يقدر ياخد قطعة، أو يهدد بالمات؟</li>
+      <li><strong>احسب الفرص المباشرة.</strong> افحص الكشّات والأخذ والتهديدات. اختار نقلتين أو تلاتة، واحسب أقوى رد للخصم على كل واحدة.</li>
+      <li><strong>لو مفيش تكتيك، حسّن وضعك.</strong> أمّن ملكك لو مكشوف، أو نشّط أقل قطعة عندك نشاطًا. مثلًا، لو رخّك محبوس وفيه عمود مفتوح يقدر يوصله بأمان، جرّب تنقله هناك.</li>
+      <li><strong>اعمل فحص أخير.</strong> هل القطعة اللي هتحرّكها آمنة؟ هل كانت بتحمي قطعة تانية؟ هل تحريكها هيفتح خط ناحية ملكك؟</li>
+    </ol>
+    <p>في تمرين «قطعة غير محمية»، الفيل من <bdi>e2</bdi> بياخد الحصان على <bdi>c4</bdi> بكش <code dir="ltr">Bxc4+</code>. قبل الأخذ، اسأل «هل الخصم يقدر ياخد الفيل وهو بيرد على الكش؟» في الموقف ده الفيل آمن، فالنقلة تكسب حصان.</p>
+    <p><a href="#middlegame">تدرّب على قرارات منتصف اللعب</a> · <a href="#tactics-lab">تدرّب في مختبر التكتيكات</a></p>
+  </section>
+  <section class="unit-card" aria-labelledby="endgameTipsTitle">
+    <h3 id="endgameTipsTitle">النهايات</h3>
+    <ul class="game-tips-list">
+      <li><strong>نشّط ملكك لما تقلّ القطع ويكون الطريق آمن.</strong> قرّبه عشان يدعم بيادقك أو يوقف بيدق الخصم.</li>
+      <li><strong>احسب سباق البيادق قبل الدفع أو التبديل.</strong> مين يوصل للترقية الأول؟ هل الملك يقدر يلحق البيدق؟ شوف الوضع اللي هينتج قبل ما تبدّل آخر قطعة.</li>
+      <li><strong>حوّل التفوّق لفوز.</strong> لو معاك رخ أو وزير ضد ملك لوحده، ضيّق عليه المساحة وقرّب ملكك. افحص إن عنده نقلة قانونية لو هو خارج الكش عشان تتفادى الخنق.</li>
+    </ul>
+    <p><a href="#train/endings/1/learn">تدرّب على النهايات</a> · <a href="#train/mates/0/learn">تدرّب على القفلات والكش مات</a></p>
+  </section>
+  <section class="unit-card" aria-labelledby="generalTipsTitle">
+    <h3 id="generalTipsTitle">عادات لكل مباراة</h3>
+    <ul class="game-tips-list">
+      <li><strong>قبل أي نقلة، احسب للخصم كمان.</strong> «هو بيهدد إيه؟ ولو لعبت نقلتي، أقوى رد عنده إيه؟»</li>
+      <li><strong>وزّع وقتك في الـRapid.</strong> خُد وقتك قبل التضحية أو التبديل اللي هيغيّر شكل الوضع، وسيب وقت كفاية للنهاية.</li>
+      <li><strong>بعد المباراة، راجع قرار واحد.</strong> اختار موقف خسرت فيه قطعة أو ضيّعت فرصة، وارجع للنقلة اللي قبله وحدّد اللي فاتك.</li>
+    </ul>
+  </section>
+</section><footer><b>♜ رُخ</b><span>مساحة لنقلة أفضل كل يوم.</span><span><a href="pieces/ATTRIBUTION.txt" target="_blank" rel="noopener">تصميم القطع · Cburnett</a></span></footer></main><dialog id="setupModal"><div class="setup-top"><h2>جهّز تدريبك</h2><button id="setupClose" aria-label="إغلاق">✕</button></div><p id="setupDesc"></p><label>الدرس<select id="setupLesson"></select></label><label id="setupSideLabel">اللون<select id="setupSide"><option value="w">الأبيض</option><option value="b">الأسود</option></select></label><button id="setupLearn" class="primary">ابدأ التعلّم</button><button id="setupPractice">اختبر نفسك</button></dialog><dialog id="modal"><button id="close">✕</button><h2>رحلتك على الرقعة</h2><div id="report"></div><p>تقدّمك محفوظ على هذا المتصفح.</p></dialog><script type="module" src="app.js?v=60"></script><script type="module" src="safety.js?v=58"></script><script type="module" src="tactics-lab.js?v=58"></script><script type="module" src="academy.js?v=58"></script><script type="module" src="fundamentals.js?v=58"></script><script type="module" src="middlegame.js?v=58"></script><script type="module" src="chess-guide.js?v=58"></script><script type="module" src="learning-order.js?v=60"></script><script type="module" src="model-games.js?v=58"></script><script type="module" src="calculation.js?v=58"></script><script type="module" src="practical-endgames.js?v=58"></script><script type="module" src="checkmate-patterns.js?v=58"></script></body></html>

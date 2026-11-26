@@ -1,0 +1,4 @@
+Chess pieces: Cburnett (Wikimedia Commons), cburnett set distributed by lichess-org/lila.
+Source: https://github.com/lichess-org/lila/tree/master/public/piece/cburnett
+License: Creative Commons Attribution-ShareAlike 3.0 https://creativecommons.org/licenses/by-sa/3.0/
+Adaptations: warm ivory / espresso palette. These SVG adaptations remain under the same license.
