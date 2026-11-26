@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=20';
+import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=21';
 import {exercises} from './safety.js?v=58';
 const englishTheme = {...advancedThemes,
   'قطعة غير محمية': 'Hanging Piece',
@@ -92,7 +92,7 @@ function rejectMove(square,message){
   miss(message);
   draw();
 }
-function play(sq){
+function play(sq,promotionChoice){
   if(done)return;
   if(c.get(sq)?.color===c.turn()){
     verdict=null;
@@ -103,8 +103,18 @@ function play(sq){
   if(!selected)return;
   const from=selected;
   selected=null;
+  const promotions=c.moves({square:from,verbose:true}).filter(m=>m.to===sq&&m.promotion);
+  if(promotions.length&&!promotionChoice){
+    const dialog=document.createElement('dialog');dialog.style.cssText='border:1px solid #9b8054;border-radius:16px;padding:20px;background:#29241e;color:#fff;max-width:90vw;text-align:center';
+    const heading=document.createElement('div');heading.textContent='اختر قطعة الترقية';heading.style.marginBottom='12px';dialog.append(heading);
+    const choices=document.createElement('div');choices.style.cssText='display:flex;gap:8px;justify-content:center';
+    for(const [piece,label] of [['q','وزير'],['r','رخ'],['b','فيل'],['n','حصان']]){
+      const btn=document.createElement('button');btn.className='premium-btn';btn.textContent=label;btn.onclick=()=>{dialog.close();dialog.remove();selected=from;play(sq,piece)};choices.append(btn);
+    }
+    dialog.append(choices);dialog.addEventListener('cancel',()=>{dialog.remove();selected=from;draw()});document.body.append(dialog);dialog.showModal();return;
+  }
   let move;
-  try{move=c.move({from,to:sq,promotion:'q'})}catch{}
+  try{move=c.move({from,to:sq,promotion:promotionChoice||'q'})}catch{}
   if(!move){
     rejectMove(sq,'النقلة غير قانونية. افحص حركة القطعة وأمان الملك.');
     return;
