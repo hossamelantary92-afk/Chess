@@ -27,13 +27,14 @@ const mistakeKey=m=>m.origin.color+'|'+m.origin.id+'|'+m.prefix.join(' ');
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
 let finished = practice && Boolean(state.finished);
-let setupCollapsed = Boolean(state.setupCollapsed);
+const mobileLayout = typeof matchMedia==='function' && matchMedia('(max-width:800px)').matches;
+let setupCollapsed = state.focusLayoutVersion===1 ? Boolean(state.setupCollapsed) : mobileLayout;
 const board = $('mastery-board');
 const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'وزير', k: 'ملك'};
 
 function persist() {
   try {
-    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed, reviewTarget}, saved, mistakes}));
+    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed, focusLayoutVersion:1, reviewTarget}, saved, mistakes}));
     return true;
   } catch { return false; }
 }
@@ -52,10 +53,10 @@ function renderSetup() {
   $('setup-fields').hidden = setupCollapsed;
   $('setup-summary').hidden = !setupCollapsed;
   $('toggle-setup').setAttribute('aria-expanded', String(!setupCollapsed));
-  $('setup-toggle-label').textContent = setupCollapsed ? 'تعديل' : 'طي';
+  $('setup-title').textContent = setupCollapsed ? 'Opening Setup' : 'Opening Setup';
+  $('setup-toggle-label').textContent = setupCollapsed ? 'تغيير' : 'تم';
   $('toggle-setup').setAttribute('aria-label', setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات');
-  const identity = lineIdentity(activeId, activeLine);
-  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + (mode==='dynamic' ? catalog.get(state.id).name+' · Dynamic' : identity.opening.name + ' · ' + identity.variation);
+  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + catalog.get(state.id).name;
 }
 function setSetupCollapsed(value) { setupCollapsed = value; renderSetup(); persist(); }
 function renderPicker() {
@@ -64,10 +65,19 @@ function renderPicker() {
   }
   $('first-move-field').hidden = state.color === 'w';
   setOptions($('first-move'), firstMoves, state.first, move => move);
-  const families=familyChoices(state.color,state.first), family=familyOf(state.id);
-  setOptions($('opening-family'),families.map(f=>f.id),family,id=>families.find(f=>f.id===id).label);
-  const openings=families.find(f=>f.id===family)?.openings ?? openingChoices(state.color,state.first);
-  setOptions($('opening'), openings, state.id, id => catalog.get(id).name);
+  const families=familyChoices(state.color,state.first);
+  const allowed=openingChoices(state.color,state.first);
+  // Native optgroups retain the family structure without a separate dropdown.
+  const groups=[];
+  for(const id of allowed){
+    const family=families.find(f=>f.openings.includes(id));
+    if(!family)continue;
+    let group=groups[groups.length-1];
+    if(!group||group.label!==family.label){group=document.createElement('optgroup');group.label=family.label;groups.push(group);}
+    group.append(new Option(catalog.get(id).name,id));
+  }
+  $('opening').replaceChildren(...groups);
+  $('opening').value=state.id;
   $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، ثم Slav، وبعدهم King’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
 }
 
@@ -299,8 +309,7 @@ function render(message, result = '') {
   $('active-category').textContent = shownCategory;
   $('active-category').hidden = shownCategory === shownOpening;
   $('active-variation').textContent = shownVariation;
-  $('training-mode-label').textContent = mode.toUpperCase();
-  $('mode-guide').textContent=mode==='learn'?'شاهد النقلات وافهم الفكرة، ثم جرّب الاختبار.':mode==='test'?'اختبر حفظ خط محدد من البداية.':'واجه ردودًا متغيرة من الخطوط المدروسة؛ أكتر من رد ممكن يكون مقبول.';
+
   $('progress-fill').style.width = (mode==='dynamic'?(finished?100:0):(activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0)) + '%';
   $('progress-fill').parentElement?.classList.toggle('dynamic-progress',mode==='dynamic'&&!finished);
   renderBoard();
@@ -420,7 +429,6 @@ $('mastery-color').onclick = event => {
   if (color && color !== state.color) choose({color, first: state.first, id: openingChoices(color, state.first)[0]});
 };
 $('first-move').onchange = event => choose({color: 'b', first: event.target.value, id: openingChoices('b', event.target.value)[0]});
-$('opening-family').onchange=event=>{const family=familyChoices(state.color,state.first).find(f=>f.id===event.target.value);if(family)choose({color:state.color,first:state.first,id:family.openings[0]});};
 $('opening').onchange = event => choose({color: state.color, first: state.first, id: event.target.value});
 $('opening-line').onchange = event => {
   activeLine = catalog.get(activeId).lines.find(line => line.id === event.target.value);
