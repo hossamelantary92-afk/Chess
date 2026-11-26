@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
-import {openings} from './opening-library.js';
-import {openingBranches} from './opening-branches.js?v=6';
+import {openings} from './opening-library.js?v=7';
+import {openingBranches} from './opening-branches.js?v=7';
 
 const profiles = [
   ['Beginner', 'تطوير هادي', 'الفيل بينشط على c4 والتبييت قريب.', 'توقيت d4 بيتغير مع كل رد.'],
@@ -75,19 +75,19 @@ const queen=catalog.get('6');
 catalog.set('qgd',{...queen,name:'Queen’s Gambit Declined',lines:queen.lines.filter(l=>['','queen-gambit-exchange','qgd-transposition'].includes(l.id))});
 catalog.set('slav',{name:'Slav Defense',summary:'ادعم d5 بـ...c6، وطوّر فيل c8 قبل ...e6 لو الوضع يسمح.',profile:['Intermediate','مركز متين','بيدق c6 يدعم d5.','راقب توقيت تطوير الفيل واسترداد بيدق c4.'],lines:[
   {...queen.lines.find(l=>l.id==='queen-gambit-slav'),id:'',name:'Classical Line'},
-  {id:'slav-exchange',name:'Exchange Variation',start:5,moves:'d4 d5 c4 c6 cxd5 cxd5 Nc3 Nf6 Nf3 Nc6 Bf4 Bf5 e3 e6'.split(' '),idea:'بعد تبادل بيادق c وd يبقى المركز متماثل. الأولوية لتطوير القطع قبل فتح خطوط جديدة.',white:'طوّر فيل f1 وأمّن الملك. راقب السيطرة على عمود c.',black:'كمّل تطوير فيل f8 وأمّن الملك. نافس على عمود c وراجع توقيت كسر المركز.',question:'ليه ...Bf5 مفيدة قبل ...e6؟',answer:'الفيل يخرج من سلسلة البيادق قبل إغلاق قطره.'}
+  {id:'slav-exchange',name:'Exchange Variation',start:5,moves:'d4 d5 c4 c6 cxd5 cxd5 Nc3 Nf6 Nf3 Nc6 Bf4 Bf5 e3 e6'.split(' '),idea:'بعد 3.cxd5 cxd5 يبقى لكل طرف بيدق على d وعمود c مفتوح. طوّر القطع ونافس على العمود بدل تقليد كل نقلة.',white:'طوّر فيل f1 وأمّن الملك. راقب السيطرة على عمود c.',black:'كمّل تطوير فيل f8 وأمّن الملك. نافس على عمود c وراجع توقيت كسر المركز.',question:'ليه ...Bf5 مفيدة قبل ...e6؟',answer:'الفيل يخرج من سلسلة البيادق قبل إغلاق قطره.'}
 ]});
 catalog.set('kid',{name:'King’s Indian Defense',summary:'الأسود يسمح للأبيض بمركز واسع ثم ينافسه بكسر مركزي، مع فيل g7 النشط.',profile:['Advanced','هجوم مضاد','فيل g7 يضغط على القطر الطويل.','احسب توقيت ...e5 أو ...c5 قبل الهجوم.'],lines:[
-{id:'',name:'Classical Variation',start:8,moves:'d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6'.split(' '),notes:{2:'...Nf6 يطوّر الحصان ويراقب e4.',6:'...Bg7 ينشّط الفيل على القطر الطويل.',12:'...e5 يتحدّى مركز الأبيض.'},white:'أمّن الملك وحدد هل تغلق المركز بـd5 أو تبقي التوتر حسب الوضع.',black:'طوّر باقي القطع وراقب قرار الأبيض في المركز قبل اختيار الهجوم.',question:'ليه الأسود يتحدّى المركز بعد التبييت؟',answer:'ملك الأسود بقى آمن نسبيًا، وفتح المركز ممكن ينشّط قطعه.'},
-{id:'kid-fianchetto',name:'Fianchetto Variation',start:6,moves:'d4 Nf6 c4 g6 Nf3 Bg7 g3 O-O Bg2 d6 O-O Nbd7 Nc3 e5'.split(' '),idea:'الأبيض يضع الفيل على g2 ويحمي جناح الملك، والأسود ينافس على المركز.',white:'راقب d4 وأكمل تطوير القطع.',black:'نافس على المركز بـ...e5 وراجع وضع الحصان والبيادق.'}
+{id:'',name:'Classical Variation',start:8,moves:'d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6'.split(' '),notes:{2:'...Nf6 يطوّر الحصان ويراقب e4.',6:'...Bg7 ينشّط الفيل على القطر الطويل.',12:'...e5 يهاجم d4 ويثبّت حضور الأسود في المركز. لو الأبيض لعب d5، يتغير اتجاه اللعب وقد يصبح ...f5 مناسبًا بعد تجهيز القطع.'},white:'أمّن الملك وحدد هل تغلق المركز بـd5 أو تبقي التوتر حسب الوضع.',black:'طوّر باقي القطع وراقب قرار الأبيض في المركز قبل اختيار الهجوم.',question:'ليه الأسود يتحدّى المركز بعد التبييت؟',answer:'ملك الأسود بقى آمن نسبيًا، وفتح المركز ممكن ينشّط قطعه.'},
+{id:'kid-fianchetto',name:'Fianchetto Variation',start:6,moves:'d4 Nf6 c4 g6 Nf3 Bg7 g3 O-O Bg2 d6 O-O Nbd7 Nc3 e5'.split(' '),idea:'الأبيض يضع الفيل على g2 ويحمي جناح الملك، والأسود ينافس على المركز.',white:'حافظ على مركز d4 وطوّر فيل c1. قبل دفع d5 أو الأخذ على e5، قيّم أثر القرار على قطر فيل g2.',black:'نافس على المركز بـ...e5 وراجع وضع الحصان والبيادق.'}
 ]});
 // White chooses a starting plan; Black chooses a reply to White's first move.
 catalog.set('english-white',{name:'English Opening',summary:'ابدأ بـ c4 للسيطرة على d5 من الجناح، ثم طوّر القطع وراقب مركز الأسود.',profile:['Intermediate','سيطرة من الجناح','ممكن تتعامل مع مركز الأسود بأكتر من بناء.','لا تؤجل تطوير القطع عشان تحرّك البيادق بلا هدف.'],lines:[
 {id:'',name:'Symmetrical Line',moves:'c4 c5 Nc3 Nc6 g3 g6 Bg2 Bg7 Nf3 Nf6 O-O O-O'.split(' '),idea:'ابدأ بالسيطرة على d5 ثم طوّر الحصان والفيل وأمّن الملك.',notes:{1:'c4 يسيطر على d5.',3:'Nc3 يزود السيطرة على d5.',7:'Bg2 يفعّل الفيل على القطر الطويل.'},white:'أمّن الملك ثم راقب توقيت d4 حسب وضع الأسود.',black:'نافس على d4 وطوّر القطع قبل أي كسر مركزي.'},
-{id:'english-e5',name:'Against ...e5',moves:'c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6 O-O'.split(' '),idea:'الأسود يحتل المركز؛ الأبيض يضغط عليه من الجناح ويطوّر الفيل.',white:'كمّل التطوير وراقب d5 وd4.',black:'استغل وجود بيدق e5 لتأمين مساحة وتطوير القطع.'}
+{id:'english-e5',name:'Against ...e5',moves:'c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6 O-O'.split(' '),idea:'الأسود يحتل المركز؛ الأبيض يضغط عليه من الجناح ويطوّر الفيل.',white:'كمّل التطوير وراقب d5 كنقطة للقطع. حضّر d4 فقط لو تقدر تواجه ضغط بيدق e5 وتستفيد من فتح المركز.',black:'استغل وجود بيدق e5 لتأمين مساحة وتطوير القطع.'}
 ]});
 catalog.set('reti-white',{name:'Réti Opening',summary:'ابدأ بـ Nf3 وطوّر القطع بمرونة، واستخدم c4 للضغط على مركز الأسود.',profile:['Intermediate','تطوير مرن','الحصان يمنع ...e5 غير المدعومة ويمهّد للتبييت.','اختار بناء المركز حسب رد الأسود.'],lines:[
-{id:'',name:'Classical Setup',moves:'Nf3 d5 c4 e6 g3 Nf6 Bg2 Be7 O-O O-O'.split(' '),idea:'ضغط على d5 من الجناح مع تبييت سريع.',notes:{1:'Nf3 يطوّر قطعة ويراقب e5 وd4.',3:'c4 يضغط على بيدق d5.'},white:'كمّل التطوير وراقب توقيت d4.',black:'ادعم المركز وطوّر القطع.'},
+{id:'',name:'Classical Setup',moves:'Nf3 d5 c4 e6 g3 Nf6 Bg2 Be7 O-O O-O'.split(' '),idea:'ضغط على d5 من الجناح مع تبييت سريع.',notes:{1:'Nf3 يطوّر قطعة ويراقب e5 وd4.',3:'c4 يضغط على بيدق d5.'},white:'كمّل التطوير وراقب توقيت d4.',black:'ادعم d5 وطوّر القطع. قيّم ...dxc4 أو ...c5 حسب استعداد الأبيض لاسترداد البيدق أو فتح المركز.'},
 {id:'reti-nf6',name:'Against ...Nf6',moves:'Nf3 Nf6 c4 g6 g3 Bg7 Bg2 O-O O-O d6'.split(' '),idea:'التطوير المرن يسمح بالانتقال لبناء إنجليزي حسب نقلات الطرفين.'}
 ]});
 catalog.set('london-black',{...catalog.get('2'),name:'Defense vs London System',summary:'لو الأبيض طوّر الفيل إلى f4، نافس مركز d4 وطوّر قطعك. اختار الرد حسب وضع البيادق، مش بالتقليد.',lines:catalog.get('2').lines});
