@@ -1,7 +1,7 @@
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {endgameLessons} from './practical-endgames-data.js?v=136';
+import {endgameLessons} from './practical-endgames-data.js?v=137';
 
 const $ = id => document.getElementById(id);
 const pieceNames = {p:'بيدق', n:'حصان', b:'فيل', r:'رخ', q:'وزير', k:'ملك'};
@@ -44,9 +44,12 @@ panel.innerHTML = `
   </div>`;
 document.querySelector('main footer').before(panel);
 const picker = $('endgamePicker');
-for (const lesson of endgameLessons) {
+const orderedLessons = [...endgameLessons].sort((a,b) => a.positions[0].level - b.positions[0].level);
+const learningOrder = orderedLessons.flatMap(lesson => lesson.positions.map(position => exercises.indexOf(position)));
+const levelLabels = {1:'أساسي',2:'متوسط',3:'متقدم'};
+for (const lesson of orderedLessons) {
   const group = document.createElement('optgroup');
-  group.label = lesson.title;
+  group.label = `${levelLabels[lesson.positions[0].level]} · ${lesson.title}`;
   for (const position of lesson.positions) {
     const option = document.createElement('option');
     option.value = exercises.indexOf(position);
@@ -104,7 +107,7 @@ function render(feedback = '') {
   $('endgameHint').hidden = !started || Boolean(outcome);
   $('endgameRestart').hidden = !started;
   $('endgameNext').hidden = outcome !== 'complete';
-  $('endgameNext').textContent = index + 1 === exercises.length ? 'ارجع للموقف الأول' : 'الموقف التالي';
+  $('endgameNext').textContent = learningOrder.indexOf(index) + 1 === learningOrder.length ? 'ارجع للموقف الأول' : 'الموقف التالي';
   $('endgameReview').hidden = !outcome;
   $('endgameNote').textContent = outcome ? exercise.note : '';
   $('endgamePrompt').textContent = outcome === 'alternative' ? 'الخط ده انتهى بالتعادل. أعد المحاولة ودور على طريقة تستفيد من وضع القطع.' :
@@ -214,7 +217,7 @@ $('endgameRestart').onclick = () => {
   $('endgameGoals').querySelector('button').focus({preventScroll:true});
 };
 $('endgameNext').onclick = () => {
-  open((index + 1) % exercises.length);
+  open(learningOrder[(learningOrder.indexOf(index) + 1) % learningOrder.length]);
   $('endgameTitle').focus({preventScroll:true});
 };
 picker.onchange = () => open(Number(picker.value));
