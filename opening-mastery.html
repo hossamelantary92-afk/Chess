@@ -7,7 +7,7 @@
   <title>Opening Mastery | رُخ</title>
   <link rel="stylesheet" href="style.css?v=32">
   <link rel="stylesheet" href="club.css?v=59">
-  <link rel="stylesheet" href="opening-mastery.css">
+  <link rel="stylesheet" href="opening-mastery.css?v=2">
 </head>
 <body class="mastery-page">
 <header><a class="brand" href="index.html">♜ <span>رُخ<small>ROOK CHESS ACADEMY</small></span></a><a href="index.html">الرئيسية</a></header>
@@ -21,7 +21,8 @@
         <button type="button" data-color="b" lang="en">Black</button>
       </div>
       <label id="first-move-field">أول نقلة للأبيض<select id="first-move" dir="ltr"></select></label>
-      <label>اختار افتتاحية<select id="opening" dir="ltr"></select></label>
+      <label id="opening-label">اختار افتتاحية<select id="opening" dir="ltr"></select></label>
+      <p id="opening-context" class="mastery-muted"></p>
       <p id="profile"></p>
       <dl id="trade-offs"></dl>
       <button id="save-opening" type="button" class="primary">احفظ الاختيار</button>
@@ -30,23 +31,35 @@
       <p id="save-status" role="status"></p>
     </aside>
     <section class="study-panel">
-      <h2 lang="en">Opening Tree</h2>
-      <label>اختار تفريعة<select id="opening-line" dir="ltr"></select></label>
-      <div id="mastery-board" class="study-board" aria-label="رقعة شطرنج" role="group"></div>
-      <div class="mastery-actions">
-        <button id="previous-ply" type="button" lang="en">Previous</button>
-        <button id="next-ply" type="button" lang="en">Next</button>
-        <button id="train-line" type="button" class="primary" lang="en">Train This Branch</button>
+      <h2 lang="en">Opening Training</h2>
+      <div id="mastery-mode" class="mastery-actions mastery-modes" role="group" aria-label="طريقة التدريب">
+        <button type="button" id="learn-mode" aria-pressed="true" lang="en"><strong>Learn</strong><small>شاهد النقلات</small></button>
+        <button type="button" id="test-mode" aria-pressed="false" lang="en"><strong>Test Yourself</strong><small>اختبر نفسك</small></button>
       </div>
-      <p id="move-note" aria-live="polite"></p>
+      <label>اختار تفريعة<select id="opening-line" dir="ltr"></select></label>
+      <div class="mastery-board-bar"><strong id="turn-status"></strong><span id="line-progress"></span></div>
+      <div id="mastery-board" class="study-board" aria-label="رقعة شطرنج" role="group"></div>
+      <div class="mastery-actions" id="learn-controls">
+        <button id="previous-ply" type="button" lang="en">Previous</button>
+        <button id="next-ply" type="button" class="primary" lang="en">Next</button>
+        <button id="start-ply" type="button" lang="en">Restart</button>
+      </div>
+      <div class="mastery-actions" id="test-controls" hidden><button id="retry-test" type="button" lang="en">Restart Test</button><span id="test-score" aria-live="polite"></span></div>
+      <p id="move-note" role="status" aria-live="polite"></p>
       <div id="move-list" class="mastery-actions" dir="ltr" aria-label="نقلات الخط"></div>
       <h3 lang="en">Responses & Variations</h3>
       <div id="tree-branches"></div>
-      <details><summary lang="en">Opening Ideas &amp; Plans</summary><p id="line-idea"></p><p id="white-plan"></p><p id="black-plan"></p></details>
+      <section id="opening-explanation">
+      <h3 lang="en">Opening Ideas &amp; Plans</h3><p id="opening-summary"></p><p id="line-idea"></p><p id="white-plan"></p><p id="black-plan"></p>
+      <details id="review-question" hidden><summary id="review-prompt"></summary><p id="review-answer"></p></details>
+      <section id="decision-review" hidden><h3 lang="en">Decision Practice</h3><p id="decision-prompt"></p><div id="decision-options" class="mastery-actions"></div><p id="decision-feedback" role="status"></p><button id="decision-jump" type="button">اعرض وضع القرار</button></section>
+      <div id="opening-links" class="mastery-actions"></div>
       <a id="opening-source" rel="noopener noreferrer" target="_blank" lang="en">Opening Reference</a>
+      </section>
+      <section class="mastery-extra"><h3 lang="en">More Opening Practice</h3><div class="mastery-actions"><a href="training.html#trainer">Unexpected Moves</a><a href="training.html#exam">Mixed Opening Test</a><a href="index.html#opening-traps">Traps &amp; Gambits</a></div></section>
     </section>
   </div>
 </main>
-<script type="module" src="opening-mastery.js"></script>
+<script type="module" src="opening-mastery.js?v=2"></script>
 </body>
 </html>
