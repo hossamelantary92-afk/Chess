@@ -1,4 +1,4 @@
-import {scotchMainLine, scandinavianMainLine, pircMainLine, modernMainLine} from './opening-branches.js?v=7';
+import {scotchMainLine, scandinavianMainLine, pircMainLine, modernMainLine} from './opening-branches.js?v=8';
 
 export const openings=[
 ['Italian Game','Italian Game','e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3','احتل الوسط بالبيدق، طوّر الحصان، ثم وجّه الفيل نحو f7. حضّر d4 بعد تأمين الملك.',['سيطرة على المركز وفتح طريق الفيل.','الأسود ينافس على المركز.','تطوير الحصان مع مهاجمة e5.','دفاع عن بيدق e5 مع تطوير قطعة.','الفيل يستهدف القطر نحو f7.','تطوير الفيل نحو جناح الملك.','دعم التوسع اللاحق بالنقلة d4.','تطوير الحصان ومهاجمة e4.','تثبيت الوسط وفتح طريق فيل c1.']],
