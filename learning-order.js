@@ -65,7 +65,7 @@ const jumps = document.querySelector('.stage-jumps');
 for (const stage of stages) {
   const jump = document.createElement('button');
   jump.type = 'button';
-  jump.lang = 'en';
+  jump.lang = 'ar';
   jump.textContent = stage.title;
   jump.onclick = () => {
     const heading = document.getElementById('learning-title-' + stage.id);
@@ -77,14 +77,6 @@ for (const stage of stages) {
   };
   jumps.append(jump);
 }
-import {drawDiagram} from './diagram.js';
-drawDiagram(document.querySelector('.hero-position'), 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R', {from:'f1',to:'c4'});
-const previews = {
-  opening:'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
-  middlegame:'r5k1/ppp2pp1/6bp/8/4P3/2P1B2P/PP3PP1/R5K1',
-  finish:'8/6k1/R7/1R6/8/8/8/4K3',
-  resources:'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-};
 const topics = {
   openings:['Opening Library','اتعلّم أول النقلات وخطة كل افتتاح'], 'opening-responses':['Opening Responses','اتدرّب على ردّ الخصم'],
   'opening-exam':['Opening Test','اختبر اختياراتك بالأبيض والأسود'], middlegame:['Middlegame','اختار خطتك بعد الافتتاح'],
@@ -104,12 +96,7 @@ for (const stage of stages) {
       const summary=card.querySelector('small');
       if(summary)summary.textContent=label[1];
     }
-    if(key===stage.cards[0] && previews[stage.id]){
-      const diagram=document.createElement('div');
-      diagram.className='topic-preview'; diagram.setAttribute('aria-hidden','true');
-      drawDiagram(diagram,previews[stage.id]);card.prepend(diagram);
-      card.classList.add('illustrated');
-    }
+
   }
 }
 
@@ -181,3 +168,10 @@ for(const stage of home.querySelectorAll('.learning-stage')){
 }
 const sectionIcons={resources:'♙',opening:'♘',middlegame:'♗',tactical:'♞',finish:'♜',games:'♛',progress:'♚'};
 for(const stage of stages){const heading=document.getElementById('learning-title-'+stage.id);const icon=document.createElement('span');icon.className='stage-icon';icon.setAttribute('aria-hidden','true');icon.textContent=sectionIcons[stage.id];heading.prepend(icon);}
+
+// Preserve expanded categories during reloads and visits to lessons in this tab.
+const groupsOnHome=[...home.querySelectorAll('details')];
+const groupKey=(el)=>el.querySelector('summary')?.textContent.trim();
+let opened=[];try{opened=JSON.parse(sessionStorage.getItem('rook-home-open-v183')||'[]');if(!Array.isArray(opened))opened=[]}catch{}
+for(const el of groupsOnHome)el.open=opened.includes(groupKey(el));
+for(const el of groupsOnHome)el.addEventListener('toggle',()=>{try{sessionStorage.setItem('rook-home-open-v183',JSON.stringify(groupsOnHome.filter(x=>x.open).map(groupKey)))}catch{}});
