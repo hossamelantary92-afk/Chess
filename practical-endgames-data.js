@@ -404,3 +404,37 @@ endgameLessons.push({title:'Rook Endgames – Advanced',positions:[
     "note": "الرخ خلف البيدق يراقب طريق تقدمه. بعد أخذ البيدق يتبقى رخ وملك لكل طرف؛ يجب تجنب الأخطاء التكتيكية."
   }
 ]});
+
+endgameLessons.push({title:'Rook Endgames – Practical Defense',positions:[
+  {
+    "title": "Rook Sacrifice – Save the Draw",
+    "fen": "8/8/8/8/8/8/pk6/R6K w - - 0 1",
+    "goal": "draw",
+    "line": "Rxa2+ Kxa2",
+    "prompts": [
+      "ضحّ بالرخ مقابل البيدق الأخير قبل ترقيته."
+    ],
+    "note": "بعد استرداد الملك للرخ يتبقى ملكان فقط، فينتهي الموقف بالتعادل. لا تحاول الحفاظ على الرخ على حساب السماح بالترقية."
+  },
+  {
+    "title": "Two Passed Pawns – Seventh Rank",
+    "fen": "7k/PP5r/8/8/8/8/7K/8 b - - 0 1",
+    "goal": "win",
+    "line": "Rxb7 Kg3 Rxa7",
+    "prompts": [
+      "خذ البيدق الأقرب للرخ مع استمرار السيطرة على الصف السابع.",
+      "خذ البيدق الآخر قبل ترقيته."
+    ],
+    "note": "السيطرة على صف الترقية تسمح بإيقاف البيدقين في هذا الوضع؛ بعد الأخذ يبقى رخ ضد ملك."
+  },
+  {
+    "title": "Convert the Extra Rook – Final Net",
+    "fen": "k7/8/1K6/8/8/8/7R/8 w - - 0 1",
+    "goal": "win",
+    "line": "Rh8#",
+    "prompts": [
+      "الملك يغطي مربعات الهروب؛ استخدم الرخ لإنهاء المباراة."
+    ],
+    "note": "الملك الأبيض يغطي a7 وb7 وb6، والرخ على الصف الثامن يغطي a8 وb8. كش مات."
+  }
+]});
