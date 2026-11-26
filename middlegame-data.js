@@ -23,7 +23,9 @@ export const lessons = [
           "d4": "نافست على المركز بعد ما أمّنت الفيل. بيدق c3 يدعم d4، ولو الأسود أخذ بـ...cxd4 احسب الاسترداد بـcxd4."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "king",
@@ -49,7 +51,9 @@ export const lessons = [
           "Re1": "من e1 الرخ يدعم e4 على نفس العمود. كده أمّنت الملك وبقيت جاهز تنافس على المركز."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "piece",
@@ -85,7 +89,9 @@ export const lessons = [
           "Bxf6": "بدّلت الفيل بالحصان. الأسود يقدر يسترد بالوزير من d8، فتقييم النقلة يعتمد على إذا كان إزالة الحصان تخدم خطتك."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "openingtransition",
@@ -111,7 +117,9 @@ export const lessons = [
           "Be3": "ربطت التطوير بخطة مركزية."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "tempo",
@@ -137,7 +145,9 @@ export const lessons = [
           "Nf3": "أكملت تطوير الحصانين."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "initiative",
@@ -163,7 +173,9 @@ export const lessons = [
           "cxd4": "استعدت البيدق وهاجمت الفيل؛ احسب ردوده."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "trade",
@@ -189,7 +201,9 @@ export const lessons = [
           "Bd3": "طوّرت الفيل ناحية جناح الملك وأخليت f1. قبل التبييت في النقلة الجاية، افحص آخر نقلة للأسود والمربعات اللي ملكك هيعدّي عليها."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "file",
@@ -215,7 +229,9 @@ export const lessons = [
           "Rxe8+": "أزلت رخ الأسود بكش، لكن الأسود يقدر يسترد بـ...Qxe8 أو ...Nxe8. قبل التبديل، احسب مين هيسيطر على العمود بعد الرد."
         }
       }
-    }
+    },
+    "category": "Fundamentals",
+    "level": "Foundation"
   },
   {
     "id": "break",
@@ -241,7 +257,9 @@ export const lessons = [
           "Nc6": "طلّعت الحصان لـc6. دلوقتي هو وبيدق c5 بيضغطوا على d4. قبل الأخذ احسب دفاع الأبيض والقطع اللي هتدخل في التبادل."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "space",
@@ -267,7 +285,9 @@ export const lessons = [
           "cxd4": "استعدت بيدق المركز، لكن ضغط الوزير والحصان مستمر؛ افحصه قبل الهجوم."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "pawnchain",
@@ -294,7 +314,9 @@ export const lessons = [
           "b3": "هاجمت البيدق c4؛ الاسترداد ليس مضمونًا أمام كل رد."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "isolatedpawn",
@@ -321,7 +343,9 @@ export const lessons = [
           "Rxd5": "استرددت المادة ونشطت الرخ؛ اختفى البيدق المعزول."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "doubledpawns",
@@ -348,7 +372,9 @@ export const lessons = [
           "Rb4": "الرخ يواصل الضغط على b6؛ افحص أمانه قبل أي تقدم آخر."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "backwardpawn",
@@ -375,7 +401,9 @@ export const lessons = [
           "Rxd7": "كسبت البيدق دون التضحية بالرخ."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "passedpawn",
@@ -402,7 +430,9 @@ export const lessons = [
           "d7": "البيدق على بعد نقلة من الترقية؛ احسب اقتراب الملك."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "pawnmajority",
@@ -429,7 +459,9 @@ export const lessons = [
           "b3": "دعمت c4؛ احسب التبادلات قبل التقدم."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "pawnislands",
@@ -456,14 +488,16 @@ export const lessons = [
           "Rd7": "الرخ يضغط على b7 وf7؛ افحص الردود."
         }
       }
-    }
+    },
+    "category": "Pawn Structures",
+    "level": "Intermediate"
   },
   {
     "id": "weaksquares",
     "title": "Weak Squares",
-    "fen": "6k1/pp3ppp/8/8/3P4/5N2/PP3PPP/6K1 b - - 0 1",
+    "fen": "6k1/pp4pp/8/8/3P4/5N2/PP3PPP/6K1 b - - 0 1",
     "line": "h6",
-    "context": "مربع e5 لا يمكن لبيدق أسود على d أو f مهاجمته فورًا، لكن بيدق f7 قد يتقدم لاحقًا إلى f6. بيدق d4 يدعم المربع.",
+    "context": "لا توجد بيادق سوداء على عمودي d وf تستطيع طرد الحصان من e5. بيدق d4 يدعم المربع.",
     "plans": [
       "نشّط الحصان في المركز",
       "أعد الحصان إلى g1",
@@ -472,18 +506,20 @@ export const lessons = [
     "correct": 0,
     "hint": "حصان f3 يصل إلى e5.",
     "replies": {
-      "Ne5": "الحصان مدعوم ويضغط على f7؛ راقب إمكانية ...f6."
+      "Ne5": "احتل الحصان مربعًا مركزيًا لا يمكن لبيدق أسود مهاجمته."
     },
     "followups": {
       "Ne5": {
-        "opponent": "f6",
-        "question": "الأسود تحدى الحصان. اختر مربعًا آمنًا يدعم المركز.",
-        "hint": "ارجع إلى f3.",
+        "opponent": "Kf8",
+        "question": "حافظ على الحصان النشط ووسّع مساحة جناح الوزير.",
+        "hint": "ادفع بيدق a2 إلى a3.",
         "moves": {
-          "Nf3": "حافظت على الحصان؛ المربع لم يكن حصنًا دائمًا."
+          "a3": "احتفظت بالحصان في مركزه؛ هذه نقلة انتظار تعليمية وليست أفضل نقلة مثبتة."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "outpost",
@@ -509,14 +545,16 @@ export const lessons = [
           "dxe5": "استرددت الحصان وكسبت مساحة ببيدق e5، لكن افحص ضغط الأسود عليه."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "badbishop",
     "title": "Good and Bad Bishops",
     "fen": "6k1/pp3ppp/8/8/3P4/2P1P3/PP3PPP/2B3K1 b - - 0 1",
     "line": "h6",
-    "context": "فيل c1 على مربعات داكنة، وبيادق c3 وe3 على مربعات داكنة أيضًا، بينما d4 على مربع فاتح. افتح قطرًا بديلًا للفيل.",
+    "context": "فيل c1 على مربعات داكنة، وبيادق c3 وe3 وd4 على مربعات داكنة أيضًا. افتح قطرًا بديلًا للفيل.",
     "plans": [
       "افتح قطرًا بديلًا للفيل بتحريك بيدق b",
       "جمّد الفيل",
@@ -536,7 +574,9 @@ export const lessons = [
           "Ba3+": "الفيل خرج خارج سلسلة البيادق ويسيطر على القطر a3–f8؛ نشاطه تحسن."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "bishoppair",
@@ -563,7 +603,9 @@ export const lessons = [
           "Bc4": "الفيلان يغطيان لونين مختلفين؛ نشاطهما أهم من مجرد امتلاكهما."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "knightbishop",
@@ -590,14 +632,16 @@ export const lessons = [
           "Nd3": "الحصان يهاجم الفيل على b2؛ لا يعني ذلك استرداد البيدق قسرًا."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "overprotection",
     "title": "Overprotection",
     "fen": "6k1/pp3ppp/8/4P3/3P4/5N2/PP3PPP/3R2K1 b - - 0 1",
     "line": "h6",
-    "context": "بيدق e5 نقطة مركزية يدعمها d4 والحصان. يمكن زيادة دعمه بقطعة نشطة.",
+    "context": "بيدق e5 يدعمه d4 والحصان f3. أضف دعم الرخ لتتيح إعادة تمركز الحصان.",
     "plans": [
       "زد دعم المركز برخ نشط",
       "أبعد الحصان",
@@ -617,7 +661,9 @@ export const lessons = [
           "Nd2": "أصبح الحصان قادرًا على إعادة التمركز دون ترك e5 بلا دعم."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "restriction",
@@ -644,7 +690,9 @@ export const lessons = [
           "Rxb7": "كسبت بيدقًا مع نشاط الرخ."
         }
       }
-    }
+    },
+    "category": "Positional Play",
+    "level": "Intermediate"
   },
   {
     "id": "kingattack",
@@ -671,7 +719,9 @@ export const lessons = [
           "Qf4": "الوزير نشط، لكن لا يوجد مات قسري مثبت."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "attackcoordination",
@@ -698,7 +748,9 @@ export const lessons = [
           "Qf4": "حافظت على الضغط؛ لا تفترض أن الأخذ آمن دون حساب."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "openinglines",
@@ -725,7 +777,9 @@ export const lessons = [
           "Rd7": "الرخ نشط على الصف السابع؛ افحص رد الخصم."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "oppositecastling",
@@ -752,7 +806,9 @@ export const lessons = [
           "a3": "دعمت b4؛ افحص سرعة هجوم الخصم قبل المتابعة."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "attacktiming",
@@ -779,7 +835,9 @@ export const lessons = [
           "Kg1": "الملك خلف غطاء البيادق؛ يمكن الآن تقييم خطة تنشيط الرخ."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "positionalsacrifice",
@@ -805,7 +863,9 @@ export const lessons = [
           "Nf6": "نافست على المركز. تعويض الأبيض يعتمد على التطوير واستعادة البيدق؛ ليس كل عرض بيدق تضحية دائمة."
         }
       }
-    }
+    },
+    "category": "Attacking Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "prophylaxis",
@@ -832,7 +892,9 @@ export const lessons = [
           "Rd7": "الرخ نشط على الصف السابع؛ افحص أمان الملك والرخ في كل نقلة."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "activedefense",
@@ -859,14 +921,16 @@ export const lessons = [
           "Re7": "الرخ يضغط على f7."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "counterattack",
     "title": "Counterattack",
     "fen": "6k1/5p1p/8/3q4/4N3/8/3Q4/6K1 b - - 0 1",
     "line": "h6",
-    "context": "الوزير الأسود يهاجم وزيرك على d2. حصان e4 يستطيع إعطاء كش مع مهاجمة الوزير على d5.",
+    "context": "الوزير الأسود يهدد الوزير الأبيض، لكن الوزير الأبيض يستطيع أخذه مباشرة. الشوكة هنا خيار تعليمي وليست ضرورية.",
     "plans": [
       "نفّذ شوكة بكش",
       "حرّك بيدقًا",
@@ -886,7 +950,9 @@ export const lessons = [
           "Nxd5": "كسبت الوزير في هذا الفرع؛ الكش المضاد أجبر الملك على الرد."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "defensiveexchange",
@@ -913,7 +979,9 @@ export const lessons = [
           "Kf1": "بدأت تنشيط الملك في نهاية البيادق."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "defendweakness",
@@ -940,7 +1008,9 @@ export const lessons = [
           "d4": "البيدق اكتسب مساحة مع دعم الرخ."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "consolidation",
@@ -967,7 +1037,9 @@ export const lessons = [
           "Rd7": "الرخ نشط مع بقاء غطاء الملك."
         }
       }
-    }
+    },
+    "category": "Defensive Strategy",
+    "level": "Intermediate"
   },
   {
     "id": "simplifyahead",
@@ -994,7 +1066,9 @@ export const lessons = [
           "Rd1": "الرخ يوقف تقدم البيدق من الأمام."
         }
       }
-    }
+    },
+    "category": "Strategic Transitions",
+    "level": "Advanced"
   },
   {
     "id": "keepcomplexity",
@@ -1021,7 +1095,9 @@ export const lessons = [
           "Qe4": "الوزير نشط؛ احسب تهديدات الخصم."
         }
       }
-    }
+    },
+    "category": "Strategic Transitions",
+    "level": "Advanced"
   },
   {
     "id": "endgametransition",
@@ -1048,6 +1124,8 @@ export const lessons = [
           "Ke2": "الملك أكثر نشاطًا؛ احسب سباق الوصول للبيادق."
         }
       }
-    }
+    },
+    "category": "Strategic Transitions",
+    "level": "Advanced"
   }
 ];
