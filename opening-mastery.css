@@ -204,3 +204,37 @@
 .mastery-page .mastery-active{margin-bottom:7px}
 }
 @media(max-width:350px){.mastery-page .mastery-modes button{gap:4px}.mastery-page .mastery-modes button strong{font-size:12px}.mastery-extra a{font-size:11px}}
+
+/* v6: learning progression, compact three-mode navigation and review */
+.mastery-page .mastery-route{display:flex;align-items:center;justify-content:space-between;gap:4px;font:600 10px/1.3 system-ui;color:var(--om-muted);margin:0 0 10px}
+.mastery-route i{flex:1;height:1px;background:var(--om-edge)}
+.mastery-route span{white-space:nowrap}
+.mastery-page .mastery-training .mastery-modes{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.mastery-page .mastery-training .mastery-modes button{min-width:0;min-height:53px;gap:3px;padding:5px 3px;flex-direction:column}
+.mastery-page .mastery-training .mastery-modes button span{gap:2px;text-align:center}
+.mastery-page .mastery-training .mastery-modes button small{text-align:center;font-size:10px}
+.mastery-page .mastery-training .mastery-modes button strong{font-size:clamp(10px,2.8vw,13px);white-space:nowrap}
+.mastery-page .mastery-training .mastery-modes button svg{width:16px;height:16px}
+.mastery-page .mode-guide,.mastery-page .learning-order-note{font-size:11px!important;color:var(--om-muted)!important;line-height:1.55!important;margin:5px 0 10px!important}
+.mastery-page #setup-fields .mastery-fields{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.mastery-page #setup-fields #first-move-field{grid-column:1;grid-row:1}
+.mastery-page #setup-fields #family-field{grid-column:2;grid-row:1}
+.mastery-page #setup-fields #first-move-field[hidden]+#family-field{grid-column:1/-1}
+.mastery-page #setup-fields #opening-label{grid-column:1/-1;grid-row:auto}
+.mastery-page #setup-fields #line-field{grid-column:1/-1;grid-row:auto}
+.mastery-page #setup-fields #opening-label select:disabled{opacity:.75}
+.mastery-page #setup-fields .field-caption{font-size:11px}
+#key-point-card{margin-top:8px;border-inline-start:3px solid #789b55}
+.mastery-quick-check{border:1px solid var(--om-edge);border-radius:9px;padding:9px;margin-top:10px}
+.mastery-page .mastery-quick-check h3{margin:0}
+.mastery-page .mastery-quick-check details{margin:0;border:0}
+.session-result{border:1px solid #668649;background:#30392a;border-radius:10px;padding:10px;margin-top:8px}
+.session-result strong{color:var(--om-accent);font-size:14px}
+.mastery-page .session-result button{margin:4px 0 0 5px;font-size:11px;min-height:40px}
+#review-items{display:grid;gap:6px}
+#review-items>div{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--om-edge);border-radius:8px;padding:7px}
+#review-items>div>span{min-width:0;display:grid;gap:3px;direction:ltr;text-align:left}
+#review-items strong{font:600 12px/1.4 system-ui;overflow-wrap:anywhere}
+#review-items small{color:var(--om-muted);font:500 11px/1.4 system-ui}
+.mastery-page #review-items button{min-height:40px;padding:5px 9px;color:var(--om-accent)}
+.mastery-progress.dynamic-progress{background:repeating-linear-gradient(90deg,#4c623c 0 12px,#34392e 12px 18px)}
