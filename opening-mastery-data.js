@@ -74,50 +74,85 @@ catalog.set('kid',{name:'King’s Indian Defense',summary:'الأسود يسمح
 {id:'',name:'Classical Variation',start:8,moves:'d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6'.split(' '),notes:{2:'...Nf6 يطوّر الحصان ويراقب e4.',6:'...Bg7 ينشّط الفيل على القطر الطويل.',12:'...e5 يتحدّى مركز الأبيض.'},white:'أمّن الملك وحدد هل تغلق المركز بـd5 أو تبقي التوتر حسب الوضع.',black:'طوّر باقي القطع وراقب قرار الأبيض في المركز قبل اختيار الهجوم.',question:'ليه الأسود يتحدّى المركز بعد التبييت؟',answer:'ملك الأسود بقى آمن نسبيًا، وفتح المركز ممكن ينشّط قطعه.'},
 {id:'kid-fianchetto',name:'Fianchetto Variation',start:6,moves:'d4 Nf6 c4 g6 Nf3 Bg7 g3 O-O Bg2 d6 O-O Nbd7 Nc3 e5'.split(' '),idea:'الأبيض يضع الفيل على g2 ويحمي جناح الملك، والأسود ينافس على المركز.',white:'راقب d4 وأكمل تطوير القطع.',black:'نافس على المركز بـ...e5 وراجع وضع الحصان والبيادق.'}
 ]});
-// Stable lesson identifiers; order by educational accessibility, not absolute strength.
+// White chooses a starting plan; Black chooses a reply to White's first move.
+catalog.set('english-white',{name:'English Opening',summary:'ابدأ بـ c4 للسيطرة على d5 من الجناح، ثم طوّر القطع وراقب مركز الأسود.',profile:['Intermediate','سيطرة من الجناح','ممكن تتعامل مع مركز الأسود بأكتر من بناء.','لا تؤجل تطوير القطع عشان تحرّك البيادق بلا هدف.'],lines:[
+{id:'',name:'Symmetrical Line',moves:'c4 c5 Nc3 Nc6 g3 g6 Bg2 Bg7 Nf3 Nf6 O-O O-O'.split(' '),idea:'ابدأ بالسيطرة على d5 ثم طوّر الحصان والفيل وأمّن الملك.',notes:{1:'c4 يسيطر على d5.',3:'Nc3 يزود السيطرة على d5.',7:'Bg2 يفعّل الفيل على القطر الطويل.'},white:'أمّن الملك ثم راقب توقيت d4 حسب وضع الأسود.',black:'نافس على d4 وطوّر القطع قبل أي كسر مركزي.'},
+{id:'english-e5',name:'Against ...e5',moves:'c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6 O-O'.split(' '),idea:'الأسود يحتل المركز؛ الأبيض يضغط عليه من الجناح ويطوّر الفيل.',white:'كمّل التطوير وراقب d5 وd4.',black:'استغل وجود بيدق e5 لتأمين مساحة وتطوير القطع.'}
+]});
+catalog.set('reti-white',{name:'Réti Opening',summary:'ابدأ بـ Nf3 وطوّر القطع بمرونة، واستخدم c4 للضغط على مركز الأسود.',profile:['Intermediate','تطوير مرن','الحصان يمنع ...e5 غير المدعومة ويمهّد للتبييت.','اختار بناء المركز حسب رد الأسود.'],lines:[
+{id:'',name:'Classical Setup',moves:'Nf3 d5 c4 e6 g3 Nf6 Bg2 Be7 O-O O-O'.split(' '),idea:'ضغط على d5 من الجناح مع تبييت سريع.',notes:{1:'Nf3 يطوّر قطعة ويراقب e5 وd4.',3:'c4 يضغط على بيدق d5.'},white:'كمّل التطوير وراقب توقيت d4.',black:'ادعم المركز وطوّر القطع.'},
+{id:'reti-nf6',name:'Against ...Nf6',moves:'Nf3 Nf6 c4 g6 g3 Bg7 Bg2 O-O O-O d6'.split(' '),idea:'التطوير المرن يسمح بالانتقال لبناء إنجليزي حسب نقلات الطرفين.'}
+]});
+catalog.set('london-black',{...catalog.get('2'),name:'Defense vs London System',summary:'لو الأبيض طوّر الفيل إلى f4، نافس مركز d4 وطوّر قطعك. اختار الرد حسب وضع البيادق، مش بالتقليد.',lines:catalog.get('2').lines});
 const defenses = {
-  e4: ['open-game','5','10','4','3','11','12','0','1','9','8'],
-  d4: ['qgd','slav','kid','dutch','6','2','7'],
+  e4: ['open-game','5','10','4','3','11','12'],
+  d4: ['qgd','london-black','slav','kid','dutch','7'],
   c4: ['english-symmetrical','english-reversed'],
   Nf3: ['d5-vs-nf3'],
   'Other Moves': ['larsen','bird']
 };
-const whiteOrder = ['0','2','9','6','1','english-symmetrical','english-reversed','d5-vs-nf3','5','10','4','3','11','12','dutch','7','8','larsen','bird'];
-export const firstMoves = Object.keys(defenses);
-export function openingChoices(color, first) {
-  return color === 'w' ? whiteOrder : defenses[first] ?? defenses.e4;
-}
-// These are curriculum groupings, not a claim that every group is a single ECO family.
-const families = [
-  ['open','Open Games',['open-game','0','1','9']],
-  ['london','London System',['2']],
-  ['queen','Queen’s Gambit',['6','qgd','slav']],
-  ['kid','King’s Indian',['kid']],
-  ['english','English Opening',['english-symmetrical','english-reversed']],
-  ['reti','Réti / 1.Nf3',['d5-vs-nf3']],
-  ['caro','Caro–Kann',['5','8']],
-  ['scandi','Scandinavian',['10']],
-  ['french','French Defense',['4']],
-  ['sicilian','Sicilian Defense',['3']],
-  ['pirc','Pirc Defense',['11']],
-  ['modern','Modern Defense',['12']],
-  ['dutch','Dutch Defense',['dutch']],
-  ['englund','Englund Gambit',['7']],
-  ['other','Other First Moves',['larsen','bird']]
+const whiteOrder=['0','2','9','6','1','english-white','reti-white'];
+export const firstMoves=Object.keys(defenses);
+export function openingChoices(color,first){return color==='w'?whiteOrder: defenses[first]??defenses.e4;}
+const learningGroups=[
+ ['beginner','Start here',['0','2']],
+ ['develop','Next steps',['9','6','1']],
+ ['expand','Expand your repertoire',['english-white','reti-white']],
+ ['e4basic','Core defenses',['open-game','5','10']],
+ ['e4advanced','Explore next',['4','3','11','12']],
+ ['d4basic','Classical setups',['qgd','london-black','slav']],
+ ['d4advanced','Counterattacks',['kid','dutch','7']],
+ ['other','Other responses',['english-symmetrical','english-reversed','d5-vs-nf3','larsen','bird']]
 ];
-export function familyOf(id) { return families.find(f=>f[2].includes(id))?.[0] ?? 'other'; }
-export function familyChoices(color,first) {
-  const allowed=openingChoices(color,first);
-  return [...new Set(allowed.map(familyOf))].map(id=>({id,label:families.find(f=>f[0]===id)[1],openings:allowed.filter(x=>familyOf(x)===id)}));
+export function familyOf(id){return learningGroups.find(g=>g[2].includes(id))?.[0]??'other';}
+export function familyChoices(color,first){
+ const allowed=openingChoices(color,first);
+ return learningGroups.map(([id,label,ids])=>({id,label,openings:allowed.filter(x=>ids.includes(x))})).filter(g=>g.openings.length);
 }
-// Dynamic training stays inside the selected study repertoire. Opponent moves
-// are sampled from distinct legal, authored continuations, not engine guesses.
-export function dynamicLines(id) {
-  const ids=id==='open-game'?['0','1','9']:[id];
-  return ids.flatMap(id=>catalog.get(id).lines.map(line=>({id,line})));
+// Keep old links, saved choices and review positions usable after filtering.
+export function normalizeSelection(value){
+ if(!value||!catalog.has(value.id)||!['w','b'].includes(value.color))return value;
+ const {color,id}=value;
+ if(openingChoices(color,value.first).includes(id))return value;
+ let next=id;
+ if(color==='w'){
+   if(['english-symmetrical','english-reversed'].includes(id))next='english-white';
+   else if(id==='d5-vs-nf3')next='reti-white';
+   else if(['qgd','slav','kid','dutch','7'].includes(id))next='6';
+   else if(id==='london-black')next='2';
+   else next='0';
+   return {...value,id:next,first:firstMoves.includes(value.first)?value.first:'e4',activeId:value.activeId??id};
+ }
+ if(['0','1','9'].includes(id))next='open-game';
+ else if(id==='6')next='qgd';
+ else if(id==='2')next='london-black';
+ else if(id==='8')next='5';
+ else if(id==='english-white')next='english-symmetrical';
+ else if(id==='reti-white')next='d5-vs-nf3';
+ const first=firstMoves.find(m=>openingChoices('b',m).includes(next));
+ return first?{...value,id:next,first,activeId:value.activeId??id}:value;
 }
-export function matchingLines(id,prefix) {
-  return dynamicLines(id).filter(({line})=>line.moves.length>=prefix.length&&prefix.every((san,i)=>line.moves[i]===san));
+// Include opponent deviations separately from the selected opening.
+// Dynamic training only samples the authored lines; it is not an engine.
+export function studyLines(id,color){
+ const primaryIds=id==='open-game'?['0','1','9']:color==='b'&&id==='5'?['5','8']: [id];
+ const alternatives=color==='w'&&['0','1','9'].includes(id)?['5','10','4','3','11','12','8']:
+   color==='w'&&id==='6'?['slav','kid','dutch','7']:
+   color==='w'&&id==='2'?['kid','dutch','7']:[];
+ const entries=[];
+ const seen=new Set();
+ for(const item of [...primaryIds,...alternatives]){
+   for(const line of catalog.get(item).lines){
+     const key=line.moves.join(' ');
+     if(seen.has(key))continue;
+     seen.add(key);
+     entries.push({id:item,line,opponentResponse:alternatives.includes(item)});
+   }
+ }
+ return entries;
+}
+export function matchingLines(id,prefix,color){
+ return studyLines(id,color).filter(({line})=>line.moves.length>=prefix.length&&prefix.every((san,i)=>line.moves[i]===san));
 }
 export function positionKey(chess) {
   return chess.fen().split(' ').slice(0, 4).join(' ');
