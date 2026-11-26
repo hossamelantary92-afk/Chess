@@ -151,6 +151,20 @@ export function studyLines(id,color){
  }
  return entries;
 }
+// Beginner menu: a few representative lines; retain the full training library.
+export function essentialLines(id,color,entries=studyLines(id,color)){
+ const primary=entries.filter(e=>!e.opponentResponse);
+ const responses=entries.filter(e=>e.opponentResponse);
+ const pick=(item,lineId='')=>entries.find(e=>e.id===item&&e.line.id===lineId);
+ let core;
+ if(id==='open-game')core=['0','1','9'].map(i=>pick(i));
+ else if(id==='0')core=[pick('0'),pick('0','two-knights-quiet'),pick('0','italian-center')];
+ else if(id==='5')core=[pick('5'),pick('5','caro-advance'),pick('5','caro-exchange')];
+ else core=primary.slice(0,3);
+ const replyIds=color==='w'&&['0','1','9'].includes(id)?['3','5','4','10']:color==='w'&&id==='6'?['kid','dutch']:color==='w'&&id==='2'?['dutch']: [];
+ const replies=replyIds.map(i=>i==='3'?pick(i,'sicilian-alapin-d5'):pick(i)).filter(e=>e&&responses.includes(e));
+ return [...new Set([...core.filter(Boolean),...replies])];
+}
 export function matchingLines(id,prefix,color){
  return studyLines(id,color).filter(({line})=>line.moves.length>=prefix.length&&prefix.every((san,i)=>line.moves[i]===san));
 }
