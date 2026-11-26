@@ -173,3 +173,5 @@ bank.push({...row("reti-tartakower-1910","الاستدراج",3,"rnb1kb1r/pp3ppp
 bank.push({...row("anderssen-dufresne-1852","الإلهاء",3,"1r2k1r1/pbppnp1p/1bn2P2/8/Q7/B1PB1q2/P4PPP/3RR1K1 w - - 0 20","Rxe7+ Nxe7 Qxd7+ Kxd7 Bf5+ Ke8 Bd7+ Kf8 Bxe7#","أندرسن ضد دوفرين، برلين 1852، المباراة الخالدة الخضراء. التضحية بالرخ ثم الوزير تستدرج الملك وتتيح كشوف الفيلين المتتابعة. خط المباراة المعروض وليس ادعاءً بتفرد الحل. المصدر: https://www.numericana.com/answer/chess.htm","احسب الكشات المتتالية قبل استرداد المادة."),demonstration:true,examReady:false,source:"https://www.numericana.com/answer/chess.htm"});
 // Promotion alternatives: both rook and queen deliver mate in this position.
 for(const p of bank){if(p.id==='promotion-check')p.acceptedMoves=['e8=Q#','e8=R#'];}
+
+bank.push({...row("underpromotion-82-0",'الترقية',2,"8/1P6/k7/8/K2B4/8/8/1R6 w - - 0 1","b8=N#","الترقية إلى حصان هنا تحقق المات الوحيد في نقلة واحدة، بخلاف الوزير. افحص طريقة هجوم الحصان ومربعات الهروب.",'ابحث عن مات في نقلة، ولا تفترض أن الوزير هو الأفضل.'),examReady:true,demonstration:false});
