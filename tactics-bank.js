@@ -162,3 +162,7 @@ for(const p of bank){const a=captureAudit.find(x=>x.id===p.id);if(a){p.examReady
 
 // Difficulty reflects calculation length and instructional complexity.
 for(const p of bank){const b=new Chess(p.fen);const pieces=b.board().flat().filter(Boolean).length;const turns=Math.ceil(p.line.length/2);p.level=turns>=3||p.id==='morphy-opera'||(turns>=2&&pieces>=12)?3:turns>=2||pieces>=12||['التحميل الزائد','الإلهاء','النقلة البينية'].includes(p.theme)?2:1;}
+
+// Retire the unsound queen fork: Rxa4 refutes Qa4+.
+const badQueenFork=bank.findIndex(p=>p.id==='queen-double-threat');if(badQueenFork>=0)bank.splice(badQueenFork,1);
+for(const p of bank){if(['fork-rook','fork-corner','fork-rook-black','fork-corner-black','knight-fork-queen-check','knight-fork-queen-check-black'].includes(p.id)){p.explain+=' تم فحص جميع ردود الملك: يمكن كسب مادة في كل رد، مع احتمال استرداد الحصان في بعض خطوط شوكة الوزير.';}if(p.id==='overload-rook-two-targets')p.explain+=' فحص الردود المباشرة يؤكد مكسبًا ماديًا أو ماتًا بعد الاسترداد في الخط المعروض.';}
