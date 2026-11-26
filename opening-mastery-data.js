@@ -63,10 +63,21 @@ catalog.get('6').lines.push({
   idea: 'بعد ...d5 وصلت لنفس الوضع اللي بيظهر بعد 1. d4 d5 2. c4 e6 3. Nc3 Nf6.'
 });
 
+// Separate Black's defensive choices while preserving the original Queen's Gambit lesson.
+const queen=catalog.get('6');
+catalog.set('qgd',{...queen,name:'Queen’s Gambit Declined',lines:queen.lines.filter(l=>['','queen-gambit-exchange','qgd-transposition'].includes(l.id))});
+catalog.set('slav',{name:'Slav Defense',summary:'ادعم d5 بـ...c6، وطوّر فيل c8 قبل ...e6 لو الوضع يسمح.',profile:['Intermediate','مركز متين','بيدق c6 يدعم d5.','راقب توقيت تطوير الفيل واسترداد بيدق c4.'],lines:[
+  {...queen.lines.find(l=>l.id==='queen-gambit-slav'),id:'',name:'Classical Line'},
+  {id:'slav-exchange',name:'Exchange Variation',start:5,moves:'d4 d5 c4 c6 cxd5 cxd5 Nc3 Nf6 Nf3 Nc6 Bf4 Bf5 e3 e6'.split(' '),idea:'بعد تبادل بيادق c وd يبقى المركز متماثل. الأولوية لتطوير القطع قبل فتح خطوط جديدة.',white:'طوّر فيل f1 وأمّن الملك. راقب السيطرة على عمود c.',black:'كمّل تطوير فيل f8 وأمّن الملك. نافس على عمود c وراجع توقيت كسر المركز.',question:'ليه ...Bf5 مفيدة قبل ...e6؟',answer:'الفيل يخرج من سلسلة البيادق قبل إغلاق قطره.'}
+]});
+catalog.set('kid',{name:'King’s Indian Defense',summary:'الأسود يسمح للأبيض بمركز واسع ثم ينافسه بكسر مركزي، مع فيل g7 النشط.',profile:['Advanced','هجوم مضاد','فيل g7 يضغط على القطر الطويل.','احسب توقيت ...e5 أو ...c5 قبل الهجوم.'],lines:[
+{id:'',name:'Classical Variation',start:8,moves:'d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6'.split(' '),notes:{2:'...Nf6 يطوّر الحصان ويراقب e4.',6:'...Bg7 ينشّط الفيل على القطر الطويل.',12:'...e5 يتحدّى مركز الأبيض.'},white:'أمّن الملك وحدد هل تغلق المركز بـd5 أو تبقي التوتر حسب الوضع.',black:'طوّر باقي القطع وراقب قرار الأبيض في المركز قبل اختيار الهجوم.',question:'ليه الأسود يتحدّى المركز بعد التبييت؟',answer:'ملك الأسود بقى آمن نسبيًا، وفتح المركز ممكن ينشّط قطعه.'},
+{id:'kid-fianchetto',name:'Fianchetto Variation',start:6,moves:'d4 Nf6 c4 g6 Nf3 Bg7 g3 O-O Bg2 d6 O-O Nbd7 Nc3 e5'.split(' '),idea:'الأبيض يضع الفيل على g2 ويحمي جناح الملك، والأسود ينافس على المركز.',white:'راقب d4 وأكمل تطوير القطع.',black:'نافس على المركز بـ...e5 وراجع وضع الحصان والبيادق.'}
+]});
 // Stable lesson identifiers; order by educational accessibility, not absolute strength.
 const defenses = {
   e4: ['open-game','5','10','4','3','11','12','0','1','9','8'],
-  d4: ['6','2','dutch','7'],
+  d4: ['qgd','slav','kid','dutch','6','2','7'],
   c4: ['english-symmetrical','english-reversed'],
   Nf3: ['d5-vs-nf3'],
   'Other Moves': ['larsen','bird']
@@ -80,7 +91,8 @@ export function openingChoices(color, first) {
 const families = [
   ['open','Open Games',['open-game','0','1','9']],
   ['london','London System',['2']],
-  ['queen','Queen’s Gambit',['6']],
+  ['queen','Queen’s Gambit',['6','qgd','slav']],
+  ['kid','King’s Indian',['kid']],
   ['english','English Opening',['english-symmetrical','english-reversed']],
   ['reti','Réti / 1.Nf3',['d5-vs-nf3']],
   ['caro','Caro–Kann',['5','8']],
