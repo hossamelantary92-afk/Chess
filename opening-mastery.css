@@ -292,3 +292,29 @@
 .mastery-page #toggle-all-lines[aria-pressed="true"]{color:var(--om-text);background:transparent;border:0}
 .mastery-page #toggle-all-lines:focus-visible{outline-offset:-2px}
 @media(max-width:350px){.mastery-page #setup-fields .field-caption{font-size:13px}.mastery-page #toggle-all-lines{font-size:11px}}
+
+/* V10: optional teaching tools and a quiet, board-first layout */
+.mastery-page .mastery-board-wrap{position:relative;width:min(100%,560px);margin:auto}
+.mastery-page .mastery-board-wrap #mastery-board{width:100%}
+.mastery-page #visual-arrows{position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);pointer-events:none;z-index:3;overflow:visible}
+#mastery-board .tile.teach-center{box-shadow:inset 0 0 0 3px #5a873cbb}
+#mastery-board .tile.teach-target{box-shadow:inset 0 0 0 3px #d2a248dd}
+#mastery-board .tile.hint-target{box-shadow:inset 0 0 0 4px #8eb34e}
+.mastery-page #visual-tools{justify-content:flex-start;gap:6px;margin-block:6px}
+.mastery-page #visual-toggle,.mastery-page #hint-button{min-height:40px;font-size:12px}
+#visual-legend{font-size:10px;color:var(--om-muted);line-height:1.5}
+#hint-count{font:600 12px system-ui;color:var(--om-muted)}
+.mastery-page #hint-text{background:#30392a;border:1px solid #61764b;border-radius:8px;padding:9px}
+#middlegame-check{margin-top:10px}
+#middlegame-options{display:grid;gap:6px}
+.mastery-page #middlegame-options button{width:100%;text-align:right;line-height:1.65;font-weight:500}
+.mastery-page #middlegame-options button[data-answer="correct"]{border-color:#92b96a;color:#d6e9bb}
+.mastery-page #middlegame-options button[data-answer="retry"]{border-color:#b77f65}
+#starter-items,#mastery-scores{display:grid;gap:7px;margin-top:8px}
+#starter-items>button{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;direction:ltr}
+#starter-items small,#mastery-scores small{color:var(--om-muted);font-size:11px}
+.mastery-score-row{display:grid;gap:4px;padding:7px 0;border-bottom:1px solid var(--om-edge)}
+.mastery-score-heading{display:flex;justify-content:space-between;gap:8px;direction:ltr;align-items:center;font-size:12px}
+.mastery-score-heading strong{overflow-wrap:anywhere}
+.mastery-score-track{height:5px;background:#44483d;border-radius:5px;overflow:hidden;direction:ltr}
+.mastery-score-track span{display:block;height:100%;background:var(--om-accent);border-radius:5px}
