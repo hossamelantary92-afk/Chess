@@ -20,6 +20,10 @@ if (valid(linked)) history.replaceState(history.state, '', location.pathname);
 const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
 let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
 let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line) ?? catalog.get(activeId).lines[0];
+if(activeId==='open-game'&&state.id==='open-game'){
+  const canonical=studyLines(state.id,state.color).find(e=>e.line.moves.join(' ')===activeLine.moves.join(' '));
+  if(canonical){activeId=canonical.id;activeLine=canonical.line;}
+}
 let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn';
 let chess, ply, lastMove, selected, practice = mode !== 'learn';
 const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.map(m=>({...m,origin:normalizeSelection(m.origin)})).filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
@@ -72,7 +76,10 @@ function renderPicker() {
   const groups=families.map(family=>{
     const group=document.createElement('optgroup');
     group.label=family.label;
-    group.append(...family.openings.map(id=>new Option(catalog.get(id).name,id)));
+    group.append(...family.openings.map(id=>{
+      const opening=catalog.get(id),san=opening.lines[0].moves[state.color==='w'?0:1];
+      return new Option(opening.name+' · '+(state.color==='w'?'1.':'1...')+san,id);
+    }));
     return group;
   });
   $('opening').replaceChildren(...groups);
@@ -309,7 +316,7 @@ function render(message, result = '') {
   const identity = lineIdentity(activeId, activeLine);
   const displayOpening = identity.opening;
   renderOpeningInfo(displayOpening);
-  let shownOpening=displayOpening.name,shownCategory=identity.category.name,shownVariation=identity.variation;
+  let shownOpening=displayOpening.name,shownCategory=state.id!==activeId?(state.color==='w'?'White repertoire · '+catalog.get(state.id).name:catalog.get(state.id).name):identity.category.name,shownVariation=identity.variation;
   if(mode==='dynamic') {
     const candidates=matchingLines(state.id,activeLine.moves.slice(0,ply),state.color);
     const names=[...new Set(candidates.map(e=>lineIdentity(e.id,e.line).opening.name))];
