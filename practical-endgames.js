@@ -82,6 +82,44 @@ function queenChoose(sq){
 }
 $('queenReset').onclick=()=>{qGame=new Chess('8/8/4k3/8/8/3Q4/8/4K3 w - - 0 1');qSelected=null;$('queenStatus').textContent='الأبيض يلعب — حقق المات.';queenDraw();};
 queenTrainer.addEventListener('toggle',()=>{if(queenTrainer.open&&!qGame)$('queenReset').click();});
+const rookMateTrainer=document.createElement('details');
+rookMateTrainer.className='unit-card';
+rookMateTrainer.innerHTML='<summary>Rook Checkmate Mastery · تدريب المات بالرخ</summary><p>احصر الملك بالرخ، قرّب ملكك واستخدم المعارضة، واحمِ الرخ من الأخذ. العب أي نقلة قانونية حتى المات. دفاع تدريبي تقريبي وليس Tablebase.</p><div class="training-links"><button class="premium-btn" id="rookMateReset">ابدأ / أعد التدريب</button></div><div class="frame"><div id="rookMateBoard" aria-label="رقعة المات بالرخ"></div></div><p id="rookMateStatus" role="status"></p>';
+panel.querySelector('.lesson-head').after(rookMateTrainer);
+let rGame,rSelected;
+function rookMateDraw(){
+ const board=$('rookMateBoard');let i=0;
+ const targets=new Set(rSelected?rGame.moves({square:rSelected,verbose:true}).map(m=>m.to):[]);
+ for(const rank of '87654321')for(const file of 'abcdefgh'){
+ const sq=file+rank,p=rGame.get(sq),btn=squareAt(board,i++);
+ btn.type='button';btn.className=(('abcdefgh'.indexOf(file)+Number(rank))%2?'dark':'')+(rSelected===sq?' selected':'')+(targets.has(sq)?' legal':'');
+ btn.disabled=rGame.isGameOver();btn.setAttribute('aria-label',sq);
+ paintSquare(btn,p?'<img class="piece" src="pieces/'+p.color+p.type.toUpperCase()+'.svg" alt="" draggable="false">':'');
+ btn.onclick=()=>rookMateChoose(sq);
+ }
+}
+function rookMateDefense(g){
+ let best=null,score=-Infinity;
+ for(const m of g.moves({verbose:true})){
+ g.move(m.san);const captured=m.captured==='r',draw=g.isDraw(),mateThreat=g.moves().some(s=>s.endsWith('#'));
+ const king=g.board().flat().find(p=>p?.type==='k'&&p.color==='b');
+ const center=king?Math.min('abcdefgh'.indexOf(king.square[0]),7-'abcdefgh'.indexOf(king.square[0]),Number(king.square[1])-1,8-Number(king.square[1])):0;
+ const value=captured||draw?10000:(mateThreat?-1000:0)+center*10;
+ g.undo();if(value>score){score=value;best=m.san;}
+ }return best;
+}
+function rookMateChoose(sq){
+ if(rGame.isGameOver())return;
+ if(rGame.get(sq)?.color==='w'){rSelected=rSelected===sq?null:sq;rookMateDraw();return;}
+ if(!rSelected)return;
+ const m=rGame.moves({square:rSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
+ rGame.move(m.san);rSelected=null;
+ if(!rGame.isGameOver()){const reply=rookMateDefense(rGame);if(reply)rGame.move(reply);}
+ $('rookMateStatus').textContent=rGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(rGame.history().length/2)+' نقلة.':rGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الرخ.':'استمر في تضييق مساحة الملك وتقريب ملكك.';
+ rookMateDraw();
+}
+$('rookMateReset').onclick=()=>{rGame=new Chess('8/8/4k3/8/8/3R4/8/4K3 w - - 0 1');rSelected=null;$('rookMateStatus').textContent='الأبيض يلعب — حقق المات.';rookMateDraw();};
+rookMateTrainer.addEventListener('toggle',()=>{if(rookMateTrainer.open&&!rGame)$('rookMateReset').click();});
 const picker = $('endgamePicker');
 const levelLabels = {1:'أساسي',2:'متوسط',3:'متقدم'};
 const learningOrder = [];
