@@ -133,3 +133,21 @@ bank.push(row("forced-mate-72-1","كش مات",3,"8/6N1/8/3R4/K7/8/8/k7 w - - 0 
 bank.push(row("forced-mate-72-2","كش مات",3,"7k/4K3/8/8/8/8/5R2/2B5 w - - 0 1","Kf7 Kh7 Rh2#","مات في نقلتين: Kf7 يترك للخصم ردًا قانونيًا واحدًا (Kh7)، ثم Rh2# ينهي المباراة. افحص مربعات الهروب قبل اختيار النقلة الأولى.","ابحث عن نقلة تحصر رد الملك ثم مات."));
 bank.push(row("forced-mate-72-3","كش مات",3,"8/7B/8/2R5/5K2/8/8/7k w - - 0 1","Kg3 Kg1 Rc1#","مات في نقلتين: Kg3 يترك للخصم ردًا قانونيًا واحدًا (Kg1)، ثم Rc1# ينهي المباراة. افحص مربعات الهروب قبل اختيار النقلة الأولى.","ابحث عن نقلة تحصر رد الملك ثم مات."));
 for(const id of ["forced-mate-72-0","forced-mate-72-1","forced-mate-72-2","forced-mate-72-3"]){const p=bank.find(x=>x.id===id),src=new Chess(p.fen),placement=p.fen.split(' ')[0].split('/').reverse().map(r=>r.replace(/[a-zA-Z]/g,x=>x===x.toUpperCase()?x.toLowerCase():x.toUpperCase())).join('/'),fen=placement+' b - - 0 1',dst=new Chess(fen),line=p.line.map(s=>{const m=src.move(s);return dst.move({from:mirrorSquare(m.from),to:mirrorSquare(m.to)}).san});bank.push({...p,id:id+'-black',fen,line,explain:'مات في نقلتين: '+line[0]+' يجبر الخصم على '+line[1]+' ثم '+line[2]+'.',hint:p.hint})}
+
+ // Editorial audit: demonstration positions must not be scored as unique solutions.
+const demoIds=new Set(['discovery-file','discovery-file-black','discovery-rook','double-bishop','double-bishop-black','double-diagonal','bishop-rook-double','bishop-rook-double-black','opening-pin','active-pieces-trap','pawn-fork-two','pawn-fork-black','pawn-fork-central','pawn-fork-central-black','decoy-king-fork-new','zwischenzug-check-first','interference-bishop-line','remove-bishop-rook','remove-bishop-rook-black','remove-knight-queen','remove-knight-queen-black','promotion-rook','skewer-rank','skewer-rank-black','skewer-file','skewer-file-black','skewer-other-file','skewer-other-file-black','bishop-skewer-queen','remove-pawn','remove-pawn-black']);
+let queenBlackSeen=false;
+for(const p of bank){
+ if(p.id==='loose-queen-black'){if(queenBlackSeen)p.id='loose-queen-black-e6';queenBlackSeen=true}
+ if(p.id==='zwischenzug-mate'){p.theme='كش مات';p.level=1;p.explain='قبل أخذ الوزير على d2، افحص الكشات: Re8# مات مباشر. هذا مثال لأولوية المات على كسب المادة.'}
+ if(p.id==='fork-rook-black')p.explain=p.explain.replace('Nf7+','Nf2+');
+ if(p.id==='remove-pawn-black')p.explain=p.explain.replace('Rxf7','Rxf2');
+ if(p.id==='skewer-other-file-black')p.explain=p.explain.replace('Rb1+','Rb8+').replace('Kc6','Kc3');
+ if(p.id==='knight-fork-queen-check-black')p.explain=p.explain.replace('Kd8','Kd1');
+ if(p.id==='backrank-second-file-black')p.explain='الرخ يصل إلى c1 ويغلق الصف الأول. بيادق الأبيض f2 وg2 وh2 تمنع الهروب.';
+ if(p.id==='remove-knight-queen'||p.id==='remove-knight-queen-black'){p.explain='مثال على أخذ مدافع، وليس ربحًا إجباريًا للوزير. احسب إمكانية استرداد الرخ والتهديدات المضادة.';p.hint='حدد الحصان المدافع ثم افحص الاسترداد.'}
+ p.demonstration=demoIds.has(p.id);
+ const b=new Chess(p.fen);let forced=true;for(let i=0;i<p.line.length;i++){if(i%2&&b.moves().length!==1)forced=false;b.move(p.line[i],{strict:true})}
+ p.examReady=forced&&b.isCheckmate()&&!p.demonstration;
+ if(p.id.startsWith('forced-mate-72'))p.level=2;
+}
