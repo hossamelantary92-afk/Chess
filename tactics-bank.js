@@ -151,3 +151,7 @@ for(const p of bank){
  p.examReady=forced&&b.isCheckmate()&&!p.demonstration;
  if(p.id.startsWith('forced-mate-72'))p.level=2;
 }
+
+ // Remove misleading examples and exact color-normalized duplicates.
+const retired=new Set(['remove-bishop-rook','remove-bishop-rook-black','remove-knight-queen','remove-knight-queen-black','pawn-fork-central','pawn-fork-central-black','decoy-king-fork-new','zwischenzug-check-first','interference-bishop-line','skewer-rank','skewer-rank-black','fork-king-rook-b','double-diagonal']);
+for(let i=bank.length-1;i>=0;i--)if(retired.has(bank[i].id))bank.splice(i,1);
