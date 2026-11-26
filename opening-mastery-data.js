@@ -138,7 +138,7 @@ export function studyLines(id,color){
  const primaryIds=id==='open-game'?['0','1','9']:color==='b'&&id==='5'?['5','8']: [id];
  const alternatives=color==='w'&&['0','1','9'].includes(id)?['5','10','4','3','11','12','8']:
    color==='w'&&id==='6'?['slav','kid','dutch','7']:
-   color==='w'&&id==='2'?['kid','dutch','7']:[];
+   color==='w'&&id==='2'?['dutch','7']:[];
  const entries=[];
  const seen=new Set();
  for(const item of [...primaryIds,...alternatives]){
