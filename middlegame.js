@@ -389,7 +389,7 @@ $('midHint').onclick = () => { $('midFeedback').textContent = phase === 'followu
 $('midExample').onclick = () => finish(Object.keys(currentReplies())[0], false);
 
 function route() {
-  const match = location.hash.match(/^#(middlegame|position-evaluation|piece-activity|opening-traps|practical-decisions)(?:\/([a-z]+))?$/);
+  const match = location.hash.match(/^#(middlegame|position-evaluation|piece-activity|opening-traps|practical-decisions)(?:\/([a-z0-9-]+))?$/);
   panel.hidden = !match;
   if (!match) return;
   document.body.classList.add('training-view');
