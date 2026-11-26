@@ -56,7 +56,7 @@ main{max-width:1160px;margin:auto;padding:25px 20px 65px}.hero{padding:24px 26px
 <header><div class="top"><div class="brand">♜ رُخ <small>ROOK · CHESS ACADEMY</small></div><a class="secondary link-button" href="./#home">الرئيسية</a></div></header>
 <main>
   <section class="hero"><h1 lang="en">Training Room</h1><p>اختار افتتاح تدرسه، جرّب ردّك على الرقعة، أو كمّل خطة الأسبوع.</p></section>
-  <div class="tabs" role="group" aria-label="أقسام التدريب"><button class="tab active" id="tab-library" onclick="location.hash='library'">Opening Library</button><button class="tab" id="tab-trainer" onclick="location.hash='trainer'">Response Trainer</button><button class="tab" id="tab-exam" onclick="location.hash='exam'">Opening Test</button><button class="tab" id="tab-plan" onclick="location.hash='plan'">8-Week Plan</button></div>
+  <div class="tabs" role="group" aria-label="أقسام التدريب"><button class="tab" id="tab-library" hidden onclick="location.assign('opening-mastery.html')">Opening Mastery</button><a class="tab" href="opening-mastery.html">Opening Mastery</a><button class="tab" id="tab-trainer" onclick="location.hash='trainer'">Response Trainer</button><button class="tab" id="tab-exam" onclick="location.hash='exam'">Opening Test</button><button class="tab" id="tab-plan" onclick="location.hash='plan'">8-Week Plan</button></div>
   <section id="view-trainer" class="layout">
     <div class="trainer-heading">      <div class="bar"><h2 class="title">Response Trainer</h2><span id="counter" class="meta"></span></div>
       <div class="filters" role="group" aria-label="اختيار اللون"><button class="chip active" data-filter="all" onclick="setFilter('all')">الكل</button><button class="chip" data-filter="white" onclick="setFilter('white')">بالأبيض</button><button class="chip" data-filter="black" onclick="setFilter('black')">بالأسود</button></div>
@@ -172,7 +172,7 @@ function nextScenario(){index=(index+1)%list().length;show();}
 function resetScenario(){show()}
 function setFilter(x){filter=x;index=0;document.querySelectorAll('[data-filter]').forEach(el=>el.classList.toggle('active',el.dataset.filter===filter));show()}
 function updateStats(){$('stat-good').textContent=stats.good;$('stat-attempted').textContent=stats.attempted}
-function selectTab(tab){for(const name of ['trainer','library','exam','plan']){$('view-'+name).classList.toggle('hide',tab!==name);$('tab-'+name).classList.toggle('active',tab===name);$('tab-'+name).setAttribute('aria-pressed', String(tab===name));}if(tab==='plan')renderTraining()}
+function selectTab(tab){if(tab==='library'){location.replace('opening-mastery.html');return}for(const name of ['trainer','library','exam','plan']){$('view-'+name).classList.toggle('hide',tab!==name);$('tab-'+name).classList.toggle('active',tab===name);$('tab-'+name).setAttribute('aria-pressed', String(tab===name));}if(tab==='plan')renderTraining()}
 
 const weeks=[
  {title:'أمان القطع',english:'Piece Safety',focus:'قبل أي نقلة: افحص قطعك المهددة ومربعات الكش والأخذ والتهديد.',link:'#safety',tasks:['حل ١٢ موقفًا على الأقل من تمارين أمان القطع في رُخ','لعب ٣ مباريات Rapid 15+10 مع فحص القطع قبل كل نقلة','راجع آخر مباراة وحدّد ليه خسرت قطعة من غير مقابل'],qs:[['لو الخصم هاجم وزيرك، أول تصرف صحيح؟',['أفحص كل التهديدات والردود القانونية','ألعب النقلـة التي حفظتها','أهاجم بيدقًا آخر'],0,'الفكرة إنك تفهم قوة التهديد قبل أي رد.'],['إمتى يبقى ترك قطعة بدون حماية مشكلة؟',['دايمًا خسارة إجبارية','لما الخصم يقدر ياخدها بلا تعويض مناسب','لو كانت على مربع داكن'],1,'ممكن يكون في تضحية محسوبة، لكن لازم تتأكد من التعويض.']]},
