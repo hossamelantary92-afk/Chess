@@ -178,7 +178,8 @@ function select(square) {
     return;
   }
   if (!selected) return;
-  const move = chess.moves({square:selected, verbose:true}).find(item => item.to === square);
+  const candidates = chess.moves({square:selected, verbose:true}).filter(item => item.to === square);
+  const move = candidates.find(item => item.san === answer) ?? candidates.find(item => item.san.endsWith('#')) ?? candidates.find(item => item.promotion === 'q') ?? candidates[0];
   if (currentTask() === 'improve' && move) {
     if (move.san === answer) solve(answer, 'أحسنت، النقلة حقّقت هدف الخطة.');
     else $('matePatternStatus').textContent = 'نقلة قانونية. جرّب نقلة تحقق الهدف المحدد في السؤال.';
@@ -210,8 +211,8 @@ function select(square) {
     }
     return;
   }
-  if (move?.san === answer) {
-    solve(answer, 'أحسنت، دي كش مات.');
+  if (move?.san.endsWith('#')) {
+    solve(move.san, 'أحسنت، دي كش مات.');
     return;
   }
   $('matePatternStatus').textContent = move ? 'النقلة قانونية، لكن لسه فيه رد. راجع الهروب أو أخذ قطعة الكش أو حجب الخط.' :
@@ -222,11 +223,11 @@ function chooseMode(nextMode) {
   mode = nextMode;
   practice = false;
   branch = 0;
-  order = mode === 'defend' ? [...defenses] : mode === 'two' ? [...mateInTwo] : [...patterns];
+  order = mode === 'defend' ? [...defenses] : mode === 'two' ? mateInTwo.map((position,i)=>({...position,title:position.title ?? `Mate in Two ${i+1}`})) : [...patterns];
   if (mode === 'test') order = [...decisionTest];
   if (mode === 'decision') {
     order = [
-      ...mateInTwo.slice(-4).map(position => ({...position, task:'two'})),
+      ...mateInTwo.slice(-4).map((position,i) => ({...position, title:position.title ?? `Mate in Two ${i+5}`, task:'two'})),
       ...defenses.map(position => ({...position, task:'defend'}))
     ];
   }
