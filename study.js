@@ -7,7 +7,7 @@ const $ = id => document.getElementById(id);
 let lessons;
 const names = {r:'رخ',b:'فيل',n:'حصان',p:'بيدق',q:'وزير',k:'ملك'};
 const board = $('studyBoard');
-let setupLength, title, game, moves, ply, selected, side, last;
+let setupLength, title, game, moves, ply, selected, side, last;let mode="learn";function setMode(next, restart=true){mode=next;for(const [id,value] of [["learnMode","learn"],["practiceMode","practice"],["quizMode","quiz"]])$(id).setAttribute("aria-pressed",String(mode===value));$("explanation").hidden=mode!=="learn";$("lead").hidden=mode==="quiz";$("exercise").hidden=mode==="learn";$("next").hidden=mode==="quiz"&&ply===0;if(mode==="learn")$("explanation").open=true;if(restart)reset()}for(const [id,value] of [["learnMode","learn"],["practiceMode","practice"],["quizMode","quiz"]])$(id).onclick=()=>setMode(value);
 for (const [group,titles] of Object.entries(groups)) {
   const section = document.createElement('details');
   const heading = document.createElement('summary');
@@ -29,7 +29,7 @@ function render() {
     tile.setAttribute('aria-pressed',String(sq===selected));
     tile.setAttribute('aria-label',sq+(p?' '+names[p.type]+' '+(p.color==='w'?'أبيض':'أسود'):''));
   }
-  $('next').disabled=ply>=moves.length;
+  $('next').disabled=ply>=moves.length;$('next').hidden=mode==='quiz'&&ply===0;
   $('next').textContent=ply?'النقلة التالية':'اعرض النقلة';
 }
 function selectSquare(square){
@@ -85,21 +85,21 @@ function openLesson(){
   if(!Object.hasOwn(examples,title))title='Dutch Defense';
   $('lessonTitle').textContent=title;
   renderText();
-  $('explanation').open=false;
+  $('explanation').open=mode==='learn';
   $('variant').replaceChildren(...examples[title].map((_,i)=>new Option(String(i+1),String(i))));
   $('variantLabel').hidden=examples[title].length===1;
   for(const a of $('catalog').querySelectorAll('a')){
     if(a.textContent===title){a.setAttribute('aria-current','page');a.parentElement.open=true}
     else a.removeAttribute('aria-current');
   }
-  reset();
+  setMode(mode);
 }
 $('variant').onchange=reset;$('next').onclick=()=>advance();$('again').onclick=reset;
 addEventListener('hashchange',openLesson);openLesson();
 
 function renderText(){
   if(!lessons)return;
-  const [intro,...text]=lessons[title];$('lead').textContent=intro;
+  const [intro,...text]=lessons[title]||['الشرح غير متاح لهذا الدرس.'];$('lead').textContent=intro;
   $('prose').replaceChildren(...text.map(line=>{const p=document.createElement('p');p.textContent=line;return p}));
 }
 fetch('./study-text.json').then(response=>{
@@ -122,9 +122,9 @@ $('catalog').addEventListener('click',event=>{
   heading.scrollIntoView({block:'start'});
 });
 
-keepView('lesson', () => ({variant:$('variant').value, history:game.history().slice(setupLength), ply, explanation:$('explanation').open}), saved => {
+keepView('lesson', () => ({variant:$('variant').value, history:game.history().slice(setupLength), ply, explanation:$('explanation').open,mode}), saved => {
   if (!examples[title][Number(saved.variant)]) return;
-  $('variant').value=saved.variant; reset();
+  $('variant').value=saved.variant; setMode(['learn','practice','quiz'].includes(saved.mode)?saved.mode:'learn');
   for (const move of saved.history) last=game.move(move);
   ply=saved.ply; render(); $('explanation').open=saved.explanation;
   $('message').textContent=saved.history.join(' · ');
