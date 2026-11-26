@@ -44,6 +44,44 @@ panel.innerHTML = `
     </div>
   </div>`;
 document.querySelector('main footer').before(panel);
+const queenTrainer=document.createElement('details');
+queenTrainer.className='unit-card';
+queenTrainer.innerHTML='<summary>Queen Checkmate Mastery · تدريب المات بالوزير</summary><p>ضيّق مساحة الملك بالوزير، قرّب ملكك، وتجنب الخنق. العب أي نقلة قانونية حتى المات. دفاع تدريبي تقريبي وليس Tablebase.</p><div class="training-links"><button class="premium-btn" id="queenReset">ابدأ / أعد التدريب</button></div><div class="frame"><div id="queenBoard" aria-label="رقعة المات بالوزير"></div></div><p id="queenStatus" role="status"></p>';
+panel.querySelector('.lesson-head').after(queenTrainer);
+let qGame,qSelected;
+function queenDraw(){
+ const board=$('queenBoard');let i=0;
+ const targets=new Set(qSelected?qGame.moves({square:qSelected,verbose:true}).map(m=>m.to):[]);
+ for(const rank of '87654321')for(const file of 'abcdefgh'){
+ const sq=file+rank,p=qGame.get(sq),btn=squareAt(board,i++);
+ btn.type='button';btn.className=(('abcdefgh'.indexOf(file)+Number(rank))%2?'dark':'')+(qSelected===sq?' selected':'')+(targets.has(sq)?' legal':'');
+ btn.disabled=qGame.isGameOver();btn.setAttribute('aria-label',sq);
+ paintSquare(btn,p?'<img class="piece" src="pieces/'+p.color+p.type.toUpperCase()+'.svg" alt="" draggable="false">':'');
+ btn.onclick=()=>queenChoose(sq);
+ }
+}
+function queenDefense(g){
+ let best=null,score=-Infinity;
+ for(const m of g.moves({verbose:true})){
+ g.move(m.san);const captured=m.captured==='q',draw=g.isDraw(),mateThreat=g.moves().some(s=>s.endsWith('#'));
+ const king=g.board().flat().find(p=>p?.type==='k'&&p.color==='b');
+ const center=king?Math.min('abcdefgh'.indexOf(king.square[0]),7-'abcdefgh'.indexOf(king.square[0]),Number(king.square[1])-1,8-Number(king.square[1])):0;
+ const value=captured||draw?10000:(mateThreat?-1000:0)+center*10;
+ g.undo();if(value>score){score=value;best=m.san;}
+ }return best;
+}
+function queenChoose(sq){
+ if(qGame.isGameOver())return;
+ if(qGame.get(sq)?.color==='w'){qSelected=qSelected===sq?null:sq;queenDraw();return;}
+ if(!qSelected)return;
+ const m=qGame.moves({square:qSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
+ qGame.move(m.san);qSelected=null;
+ if(!qGame.isGameOver()){const reply=queenDefense(qGame);if(reply)qGame.move(reply);}
+ $('queenStatus').textContent=qGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(qGame.history().length/2)+' نقلة.':qGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الوزير.':'استمر في تضييق مساحة الملك وتقريب ملكك.';
+ queenDraw();
+}
+$('queenReset').onclick=()=>{qGame=new Chess('8/8/4k3/8/8/3Q4/8/4K3 w - - 0 1');qSelected=null;$('queenStatus').textContent='الأبيض يلعب — حقق المات.';queenDraw();};
+queenTrainer.addEventListener('toggle',()=>{if(queenTrainer.open&&!qGame)$('queenReset').click();});
 const picker = $('endgamePicker');
 const levelLabels = {1:'أساسي',2:'متوسط',3:'متقدم'};
 const learningOrder = [];
