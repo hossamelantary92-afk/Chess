@@ -307,7 +307,7 @@ function expectedMove(){
 }
 function hintCopy(move){
   if(!move)return '';
-  const goal=({p:'فكّر في السيطرة على المركز أو تغيير بنية البيادق.',n:'فكّر في نشاط الحصان والمربعات اللي بيغطيها.',b:'فكّر في فتح قطر للفيل أو زيادة الضغط.',r:'فكّر في تنشيط الرخ على عمود أو صف.',q:'فكّر في دور الوزير في الوضع الحالي.',k:'راجع أمان الملك وتهديدات الخصم.'})[move.piece];
+  const goal=({p:'فكّر في السيطرة على المركز أو تغيير بنية البيادق.',n:'فكّر في تطوير قطعة والسيطرة على مربعات جديدة.',b:'فكّر في زيادة النشاط على الأقطار.',r:'فكّر في الاستفادة من الأعمدة أو الصفوف.',q:'فكّر في زيادة الضغط أو تنسيق القطع.',k:'راجع أمان الملك وتهديدات الخصم.'})[move.piece];
   if(hintLevel===1)return goal;
   if(hintLevel===2)return 'القطعة: '+pieceNames[move.piece];
   if(hintLevel===3)return 'المربع المطلوب: \u2066'+move.to+'\u2069';
@@ -385,10 +385,11 @@ function tap(square) {
 
 function renderMiddlegame(){
   const complete=ply===activeLine.moves.length&&(!practice||finished);
-  const plan=state.color==='w'?activeLine.white:activeLine.black;
-  $('middlegame-check').hidden=!complete||!plan;
-  if(!complete||!plan)return;
-  $('middlegame-prompt').textContent='الافتتاحية خلصت. أنهي خطة أنسب للون اللي بتلعب بيه في المسار ده؟';
+  const authoredPlan=state.color==='w'?activeLine.white:activeLine.black;
+  const plan=authoredPlan??'راجع التهديدات والكش والأخذ أولًا، وبعدها قيّم أمان الملك وتطوير القطع والمركز قبل اختيار خطة.';
+  $('middlegame-check').hidden=!complete;
+  if(!complete)return;
+  $('middlegame-prompt').textContent=authoredPlan?'الخط خلص. أنهي خطة تعليمية أنسب للون اللي بتلعب بيه؟':'الخط التدريبي خلص، حتى لو الافتتاحية لسه مستمرة. إيه أول خطوة في تقييم الوضع؟';
   const wrongPlans=['حرّك الوزير مبكرًا بحثًا عن هجوم، حتى لو باقي القطع لسه مش متطورة.','ادفع بيادق جناح الملك من غير حساب تهديد الخصم أو أمان ملكك.'];
   const choices=[...wrongPlans];choices.splice((activeLine.moves.length+Number(state.color==='b'))%3,0,plan);
   $('middlegame-options').replaceChildren(...choices.map(choice=>{
@@ -396,7 +397,7 @@ function renderMiddlegame(){
     if(middleAnswer===choice)b.dataset.answer=choice===plan?'correct':'retry';
     return b;
   }));
-  $('middlegame-feedback').textContent=middleAnswer===null?'':middleAnswer===plan?'أحسنت! دي خطة تعليمية مناسبة للخط ده، لكن راجع تهديدات الخصم قبل تنفيذها.':'راجع أمان الملك وتطوير القطع وبنية البيادق. اختار الخطة المرتبطة بالوضع.';
+  $('middlegame-feedback').textContent=middleAnswer===null?'':middleAnswer===plan?(authoredPlan?'أحسنت! دي خطة تعليمية مناسبة للخط ده، لكن راجع تهديدات الخصم قبل تنفيذها.':'أحسنت! التقييم الأول يساعدك تختار خطة مناسبة بدل حفظ نقلات زيادة.'):'راجع أمان الملك وتطوير القطع وبنية البيادق. اختار الخطة المرتبطة بالوضع.';
 }
 function render(message, result = '') {
   const opening = catalog.get(activeId);
