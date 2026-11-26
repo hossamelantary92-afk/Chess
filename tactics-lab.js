@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=26';
+import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=27';
 import {exercises} from './safety.js?v=58';
 const englishTheme = {...advancedThemes,
   'قطعة غير محمية': 'Hanging Piece',
@@ -83,7 +83,7 @@ function explainLine(p){
  const heading=document.createElement('strong');heading.textContent=b.isCheckmate()&&forced?'مات بخط إجباري':p.line.length>1?'تحليل الخط المعروض':'تحليل النقلة';box.append(heading);
  for(const step of steps){const row=document.createElement('div');row.style.cssText='padding:9px 0;border-bottom:1px solid #7773';const top=document.createElement('div');top.style.cssText='display:flex;justify-content:space-between;gap:8px';const label=document.createElement('span');label.textContent=step.role;const san=document.createElement('b');san.dir='ltr';san.textContent=step.san;top.append(label,san);const detail=document.createElement('div');detail.style.cssText='font-size:13px;line-height:1.7;margin-top:4px';detail.textContent=step.notes;row.append(top,detail);box.append(row);}
  const summary=document.createElement('div');summary.style.cssText='padding:9px 0;font-size:13px;line-height:1.7';const delta=score()-initial;summary.textContent=b.isCheckmate()?'النتيجة: كش مات.':'صافي تغير المادة في الخط المعروض: '+(delta>0?'+':'')+delta+' نقطة. هذا ليس تقييمًا كاملًا للموقف.';box.append(summary);
- if(p.acceptedMoves?.length>1){const alt=document.createElement('div');alt.style.cssText='font-size:13px;line-height:1.7;padding:6px 0';alt.textContent='حلول أخذ بديلة متحققة: '+p.acceptedMoves.join(' / ');box.append(alt);}
+ if(p.acceptedMoves?.length>1){const alt=document.createElement('div');alt.style.cssText='font-size:13px;line-height:1.7;padding:6px 0';alt.textContent='حلول بديلة متحققة: '+p.acceptedMoves.join(' / ');box.append(alt);}
  const lesson=tacticalLessons[p.theme];if(lesson){const takeaway=document.createElement('div');takeaway.style.cssText='padding:8px 0;font-size:13px;line-height:1.7';takeaway.textContent='في مبارياتك: '+lesson.detect+' '+lesson.mistake;box.append(takeaway);}
 }
 function finish(revealed=false){if(revealed)verdict=null;done=true;$('#labIntro').hidden=true;$('#labMethod').textContent='';$('#labLesson').style.display='none';const p=queue[n];if(!revealed)counted.add(p.id);if(!failed&&!hints&&!revealed)firstCounted.add(p.id);round=counted.size;roundFirst=firstCounted.size;if(!revealed&&!log.solved.includes(p.id))log.solved.push(p.id);if(!failed&&!hints&&!revealed)log.review=log.review.filter(x=>x!==p.id);$('#labExplanation').hidden=false;$('#labExplainText').textContent=p.explain;explainLine(p);renderTheme(p.theme,englishTheme[p.theme]);$('#labTask').textContent=revealed?'راجع الفكرة وجربها تاني':'أحسنت، اكتملت الفكرة';$('#labFeedback').textContent=revealed?'عرض الحل لا يُحسب إجابة صحيحة.':failed||hints?'حل صحيح. كرر الموقف لاحقًا دون تلميح.':'حل صحيح من أول محاولة دون مساعدة.';$('#labNext').hidden=false;$('#labNext').textContent=n===queue.length-1?'نتيجة الجولة':'الموقف التالي';$('#labHint').hidden=true;$('#labAnswer').hidden=true;$('#labSkip').hidden=true;draw();save()}
