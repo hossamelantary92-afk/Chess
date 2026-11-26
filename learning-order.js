@@ -51,6 +51,13 @@ for (const stage of stages) {
   home.append(section);
 }
 
+// The unified Opening Mastery is the only opening entry on the homepage.
+ // Keep the old lesson routes available from inside Mastery, not as orphan tiles.
+for (const key of ['openings','opening-traps']) {
+  const card=cards.get(key);
+  if(card && card.parentElement===home) card.remove();
+  cards.delete(key);
+}
 const jumps = document.querySelector('.stage-jumps');
 for (const stage of stages) {
   const jump = document.createElement('button');
