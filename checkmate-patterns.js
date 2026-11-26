@@ -7,6 +7,7 @@ import {mateInTwo} from './mate-in-two-data.js?v=212';
 import {decisionTest} from './decision-test-data.js?v=2';
 import {defenses} from './mate-defense-data.js';
 
+const mateInThree = [{title:'Queen and King – Mate in Three',fen:"7k/8/8/4K3/8/8/8/3Q4 w - - 0 1",tree:{"Kf6":{"Kh7":{"Qd7+":{"Kg8":{"Qg7#":{}},"Kh8":{"Qg7#":{}},"Kh6":{"Qh3#":{}}},"Qd8":{"Kh6":{"Qh8#":{}}},"Qg4":{"Kh8":{"Qg7#":{}},"Kh6":{"Qg6#":{},"Qh4#":{},"Qh3#":{}}},"Qg1":{"Kh8":{"Qg7#":{}},"Kh6":{"Qg6#":{},"Qh2#":{},"Qh1#":{}}}},"Kg8":{"Kg6":{"Kh8":{"Qd8#":{}},"Kf8":{"Qd8#":{}}},"Qd7":{"Kh8":{"Qg7#":{}},"Kf8":{"Qc8#":{},"Qd8#":{},"Qf7#":{}}},"Qg4+":{"Kh8":{"Qg7#":{}},"Kh7":{"Qg7#":{}},"Kf8":{"Qc8#":{}}},"Qh5":{"Kf8":{"Qf7#":{},"Qh8#":{}}},"Qh1":{"Kf8":{"Qa8#":{},"Qh8#":{}}}}},"Qd7":{"Kg8":{"Kf6":{"Kh8":{"Qg7#":{}},"Kf8":{"Qc8#":{},"Qd8#":{},"Qf7#":{}}}}},"Qg4":{"Kh7":{"Kf6":{"Kh8":{"Qg7#":{}},"Kh6":{"Qg6#":{},"Qh4#":{},"Qh3#":{}}}}},"Qg1":{"Kh7":{"Kf6":{"Kh8":{"Qg7#":{}},"Kh6":{"Qg6#":{},"Qh2#":{},"Qh1#":{}}}}}},explain:'قرّب الملك وضيّق مساحة الهروب، ثم احسب ردود الخصم قبل الكش النهائي.'}];
 const $ = id => document.getElementById(id);
 const names = {p:'بيدق', n:'حصان', b:'فيل', r:'رخ', q:'وزير', k:'ملك'};
 const panel = document.createElement('section');
@@ -20,6 +21,7 @@ panel.innerHTML = `
     <button type="button" class="premium-btn" id="mateStudyMode" aria-pressed="true" lang="en">Study</button>
     <button type="button" class="premium-btn" id="mateMixMode" aria-pressed="false" lang="en">Mixed Practice</button>
     <button type="button" class="premium-btn" id="mateTwoMode" lang="en">Mate in Two</button>
+    <button type="button" class="premium-btn" id="mateThreeMode" lang="en">Mate in Three</button>
     <button type="button" class="premium-btn" id="mateDefendMode" lang="en">Defend Against Mate</button>
     <button type="button" class="premium-btn" id="mateDecisionMode" lang="en">Attack or Defend?</button>
     <button type="button" class="premium-btn" id="mateTestMode" lang="en">Decision Test</button>
@@ -72,6 +74,7 @@ let side;
 let replies;
 let branch = 0;
 let decisionPending = false;
+let threeNode = null;
 
 function isDecisionMode() {
   return mode === 'decision' || mode === 'test';
@@ -115,6 +118,8 @@ function render(feedback = '') {
   const pattern = order[index];
   const mixed = mode !== 'study';
   const two = currentTask() === 'two';
+  const three = mode === 'three';
+  $('mateThreeMode').setAttribute('aria-pressed',String(three));
   const defend = currentTask() === 'defend';
   $('improveChoice').hidden = mode !== 'test';
   $('mateTestMode').setAttribute('aria-pressed', String(mode === 'test'));
@@ -134,6 +139,7 @@ function render(feedback = '') {
   } else if (currentTask() === 'improve') {
     $('matePatternPrompt').textContent = complete ? 'شوف إيه اللي اتغيّر بعد نقلتك.' : pattern.goal;
   }
+  if(three) $('matePatternPrompt').textContent = complete?'أكملت المات.':`حقق المات خلال ${3-Math.floor(chess.history().length/2)} نقلات أو أقل.`;
   $('matePatternStatus').textContent = feedback;
   $('matePatternReview').hidden = !complete;
   $('matePatternExplain').textContent = complete ? (two ? [pattern.explain, chess.history().join(' · ')].filter(Boolean).join(' — ') : pattern.explain) : '';
@@ -151,7 +157,8 @@ function open() {
   const pattern = order[index];
   decisionPending = isDecisionMode();
   replies = null;
-  const [fen, move] = ['defend', 'improve'].includes(currentTask()) ? [pattern.fen, pattern.example] : currentTask() === 'two' ? [pattern.fen, Object.keys(pattern.keys)[0]] : mode === 'mixed' || practice ? pattern.practice : pattern.lesson;
+  threeNode = mode==='three'?pattern.tree:null;
+  const [fen, move] = mode==='three'?[pattern.fen,'']: ['defend', 'improve'].includes(currentTask()) ? [pattern.fen, pattern.example] : currentTask() === 'two' ? [pattern.fen, Object.keys(pattern.keys)[0]] : mode === 'mixed' || practice ? pattern.practice : pattern.lesson;
   chess = new Chess(fen);
   side = chess.turn();
   answer = move;
@@ -180,6 +187,12 @@ function select(square) {
   if (!selected) return;
   const candidates = chess.moves({square:selected, verbose:true}).filter(item => item.to === square);
   const move = candidates.find(item => item.san === answer) ?? candidates.find(item => item.san.endsWith('#')) ?? candidates.find(item => item.promotion === 'q') ?? candidates[0];
+  if(mode==='three' && move){
+    if(!Object.hasOwn(threeNode,move.san)){ $('matePatternStatus').textContent='النقلة لا تضمن المات في العدد المتبقي. احسب ردود الخصم.';return; }
+    const responses=threeNode[move.san];chess.move(move.san);selected=null;
+    if(chess.isCheckmate()){complete=true;render('أحسنت، كش مات.');return;}
+    const options=Object.keys(responses);const reply=options[branch%options.length];chess.move(reply);threeNode=responses[reply];render('رد الخصم · '+reply);return;
+  }
   if (currentTask() === 'improve' && move) {
     if (move.san === answer) solve(answer, 'أحسنت، النقلة حقّقت هدف الخطة.');
     else $('matePatternStatus').textContent = 'نقلة قانونية. جرّب نقلة تحقق الهدف المحدد في السؤال.';
@@ -224,7 +237,7 @@ function chooseMode(nextMode) {
   mode = nextMode;
   practice = false;
   branch = 0;
-  order = mode === 'defend' ? [...defenses] : mode === 'two' ? mateInTwo.map((position,i)=>({...position,title:position.title ?? `Mate in Two ${i+1}`})) : [...patterns];
+  order = mode === 'three' ? [...mateInThree] : mode === 'defend' ? [...defenses] : mode === 'two' ? mateInTwo.map((position,i)=>({...position,title:position.title ?? `Mate in Two ${i+1}`})) : [...patterns];
   if (mode === 'test') order = [...decisionTest];
   if (mode === 'decision') {
     order = [
@@ -242,6 +255,7 @@ function chooseMode(nextMode) {
   open();
 }
 
+$('mateThreeMode').onclick = () => chooseMode('three');
 $('mateTestMode').onclick = () => chooseMode('test');
 $('mateDecisionMode').onclick = () => chooseMode('decision');
 for (const button of $('mateDecisionChoices').querySelectorAll('button')) {
@@ -305,7 +319,7 @@ keepView('mates', () => panel.hidden ? null : {
   if (!saved.titles.every(title=>byTitle.has(title))) return;
   order=saved.titles.map(title=>byTitle.get(title)); index=saved.index;
   practice=saved.practice; branch=saved.branch; open();
-  for (const move of saved.moves) chess.move(move);
+  for (const [i,move] of saved.moves.entries()) {if(mode==='three')threeNode=threeNode[move];chess.move(move);}
   complete=saved.complete; replies=saved.replies; answer=saved.answer;
   decisionPending=saved.decisionPending; render();
 });
