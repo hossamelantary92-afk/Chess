@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, positionKey, buildTree} from './opening-mastery-data.js?v=2';
+import {catalog, firstMoves, openingChoices, positionKey, buildTree} from './opening-mastery-data.js?v=3';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -23,12 +23,13 @@ let chess, ply, lastMove, selected, practice = state.mode === 'test';
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
 let finished = practice && Boolean(state.finished);
+let setupCollapsed = Boolean(state.setupCollapsed);
 const board = $('mastery-board');
 const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'وزير', k: 'ملك'};
 
 function persist() {
   try {
-    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode: practice ? 'test' : 'learn', attempts, correct, finished}, saved}));
+    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode: practice ? 'test' : 'learn', attempts, correct, finished, setupCollapsed}, saved}));
     return true;
   } catch { return false; }
 }
@@ -38,6 +39,14 @@ function setOptions(select, values, selectedValue, label) {
   select.value = selectedValue;
 }
 
+function renderSetup() {
+  $('setup-fields').hidden = setupCollapsed;
+  $('setup-summary').hidden = !setupCollapsed;
+  $('toggle-setup').setAttribute('aria-expanded', String(!setupCollapsed));
+  $('setup-toggle-label').textContent = setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات';
+  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + catalog.get(activeId).name + (activeLine.id ? ' · '+activeLine.name : '');
+}
+function setSetupCollapsed(value) { setupCollapsed = value; renderSetup(); persist(); }
 function renderPicker() {
   for (const button of $('mastery-color').children) {
     button.setAttribute('aria-pressed', button.dataset.color === state.color);
@@ -172,6 +181,8 @@ function render(message, result = '') {
   const opening = catalog.get(activeId);
   setOptions($('opening-line'), opening.lines.map(line => line.id), activeLine.id,
     id => opening.lines.find(line => line.id === id).name);
+  $('line-field').hidden = opening.lines.length <= 1;
+  renderSetup();
   renderOpeningInfo(opening);
   $('active-opening').textContent = opening.name;
   $('training-mode-label').textContent = practice ? 'TEST' : 'LEARN';
@@ -203,7 +214,12 @@ function render(message, result = '') {
   const choices = options.map(entries => opponentTurn ? entries : entries.filter(entry => entry.id === activeId)).filter(entries => entries.length);
   const meaningful = choices.length > 1 || (choices.length === 1 && choices[0][0].move.san !== activeLine.moves[ply]);
   $('response-panel').hidden = !meaningful;
-  $('response-caption').textContent = opponentTurn ? 'جرّب رد مختلف للخصم وشوف إزاي الخطة بتتغيّر.' : 'اختار تفريعة بديلة في نفس الافتتاحية.';
+  const atFork = !practice && ply === activeLine.moves.length && meaningful;
+  $('response-panel').dataset.atEnd = String(atFork);
+  $('next-ply').disabled = practice || (ply === activeLine.moves.length && !atFork);
+  $('next-label').textContent = atFork ? 'Choose reply' : 'Next';
+  if (atFork) $('turn-status').textContent = 'اختار الرد التالي';
+  $('response-caption').textContent = atFork ? 'اختار نقلة من الفروع التالية عشان تكمّل التدريب.' : opponentTurn ? 'جرّب رد مختلف للخصم وشوف إزاي الخطة بتتغيّر.' : 'اختار تفريعة بديلة في نفس الافتتاحية.';
   function switchBranch(entry, target, note) {
     activeId = entry.id;
     activeLine = entry.line;
@@ -211,7 +227,7 @@ function render(message, result = '') {
     go(target, note);
   }
   $('tree-branches').replaceChildren(...(meaningful ? choices : []).map(entries => {
-    const next = entries.find(entry => entry.line === activeLine) ?? entries[0];
+    const next = entries.find(entry => entry.line === activeLine) ?? entries.find(entry => entry.id === activeId) ?? entries[0];
     const row = document.createElement('div');
     row.dataset.main = String(next.move.san === activeLine.moves[ply]);
     const copy = document.createElement('div');
@@ -284,9 +300,17 @@ $('save-opening').onclick = () => {
   $('save-status').textContent = persist() ? 'الاختيار اتحفظ.' : 'تعذّر الحفظ في المتصفح.';
 };
 $('previous-ply').onclick = () => go(ply - 1);
-$('next-ply').onclick = () => go(ply + 1);
-$('learn-mode').onclick = () => { if (practice) restartMode(false); };
-$('test-mode').onclick = () => { if (!practice) restartMode(true); };
+$('next-ply').onclick = () => {
+  if (ply < activeLine.moves.length) go(ply + 1);
+  else if (!$('response-panel').hidden) $('response-panel').scrollIntoView({block:'nearest',behavior:'smooth'});
+};
+$('toggle-setup').onclick = () => setSetupCollapsed(!setupCollapsed);
+function selectMode(test) {
+  if (practice !== test) restartMode(test);
+  if (typeof matchMedia === 'function' && matchMedia('(max-width:800px)').matches) setSetupCollapsed(true);
+}
+$('learn-mode').onclick = () => selectMode(false);
+$('test-mode').onclick = () => selectMode(true);
 $('retry-test').onclick = () => restartMode(true);
 $('start-ply').onclick = () => go(0);
 
