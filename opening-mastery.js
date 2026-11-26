@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=8';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=9';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
