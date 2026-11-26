@@ -24,22 +24,23 @@ function evaluateFen(fen, token){return new Promise((resolve,reject)=>{
  const g=new Chess(fen); if(g.isCheckmate()){resolve({value:g.turn()==='w'?-100000:100000,best:''});return;}
  if(g.isGameOver()){resolve({value:0,best:''});return;}
  let w;try{w=new Worker('./analysis-worker.js?v=215')}catch(e){reject(e);return;}
- engine=w;pendingReject=reject;let latest=null;
+ engine=w;pendingReject=reject;let latest=null,latestDepth=-1;
  const fail=()=>{if(engine===w)cancelEngine();reject(Error('تعذر التحليل'));};
  timer=setTimeout(fail,45000);w.onerror=fail;
  w.onmessage=({data})=>{if(engine!==w||token!==qualityRun)return;
  for(const raw of String(data).split('\n')){const line=raw.trim();
  if(line==='uciok')w.postMessage('isready');
  else if(line==='readyok'){w.postMessage('position fen '+fen);w.postMessage('go depth 12');}
- else if(line.startsWith('info ')){const s=line.match(/\bscore (cp|mate) (-?\d+)/);if(s&&!/\b(upperbound|lowerbound)\b/.test(line)){const n=Number(s[2]);latest=(s[1]==='mate'?Math.sign(n)*(100000-Math.abs(n)):n)*(g.turn()==='w'?1:-1);}}
- else if(line.startsWith('bestmove ')){if(latest===null){fail();return;}const best=line.split(' ')[1];pendingReject=null;cancelEngine();resolve({value:latest,best});return;}
+ else if(line.startsWith('info ')){const s=line.match(/\bscore (cp|mate) (-?\d+)/);const d=line.match(/\bdepth (\d+)/);if(s&&d&&Number(d[1])>=latestDepth&&!/\b(upperbound|lowerbound)\b/.test(line)){latestDepth=Number(d[1]);const n=Number(s[2]);latest=(s[1]==='mate'?Math.sign(n)*(100000-Math.abs(n)):n)*(g.turn()==='w'?1:-1);}}
+ else if(line.startsWith('bestmove ')){if(latest===null||latestDepth<12){fail();return;}const best=line.split(' ')[1];pendingReject=null;cancelEngine();resolve({value:latest,best});return;}
  }};w.postMessage('uci');
  });}
 $('quality').onclick=async()=>{resetEngine();if(!ply){$('qualityResult').textContent='اختر نقلة أولًا';return;}const token=qualityRun,index=ply,m=moves[index-1];$('quality').disabled=true;$('analyze').disabled=true;$('qualityResult').textContent='جاري مقارنة الموقفين…';
 try{const before=await evaluateFen(m.before,token);if(token!==qualityRun)return; $('analyze').disabled=true;const after=await evaluateFen(m.after,token);if(token!==qualityRun)return;
 recordQuality(index,m,before,after);showQuality();
 }catch(e){if(token===qualityRun)$('qualityResult').textContent='تعذر التحليل، حاول مجددًا.';}finally{if(token===qualityRun){$('quality').disabled=false;$('analyze').disabled=false;}}};
-function recordQuality(index,m,before,after){const loss=Math.max(0,(before.value-after.value)*(m.color==='w'?1:-1));const actual=m.from+m.to+(m.promotion||'');const best=actual===before.best;const labels=['★ Best Move','✓ Good Move','?! Inaccuracy','? Mistake','?? Blunder'];const colors=['#91c96b','#91c96b','#e1c04f','#ef9a45','#ef6666'];const i=best?0:loss<60?1:loss<120?2:loss<250?3:4;let alternative=before.best;try{alternative=new Chess(m.before).move({from:alternative.slice(0,2),to:alternative.slice(2,4),promotion:alternative[4]}).san}catch{}
+function classifyMove(before,after,color,actual){const sign=color==='w'?1:-1,b=before.value*sign,a=after.value*sign,best=actual===before.best;let loss;if(best)loss=0;else if(b>90000&&a>90000||b< -90000&&a< -90000)loss=0;else if(b>90000&&a<=90000||b>=-90000&&a< -90000)loss=1000;else loss=Math.max(0,b-a);return {loss,i:best?0:loss<60?1:loss<120?2:loss<250?3:4};}
+function recordQuality(index,m,before,after){const {loss,i}=classifyMove(before,after,m.color,m.from+m.to+(m.promotion||''));const labels=['★ Best Move','✓ Good Move','?! Inaccuracy','? Mistake','?? Blunder'];const colors=['#91c96b','#91c96b','#e1c04f','#ef9a45','#ef6666'];let alternative=before.best;try{alternative=new Chess(m.before).move({from:alternative.slice(0,2),to:alternative.slice(2,4),promotion:alternative[4]}).san}catch{}
 const fmt=v=>Math.abs(v)>90000?(v>0?'White mate':'Black mate'):(v/100).toFixed(2);const label=labels[i]+' · '+fmt(before.value)+' → '+fmt(after.value)+' · Best: '+alternative;const detail=explainMove(m,before,after,i,alternative);qualityCache.set(index,{label,i,loss,before:before.value,after:after.value,color:m.color,bestUci:before.best,replyUci:after.best,...detail});const b=$('moves').children[index-1];b.style.color=colors[i];b.textContent=b.textContent.split(' · ')[0]+' · '+labels[i].split(' ')[0];}
 
 function renderReview(){
