@@ -22,7 +22,8 @@ let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line
 let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn';
 let chess, ply, lastMove, selected, practice = mode !== 'learn';
 const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
-let lastMistake = null;
+let reviewTarget = typeof state.reviewTarget==='string'?state.reviewTarget:null;
+const mistakeKey=m=>m.origin.color+'|'+m.origin.id+'|'+m.prefix.join(' ');
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
 let finished = practice && Boolean(state.finished);
@@ -32,7 +33,7 @@ const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'و
 
 function persist() {
   try {
-    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed}, saved, mistakes}));
+    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed, reviewTarget}, saved, mistakes}));
     return true;
   } catch { return false; }
 }
@@ -143,7 +144,7 @@ function restartMode(nextMode) {
   mode=nextMode; practice=mode!=='learn';
   attempts = correct = 0;
   finished = false;
-  lastMistake=null;
+  reviewTarget=null;
   if(mode==='dynamic') {
     const prefix=[];
     if(state.color==='b') {const reply=randomOpponent(prefix); if(reply)prefix.push(reply);}
@@ -161,7 +162,7 @@ function recordMistake(san) {
   const existing=mistakes.findIndex(m=>m.origin.id===origin.id&&m.origin.color===origin.color&&m.prefix.join(' ')===prefix.join(' '));
   if(existing>=0)mistakes.splice(existing,1);
   mistakes.unshift(entry); if(mistakes.length>40)mistakes.length=40;
-  lastMistake=entry; renderReview();
+  renderReview();
 }
 function renderReview() {
   $('review-summary').textContent=mistakes.length?mistakes.length+' موقف محتاج مراجعة. اختار موقف وجرّب النقلة مرة تانية.':'مفيش أخطاء مسجلة للمراجعة حاليًا.';
@@ -177,18 +178,19 @@ function reviewMistake(m) {
   Object.assign(state,m.origin);
   activeId=m.activeId; activeLine=catalog.get(activeId).lines.find(l=>l.id===m.line);
   if(openingChoices(state.color,state.first).includes(activeId))state.id=activeId;
-  mode='test';practice=true;finished=false;attempts=correct=0;lastMistake=null;
+  mode='test';practice=true;finished=false;attempts=correct=0;reviewTarget=mistakeKey(m);
   renderPicker();go(m.ply,'راجع الموقف اللي أخطأت فيه. العب النقلة المطلوبة.');
   document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});
 }
 function resolveMistake(prefix,san) {
-  for(let i=mistakes.length-1;i>=0;i--){
-    const m=mistakes[i];
-    if(m.origin.color!==state.color||m.prefix.join(' ')!==prefix.join(' '))continue;
-    const line=catalog.get(m.activeId).lines.find(l=>l.id===m.line);
-    if(line?.moves[m.ply]===san||(mode==='dynamic'&&m.origin.id===state.id))mistakes.splice(i,1);
-  }
-  renderReview();
+  // A retry in the original session is not a separate review. Keep errors
+  // until the player explicitly returns to the position from Opening Review.
+  if(!reviewTarget)return;
+  const i=mistakes.findIndex(m=>mistakeKey(m)===reviewTarget);
+  if(i>=0){
+    const m=mistakes[i],line=catalog.get(m.activeId).lines.find(l=>l.id===m.line);
+    if(m.prefix.join(' ')===prefix.join(' ')&&line?.moves[m.ply]===san){mistakes.splice(i,1);reviewTarget=null;renderReview();}
+  }else reviewTarget=null;
 }
 function dynamicMove(san) {
   const prefix=activeLine.moves.slice(0,ply);
@@ -308,7 +310,7 @@ function render(message, result = '') {
   $('session-result').hidden=!practice||!finished;
   $('session-result-title').textContent=mode==='dynamic'?'Dynamic Session Complete':'Test Complete';
   $('session-result-text').textContent='دقة المحاولات: '+(attempts?Math.round(100*correct/attempts):0)+'% · '+correct+' إجابة صحيحة من '+attempts+' محاولة.';
-  const pendingMistake=mistakes.find(m=>m.origin.id===state.id&&m.origin.color===state.color);
+  const pendingMistake=mistakes.find(m=>m.origin.id===state.id&&m.origin.color===state.color)??mistakes.find(m=>m.origin.color===state.color);
   $('review-play').hidden=!pendingMistake;
   $('review-play').onclick=()=>{if(pendingMistake)reviewMistake(pendingMistake);};
   $('learn-controls').hidden = practice;
