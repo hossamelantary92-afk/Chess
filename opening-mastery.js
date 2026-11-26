@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=6';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=7';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -35,6 +35,7 @@ let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) ||
 let finished = practice && Boolean(state.finished);
 const mobileLayout = typeof matchMedia==='function' && matchMedia('(max-width:800px)').matches;
 let setupCollapsed = state.focusLayoutVersion===1 ? Boolean(state.setupCollapsed) : mobileLayout;
+let showAllLines=false;
 const board = $('mastery-board');
 const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'وزير', k: 'ملك'};
 
@@ -141,6 +142,7 @@ function renderSaved() {
 }
 
 function choose(entry) {
+  showAllLines=false;
   Object.assign(state, entry);
   const requested=catalog.get(entry.activeId)?.lines.find(l=>l.id===(entry.line??''));
   const first=studyLines(state.id,state.color)[0];
@@ -301,16 +303,23 @@ function render(message, result = '') {
     const info=lineIdentity(e.id,e.line);
     return e.id===state.id?info.variation:info.opening.name+' · '+info.variation;
   };
-  const primary=entries.filter(e=>!e.opponentResponse), responses=entries.filter(e=>e.opponentResponse);
+  const essentials=essentialLines(state.id,state.color,entries);
+  // Preserve the selected line (including old sessions or a branch reached on the board).
+  const selectedEntry=entries.find(e=>e.id===activeId&&e.line.id===activeLine.id);
+  const visible=showAllLines?entries:[...new Set([...essentials,selectedEntry].filter(Boolean))];
+  const primary=visible.filter(e=>!e.opponentResponse), responses=visible.filter(e=>e.opponentResponse);
+  $('toggle-all-lines').hidden=entries.length<=essentials.length;
+  $('toggle-all-lines').textContent=showAllLines?'الأساسية فقط':'كل التفريعات';
+  $('toggle-all-lines').setAttribute('aria-pressed',String(showAllLines));
   const groups=[];
-  for(const [label,items] of [['Main lines & variations',primary],['Against other Black replies',responses]]){
+  for(const [label,items] of [['Main lines',primary],['Other Black replies',responses]]){
     if(!items.length)continue;
     const g=document.createElement('optgroup');g.label=label;
-    g.append(...items.map(e=>new Option(optionLabel(e),entryKey(e))));groups.push(g);
+    g.append(...items.map(e=>new Option(!showAllLines&&e.opponentResponse?lineIdentity(e.id,e.line).opening.name+' · ...'+e.line.moves[1]:optionLabel(e),entryKey(e))));groups.push(g);
   }
   $('opening-line').replaceChildren(...groups);
   $('opening-line').value=activeId+':'+activeLine.id;
-  $('line-field-caption').textContent=state.color==='w'?'التفريعة أو رد الأسود':'الخط أو رد الأبيض';
+  $('line-field-caption').textContent=state.color==='w'?'التفريعة / رد الأسود':'الخط / رد الأبيض';
   $('line-field').hidden = mode==='dynamic'||entries.length <= 1;
   renderSetup();
   const identity = lineIdentity(activeId, activeLine);
@@ -472,6 +481,7 @@ $('next-ply').onclick = () => {
   else if (!$('response-panel').hidden) $('response-panel').scrollIntoView({block:'nearest',behavior:'smooth'});
 };
 $('toggle-setup').onclick = () => setSetupCollapsed(!setupCollapsed);
+$('toggle-all-lines').onclick = () => {showAllLines=!showAllLines;render($('move-note').textContent,$('move-note').dataset.result??'');};
 function selectMode(nextMode) {
   if(mode!==nextMode) {
     if(mode==='dynamic'&&nextMode!=='dynamic') renderPicker();
