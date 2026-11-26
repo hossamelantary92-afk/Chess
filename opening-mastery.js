@@ -20,7 +20,7 @@ const restored = normalizeSelection(stored?.view);
 const state = valid(linked) ? linked : valid(restored) ? restored : {color: 'w', first: 'e4', id: '0', line: '', ply: 0, mode: 'learn'};
 if (valid(linked)) history.replaceState(history.state, '', location.pathname);
 const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
-let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
+let activeId = studyLines(state.id,state.color).some(e=>e.id===state.activeId) ? state.activeId : state.id;
 let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line) ?? catalog.get(activeId).lines[0];
 if(activeId==='open-game'&&state.id==='open-game'){
   const canonical=studyLines(state.id,state.color).find(e=>e.line.moves.join(' ')===activeLine.moves.join(' '));
@@ -655,9 +655,9 @@ renderPicker();
 renderSaved();
 renderReview();
 renderStarter();
-if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply),state.color).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
+if (mode==='dynamic'&&(!Number.isInteger(state.ply)||state.ply<0||state.ply>activeLine.moves.length||!matchingLines(state.id,activeLine.moves.slice(0,state.ply),state.color).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
 else if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(mode);
-else go(state.ply);
+else go(Number.isInteger(state.ply)?Math.max(0,Math.min(activeLine.moves.length,state.ply)):0);
 
 // Safari can restore a closed/navigated-away page from its back-forward cache.
 window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
