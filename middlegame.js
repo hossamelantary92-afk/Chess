@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {lessons} from './middlegame-data.js?v=198';
+import {lessons} from './middlegame-data.js?v=234';
 import {positions, priorities, reviews} from './position-evaluation.js?v=199';
 
 import {activityLessons} from './piece-activity-data.js';
