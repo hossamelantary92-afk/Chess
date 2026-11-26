@@ -2,7 +2,7 @@ import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {patterns} from './checkmate-patterns-data.js?v=210';
 
-import {mateInTwo} from './mate-in-two-data.js?v=211';
+import {mateInTwo} from './mate-in-two-data.js?v=212';
 
 import {decisionTest} from './decision-test-data.js?v=2';
 import {defenses} from './mate-defense-data.js';
