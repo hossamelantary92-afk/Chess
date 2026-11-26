@@ -286,3 +286,6 @@ for(const p of bank){if(Object.hasOwn(calibratedLevels,p.id))p.level=calibratedL
 
 // V161: compare verified candidate moves rather than memorizing one continuation.
 bank.push({...row("calculation-161-candidates","حساب النقلات",3,"7k/8/5K2/8/8/8/4Q3/8 w - - 0 1","Qe7 Kg8 Qg7#","لا يوجد مات في نقلة واحدة. توجد خمس بدايات تحقق المات في نقلتين: Kf7 وKg6 وQe7 وQg4 وQg2. قارن المربعات التي يمنعها كل اختيار، ثم تخيل رد الملك والمات النهائي. الخط المعروض مثال واحد، وليس الحل الوحيد.","حدد النقلات الهادئة المرشحة واحسب رد الملك لكل منها."),task:"قارن خمس نقلات مرشحة للمات في نقلتين",examReady:false,demonstration:true,replyAudit:"unique-replies"});
+
+// V162: all legal replies verified.
+bank.push({...row("calculation-162-tree","حساب النقلات",3,"6k1/8/5K2/8/8/8/4Q3/6N1 w - - 0 1","Qg4+ Kh8 Qg7#","بعد Qg4+ للخصم ثلاثة ردود قانونية: Kh8 ثم Qg7#؛ Kh7 ثم Qg7#؛ Kf8 ثم Qc8#. تم فحص جميع الردود ولا يوجد مات في نقلة واحدة. لا تعتمد على فرع واحد قبل حساب البقية. الخط على الرقعة مثال من الشجرة وليس كل الشجرة.","احسب الردود الثلاثة قبل تحريك الوزير."),task:"احسب شجرة المات في نقلتين",examReady:false,demonstration:true,replyAudit:"illustrative"});
