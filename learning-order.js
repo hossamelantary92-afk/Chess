@@ -153,3 +153,21 @@ for (const [key, card] of cards) {
 
 // Consolidate existing standalone home links without changing their destinations.
 for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],['assessmentTitle','progress'],['trainingPlanTitle','progress']]){const old=document.getElementById(id)?.closest('.home-summary');const grid=home.querySelector('.learning-stage-'+group+' .learning-grid');if(old&&grid){const link=old.querySelector('a');if(link){const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=link.getAttribute('href');const title=document.createElement('h3');title.textContent=old.querySelector('h2').textContent;const desc=document.createElement('small');desc.textContent=old.querySelector('p')?.textContent||'';card.append(title,desc);grid.append(card);old.remove()}}}
+
+const unifiedGroups=[
+ ['resources','Chess Fundamentals','قواعد اللعب والقطع والتدريب الأساسي',['academy','basics','vision']],
+ ['tactical','Chess Tactics','شرح الأنماط والتدريب والحساب',['tactics-guide','tactics','calculation','mixed']],
+ ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames','draws']],
+ ['finish','Checkmate Mastery','القفلات وأنماط الكش مات',['mates','checkmate-patterns']],
+ ['games','Game Academy','المباريات النموذجية ومباريات الأساتذة',['model-games']]
+];
+for(const [stage,title,description,keys] of unifiedGroups){
+ const grid=home.querySelector('.learning-stage-'+stage+' .learning-grid');
+ if(!grid)continue;
+ const members=keys.map(k=>cards.get(k)).filter(c=>c&&c.parentElement===grid);
+ if(stage==='games'){const master=grid.querySelector('a[href="master-games.html"]');if(master)members.push(master)}
+ if(!members.length)continue;
+ const unit=document.createElement('details');unit.className='unified-unit';
+ const summary=document.createElement('summary');const heading=document.createElement('strong');heading.textContent=title;const sub=document.createElement('small');sub.textContent=description;summary.append(heading,sub);unit.append(summary);
+ const content=document.createElement('div');content.className='unified-unit-content';unit.append(content);grid.insertBefore(unit,members[0]);members.forEach(c=>content.append(c));
+}
