@@ -82,3 +82,14 @@ body main select:not([multiple]), body select.premium-btn:not([multiple]){
 
 #homeCards .lesson-row .home-card-top b{display:grid;place-items:center;color:#d8e5bd;background:#3d4436;border:1px solid #505943;border-radius:9px}
 #homeCards .lesson-row .home-card-top svg{display:block;width:21px;height:21px}
+
+/* Homepage: compact start/resume panel; only grouped curriculum cards. */
+#homeDashboard .home-summary[aria-labelledby="resumeTitle"]{gap:12px;align-items:center}
+#homeDashboard .home-summary[aria-labelledby="resumeTitle"] .home-summary-content{min-width:0}
+#homeDashboard .home-summary[aria-labelledby="resumeTitle"] h2{margin:0;line-height:1.4}
+#homeDashboard .learning-grid .lesson-row h3,#homeDashboard .learning-grid .lesson-row small{min-width:0;overflow-wrap:anywhere}
+@media(max-width:650px){
+ #homeDashboard .home-summary[aria-labelledby="resumeTitle"]{align-items:stretch;gap:9px;padding:12px 13px}
+ #homeDashboard .home-summary[aria-labelledby="resumeTitle"] #resume{width:100%}
+ #homeDashboard .stage-jumps button{min-width:0;white-space:normal;line-height:1.35}
+}
