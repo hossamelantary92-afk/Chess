@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=15';
+import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=16';
 import {exercises} from './safety.js?v=58';
 const englishTheme = {...advancedThemes,
   'قطعة غير محمية': 'Hanging Piece',
@@ -106,7 +106,7 @@ function play(sq){
     return;
   }
   const acceptsMate=p.line[ply]?.endsWith('#')&&c.isCheckmate();
-  if(move.san!==p.line[ply]&&!acceptsMate){
+  if(move.san!==p.line[ply]&&!acceptsMate&&!(ply===0&&p.acceptedMoves?.includes(move.san))){
     c.undo();
     rejectMove(sq,'نقلة قانونية، لكنها تختلف عن الخط التعليمي المحدد. قد توجد بدائل صحيحة؛ افحص الفكرة المطلوبة.');
     return;
