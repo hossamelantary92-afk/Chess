@@ -150,7 +150,7 @@ function updateProgress() {
 function load(item) {
   lesson = item;
   chess = new Chess(item.fen);
-  for (const san of item.line.split(' ')) lastMove = chess.move(san);
+  for (const san of item.line.trim().split(/\s+/).filter(Boolean)) lastMove = chess.move(san);
   side = chess.turn();
   initialPosition = {fen:chess.fen(), lastMove};
   reviewLine = null;
