@@ -171,3 +171,13 @@ for(const [stage,title,description,keys] of unifiedGroups){
  const summary=document.createElement('summary');const heading=document.createElement('strong');heading.textContent=title;const sub=document.createElement('small');sub.textContent=description;summary.append(heading,sub);unit.append(summary);
  const content=document.createElement('div');content.className='unified-unit-content';unit.append(content);grid.insertBefore(unit,members[0]);members.forEach(c=>content.append(c));
 }
+
+// Avoid nested navigation for categories that contain only one unified module.
+for(const stage of home.querySelectorAll('.learning-stage')){
+ const grid=stage.querySelector('.learning-grid');
+ if(grid?.children.length===1&&grid.firstElementChild.classList.contains('unified-unit')){
+ const unit=grid.firstElementChild;const content=unit.querySelector('.unified-unit-content');grid.replaceChildren(...content.children);
+ }
+}
+const sectionIcons={resources:'♙',opening:'♘',middlegame:'♗',tactical:'♞',finish:'♜',games:'♛',progress:'♚'};
+for(const stage of stages){const heading=document.getElementById('learning-title-'+stage.id);const icon=document.createElement('span');icon.className='stage-icon';icon.setAttribute('aria-hidden','true');icon.textContent=sectionIcons[stage.id];heading.prepend(icon);}
