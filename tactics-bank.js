@@ -192,3 +192,5 @@ bank.push({...row('tal-botvinnik-1960-game6','الإلهاء',3,'2r3k1/pp4bp/3p2
 bank.push({...row('saavedra-study-1895','الترقية',3,'8/2P5/8/8/3r4/8/2K5/k7 w - - 0 1','c8=R Ra4 Kb3','من دراسة سافيدرا الشهيرة في النهايات (1895)، وليست مباراة فعلية. بعد c8=Q Rc4 Qxc4 يحدث التعادل بالخنق. الترقية إلى رخ تهدد Ra8#؛ وفي الخط Ra4 Kb3 يهدد الأبيض أخذ الرخ أو Rc1#. الخط تعليمي وليس تحققًا شاملاً بكل الفروع.','احسب فخ التعادل بعد الترقية إلى وزير.'),demonstration:true,examReady:false});
 
 for(const p of bank){if(p.id==='zwischenzug-capture-check-84')p.branches=[p.line,['Qxh8+','Kf7','Rxd2']];if(p.id==='kasparov-topalov-1999')p.branches=[p.line,'Re7+ Qxe7 Qxd4+ Kb8 Qb6+ Bb7 Nc6+ Ka8 Qa7#'.split(' ')];}
+
+for(const p of bank){const entry=[{"id":"bishop-skewer-queen","branches":[["Bb5+","Kc8","Bxe8"],["Bb5+","Kd8","Bxe8"],["Bb5+","Ke7","Bxe8"],["Bb5+","Ke6","Bxe8"],["Bb5+","Kd6","Bxe8"],["Bb5+","Kc7","Bxe8"]]}].find(x=>x.id===p.id);if(entry)p.branches=entry.branches;}
