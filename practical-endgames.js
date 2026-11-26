@@ -1,7 +1,7 @@
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {endgameLessons} from './practical-endgames-data.js?v=133';
+import {endgameLessons} from './practical-endgames-data.js?v=134';
 
 const $ = id => document.getElementById(id);
 const pieceNames = {p:'بيدق', n:'حصان', b:'فيل', r:'رخ', q:'وزير', k:'ملك'};
