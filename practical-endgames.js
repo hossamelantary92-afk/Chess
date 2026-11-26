@@ -1,7 +1,7 @@
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {endgameLessons} from './practical-endgames-data.js?v=137';
+import {endgameLessons} from './practical-endgames-data.js?v=138';
 
 const $ = id => document.getElementById(id);
 const pieceNames = {p:'بيدق', n:'حصان', b:'فيل', r:'رخ', q:'وزير', k:'ملك'};
@@ -44,19 +44,24 @@ panel.innerHTML = `
   </div>`;
 document.querySelector('main footer').before(panel);
 const picker = $('endgamePicker');
-const orderedLessons = [...endgameLessons].sort((a,b) => a.positions[0].level - b.positions[0].level);
-const learningOrder = orderedLessons.flatMap(lesson => lesson.positions.map(position => exercises.indexOf(position)));
 const levelLabels = {1:'أساسي',2:'متوسط',3:'متقدم'};
-for (const lesson of orderedLessons) {
-  const group = document.createElement('optgroup');
-  group.label = `${levelLabels[lesson.positions[0].level]} · ${lesson.title}`;
-  for (const position of lesson.positions) {
-    const option = document.createElement('option');
-    option.value = exercises.indexOf(position);
-    option.textContent = position.title;
-    group.append(option);
+const learningOrder = [];
+for (const level of [1,2,3]) {
+  for (const lesson of endgameLessons) {
+    const positions = lesson.positions.filter(position => position.level === level);
+    if (!positions.length) continue;
+    const group = document.createElement('optgroup');
+    group.label = levelLabels[level] + ' · ' + lesson.title;
+    for (const position of positions) {
+      const i = exercises.indexOf(position);
+      learningOrder.push(i);
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = position.title;
+      group.append(option);
+    }
+    picker.append(group);
   }
-  picker.append(group);
 }
 
 let index = 0;
