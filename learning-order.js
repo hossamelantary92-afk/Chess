@@ -4,7 +4,7 @@ const cards = new Map(
 );
 
 const links = [
-  ['opening-mastery', 'Opening Mastery', 'اختار افتتاحياتك واستكشف الردود على الرقعة', '♘', 'opening-mastery.html'],
+  ['opening-mastery', 'Opening Mastery', 'اختار اللون والافتتاحية · شاهد النقلات أو اختبر نفسك', '♘', 'opening-mastery.html'],
   ['psychology','Chess Psychology','اتدرّب على قراراتك تحت الضغط','◇','study.html#Trust%20Your%20Intuition'],
   ['bullet','Bullet','اختار نقلة عملية تحت ضغط الساعة','◷','study.html#Time%20Management%20in%20Bullet'],
   ['opening-responses', 'مدرّب ردود الافتتاحيات', 'جرّب الردود غير المتوقعة بالأبيض والأسود', '♞', 'training.html#trainer'],
@@ -27,7 +27,7 @@ for (const [key, title, description, icon, href] of links) {
 }
 
 const stages = [
-  {id:'opening', title:'Openings', cards:['openings','opening-mastery','opening-responses','opening-traps','opening-exam']},
+  {id:'opening', title:'Openings', cards:['opening-mastery']},
   {id:'middlegame', title:'Middlegame', cards:['middlegame','position-evaluation','safety','plans','piece-activity','tactics-guide','tactics','calculation','practical-decisions','model-games','psychology']},
   {id:'finish', title:'Endgames & Checkmate', cards:['endings','practical-endgames','draws','mates','checkmate-patterns']},
   {id:'resources', title:'Essentials', cards:['academy','basics','vision','game-tips','mixed','bullet']}
