@@ -192,11 +192,7 @@ function updateOpeningPlan(){
 }
 function renderOpeningActions(){$('#actions').innerHTML='';if(practice){action('تلميح',hint);action('ابدأ من جديد',()=>{practice=true;resetOpening();feedback('دورك: العب النقلة المدروسة.');renderOpeningActions()});}else{action('اختبر نفسك',()=>{practice=true;history.replaceState(null,'',openingRoute(idx,true,openingBranchId));resetOpening();feedback('دورك: حرّك القطعة على الرقعة. الخصم هيرد تلقائيًا.');renderOpeningActions()},true)}action('جرّب الردود غير المتوقعة',()=>location.assign('training.html#trainer'));updatePlayback();$('#focusMode').textContent=practice?'اختبر نفسك':'وضع التعلّم'}
 load=function(){$('#openingBranches')?.remove();if(section!=='openings'||!openingBranch())openingBranchId='';document.body.dataset.section=section;baseLoad();if(section==='openings'){$('#title').textContent=openings[idx][0];if(!$('#focusMode')){const m=document.createElement('span');m.id='focusMode';$('#boardLabel').after(m)}renderOpeningBranches();renderOpeningActions();renderMoves();feedback(openingExplanation())}else{$('#moveCaption').textContent='';$('#focusMode')?.remove();$('#playback').innerHTML=''}saveSession()};
-function renderHomeStats(){
-  const sectionPath=lastSession&&paths.find(p=>p[0]===lastSession.section);
-  $('#resumeTitle').textContent=sectionPath?`كمّل رحلتك في ${sectionPath[2]}`:'ابدأ بإتقان الرقعة';
-  $('#resume').textContent=sectionPath?'كمّل تدريبك':'ابدأ التدريب';
-}
+function renderHomeStats(){}
 function showHome(){clearVisionResponse();isTraining=false;clearInterval(timer);document.body.classList.remove('training-view');$('#homeDashboard').hidden=false;document.querySelector('.workspace').hidden=true;renderHomeStats();window.scrollTo(0,0)}
 function showTraining(){isTraining=true;document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=false;$('#category').textContent=paths.find(p=>p[0]===section)[3];window.scrollTo(0,0);saveSession()}
 function startSection(key,index=0,mode=false,restorePly,branch=''){section=key;idx=index;openingBranchId=branch;if(section==='openings')flipped=side==='b';load();showTraining();if(section==='openings'){practice=mode;if(practice){resetOpening();for(;ply<restorePly&&ply<line().length;){chess.move(line()[ply++])}if(ply<line().length&&chess.turn()!==side)chess.move(line()[ply++]);renderBoard();renderMoves();feedback('دورك: كمّل الخط على الرقعة.')}else jumpTo(restorePly??(openingBranchId?openingBranch()?.start:0)??0);renderOpeningActions()}saveSession()}
@@ -212,7 +208,7 @@ $('#setupClose').onclick=()=>$('#setupModal').close();$('#setupModal').onclick=e
   location.hash=destination;
 }
 $('#setupLearn').onclick=()=>beginSetup(false);$('#setupPractice').onclick=()=>beginSetup(true);$('#homeBack').onclick=()=>location.hash='home';$('.brand').onclick=e=>{e.preventDefault();location.hash='home'};$('#changeLesson').onclick=()=>showSetup(section);
-$('#resume').onclick=()=>{const s=lastSession?{...lastSession}:{section:'openings',idx:lessonOrder.openings[0],ply:0,side:'w',practice:false};side=s.side;const dest=s.section==='openings'?openingRoute(s.idx,s.practice,s.branch):`#train/${s.section}/${s.idx}/${s.practice?'practice':'learn'}`;if(location.hash===dest){startSection(s.section,s.idx,s.practice,s.ply,s.branch)}else location.hash=dest};
+
 paths.forEach(([key,icon,name,en])=>{const b=document.createElement('button');b.className='home-card';b.dataset.learningCard=key;const count=key==='openings'?openings.length:key==='mates'?mates.length:key==='tactics'?tactics.length:key==='endings'?endings.length:key==='basics'?basics.length:3;b.innerHTML=`<div class="home-card-top"><b>${icon}</b><span>${count} ${key==='vision'?'أنماط تدريب':'دروس'}</span></div><h3>${name}</h3><small>${en}</small>`;b.onclick=()=>showSetup(key);$('#homeCards').append(b)});
 function route(){
   const legacy=location.hash.match(/^#train\/openings\/(\d+)(?:\/(learn|practice)(?:\/([a-z0-9-]+))?)?$/);
