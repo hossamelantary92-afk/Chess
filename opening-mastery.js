@@ -36,12 +36,25 @@ let finished = practice && Boolean(state.finished);
 const mobileLayout = typeof matchMedia==='function' && matchMedia('(max-width:800px)').matches;
 let setupCollapsed = state.focusLayoutVersion===1 ? Boolean(state.setupCollapsed) : mobileLayout;
 let showAllLines=false;
+const performance=stored?.performance&&typeof stored.performance==='object'&&!Array.isArray(stored.performance)?stored.performance:{};
+let hintLevel=practice?Math.min(4,Math.max(0,Number(state.hintLevel)||0)):0;
+let positionDirty=practice&&Boolean(state.positionDirty);
+let visualEnabled=stored?.visualEnabled!==false;
+let middleAnswer=null;
+const starter=[
+ {id:'0',color:'w',first:'e4',note:'الأساس بالأبيض'},
+ {id:'open-game',color:'b',first:'e4',note:'الدفاع الأساسي ضد e4'},
+ {id:'qgd',color:'b',first:'d4',note:'ضد جامبيت الوزير'},
+ {id:'london-black',color:'b',first:'d4',note:'ضد لندن'},
+ {id:'2',color:'w',first:'d4',note:'بديل بالأبيض'},
+ {id:'5',color:'b',first:'e4',note:'بديل دفاعي'}
+];
 const board = $('mastery-board');
 const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'وزير', k: 'ملك'};
 
 function persist() {
   try {
-    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed, focusLayoutVersion:1, reviewTarget}, saved, mistakes}));
+    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed, focusLayoutVersion:1, reviewTarget,hintLevel,positionDirty}, saved, mistakes,performance,visualEnabled}));
     return true;
   } catch { return false; }
 }
@@ -162,6 +175,7 @@ function randomOpponent(prefix) {
   return choices.length?choices[Math.floor(Math.random()*choices.length)]:null;
 }
 function restartMode(nextMode) {
+  hintLevel=0;positionDirty=false;middleAnswer=null;
   mode=nextMode; practice=mode!=='learn';
   attempts = correct = 0;
   finished = false;
@@ -200,7 +214,7 @@ function renderReview() {
 function reviewMistake(m) {
   Object.assign(state,m.origin);
   activeId=m.activeId; activeLine=catalog.get(activeId).lines.find(l=>l.id===m.line);
-  mode='test';practice=true;finished=false;attempts=correct=0;reviewTarget=mistakeKey(m);
+  mode='test';practice=true;finished=false;attempts=correct=0;hintLevel=0;positionDirty=false;middleAnswer=null;reviewTarget=mistakeKey(m);
   renderPicker();go(m.ply,'راجع الموقف اللي أخطأت فيه. العب النقلة المطلوبة.');
   document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});
 }
@@ -214,13 +228,56 @@ function resolveMistake(prefix,san) {
     if(m.prefix.join(' ')===prefix.join(' ')&&line?.moves[m.ply]===san){mistakes.splice(i,1);reviewTarget=null;renderReview();}
   }else reviewTarget=null;
 }
+function scorePosition(san){
+  if(reviewTarget)return;
+  const k=state.color+'|'+state.id+'|'+mode;
+  const positions=performance[k]??(performance[k]={});
+  const prefix=activeLine.moves.slice(0,ply).join(' ');
+  positions[prefix+'|'+san]=positionDirty||hintLevel?0:1;
+  // A wrong or assisted attempt cannot become clean by immediately retrying.
+  renderScores();
+}
+function coverage(id,color,modeName){
+  const targets=new Set();
+  const sidePly=color==='w'?0:1;
+  for(const e of essentialLines(id,color)){
+    for(let i=sidePly;i<e.line.moves.length;i+=2){
+      const prefix=e.line.moves.slice(0,i).join(' ');
+      targets.add(prefix+'|'+e.line.moves[i]);
+    }
+  }
+  const answers=performance[color+'|'+id+'|'+modeName]??{};
+  let correct=0,seen=0;
+  for(const k of targets){if(answers[k]===0||answers[k]===1){seen++;correct+=answers[k];}}
+  return {correct,seen,total:targets.size};
+}
+function renderScores(){
+  const entries=[...starter,...saved,{id:state.id,color:state.color,first:state.first}];
+  const seen=new Set();
+  $('mastery-scores').replaceChildren(...entries.filter(e=>{const k=e.color+'|'+e.id;if(seen.has(k))return false;seen.add(k);return true;}).map(e=>{
+    const fixed=coverage(e.id,e.color,'test'),dynamic=coverage(e.id,e.color,'dynamic');
+    const score=Math.round(100*(.6*fixed.correct/Math.max(1,fixed.total)+.4*dynamic.correct/Math.max(1,dynamic.total)));
+    const row=element('div','');row.className='mastery-score-row';
+    const title=element('div','');title.className='mastery-score-heading';
+    title.append(element('strong',catalog.get(e.id).name+' · '+(e.color==='w'?'White':'Black')),element('span',fixed.seen+dynamic.seen?score+'%':'Not tested'));
+    const track=element('div','');track.className='mastery-score-track';const fill=element('span','');fill.style.width=score+'%';track.append(fill);
+    const meta=element('small','Test '+fixed.correct+'/'+fixed.total+' · Dynamic '+dynamic.correct+'/'+dynamic.total);meta.dir='ltr';
+    row.append(title,track,meta);return row;
+  }));
+}
+function renderStarter(){
+  $('starter-items').replaceChildren(...starter.map(e=>{
+    const b=button('',()=>{choose(e);restartMode('learn');if(mobileLayout)setSetupCollapsed(true);document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});});
+    b.append(element('strong',catalog.get(e.id).name),element('small',e.note));return b;
+  }));
+}
 function dynamicMove(san) {
   const prefix=activeLine.moves.slice(0,ply);
   const after=[...prefix,san];
   if(!matchingLines(state.id,after,state.color).length) {
-    recordMistake(san);render('النقلة قانونية، لكن مش من الردود المدروسة في المسار ده. جرّب تاني.','retry');persist();return;
+    positionDirty=true;recordMistake(san);render('النقلة قانونية، لكن مش من الردود المدروسة في المسار ده. جرّب تاني.','retry');persist();return;
   }
-  resolveMistake(prefix,san);correct++;
+  scorePosition(san);resolveMistake(prefix,san);correct++;hintLevel=0;positionDirty=false;
   const reply=randomOpponent(after);if(reply)after.push(reply);
   const candidates=matchingLines(state.id,after,state.color),entry=pickLine(candidates);
   useEntry(entry);
@@ -234,6 +291,7 @@ function explanation() {
   return (lastMove?.san ?? '') + ' — ' + ({p:'راجع تأثير البيدق على المركز وخطوط القطع.',n:'راجع المربعات اللي الحصان بقى يسيطر عليها.',b:'تابع قطر الفيل والهدف منه.',r:'راجع العمود أو الصف اللي الرخ بيدعمه.',q:'حدّد هدف الوزير بعد النقلة.',k:'راجع أمان الملك بعد النقلة.'}[lastMove?.piece] ?? 'راجع أثر النقلة على الوضع.');
 }
 function go(target, message = '', result = '') {
+  middleAnswer=null;
   ply = Math.max(0, Math.min(Number.isInteger(target) ? target : 0, activeLine.moves.length));
   chess = new Chess();
   lastMove = null;
@@ -243,7 +301,35 @@ function go(target, message = '', result = '') {
   persist();
 }
 
+function expectedMove(){
+  if(!practice||finished||chess.turn()!==state.color)return null;
+  return chess.moves({verbose:true}).find(m=>m.san===activeLine.moves[ply])??null;
+}
+function hintCopy(move){
+  if(!move)return '';
+  const goal=({p:'فكّر في السيطرة على المركز أو تغيير بنية البيادق.',n:'فكّر في نشاط الحصان والمربعات اللي بيغطيها.',b:'فكّر في فتح قطر للفيل أو زيادة الضغط.',r:'فكّر في تنشيط الرخ على عمود أو صف.',q:'فكّر في دور الوزير في الوضع الحالي.',k:'راجع أمان الملك وتهديدات الخصم.'})[move.piece];
+  if(hintLevel===1)return goal;
+  if(hintLevel===2)return 'القطعة: '+pieceNames[move.piece];
+  if(hintLevel===3)return 'المربع المطلوب: \u2066'+move.to+'\u2069';
+  return 'النقلة في الخط المدروس: \u2066'+move.san+'\u2069';
+}
+function point(square){
+  const file='abcdefgh'.indexOf(square[0]),rank=Number(square[1]);
+  const x=state.color==='w'?file:7-file,y=state.color==='w'?8-rank:rank-1;
+  return [x*40+20,y*40+20];
+}
+function renderArrow(move){
+  const svg=$('visual-arrows');
+  if(!move){svg.innerHTML='';return;}
+  const [x,y]=point(move.from),[tx,ty]=point(move.to),dx=tx-x,dy=ty-y,len=Math.hypot(dx,dy);
+  if(!len){svg.innerHTML='';return;}
+  const ux=dx/len,uy=dy/len,ex=tx-ux*8,ey=ty-uy*8,bx=ex-ux*12,by=ey-uy*12;
+  svg.innerHTML='<path d="M'+(x+ux*7)+' '+(y+uy*7)+' L'+bx+' '+by+'" stroke="#537e32" stroke-width="5" stroke-linecap="round" opacity=".85" fill="none"/><path d="M'+ex+' '+ey+' L'+(bx-uy*6)+' '+(by+ux*6)+' L'+(bx+uy*6)+' '+(by-ux*6)+' Z" fill="#537e32" opacity=".9"/>';
+}
 function renderBoard() {
+  const teaching=!practice&&visualEnabled&&lastMove;
+  const hint=practice&&hintLevel>=3?expectedMove():null;
+  renderArrow(teaching?lastMove:hintLevel>=4?hint:null);
   const legal = practice && !finished && selected ? chess.moves({square: selected, verbose: true}).map(move => move.to) : [];
   for (let index = 0; index < 64; index++) {
     const squareIndex = state.color === 'b' ? 63 - index : index;
@@ -253,7 +339,10 @@ function renderBoard() {
     const piece = chess.get(square);
     const cell = squareAt(board, index);
     cell.className = ['tile', (file + row) % 2 && 'shaded', selected === square && 'picked',
-      legal.includes(square) && 'legal', (lastMove?.from === square || lastMove?.to === square) && 'recent'].filter(Boolean).join(' ');
+      legal.includes(square) && 'legal', (lastMove?.from === square || lastMove?.to === square) && 'recent',
+      teaching&&['d4','e4','d5','e5'].includes(square)&&chess.attackers(square,lastMove.color).includes(lastMove.to)&&'teach-center',
+      teaching&&piece&&piece.color!==lastMove.color&&chess.attackers(square,lastMove.color).includes(lastMove.to)&&'teach-target',
+      hint?.to===square&&'hint-target'].filter(Boolean).join(' ');
     if (index % 8 === 0) cell.dataset.rank = square[1]; else delete cell.dataset.rank;
     if (index >= 56) cell.dataset.file = square[0]; else delete cell.dataset.file;
     cell.setAttribute('aria-label', piece ? `${square} · ${pieceNames[piece.type]} ${piece.color === 'w' ? 'أبيض' : 'أسود'}` : square);
@@ -279,13 +368,13 @@ function tap(square) {
   if(mode==='dynamic'){dynamicMove(move.san);return;}
   const expected = activeLine.moves[ply];
   if (move.san !== expected) {
-    recordMistake(move.san);
+    positionDirty=true;recordMistake(move.san);
     render('نقلة قانونية، لكنها مش النقلة المطلوبة في التفريعة دي. جرّب تاني. ده مش معناه إنها غلط في مباراة حقيقية.', 'retry');
     persist();
     return;
   }
-  resolveMistake(activeLine.moves.slice(0,ply),move.san);
-  correct++;
+  scorePosition(move.san);resolveMistake(activeLine.moves.slice(0,ply),move.san);
+  correct++;hintLevel=0;positionDirty=false;
   const note = activeLine.notes?.[ply + 1] ?? '';
   const reply = activeLine.moves[ply + 1];
   const next = Math.min(activeLine.moves.length, ply + 1 + Number(Boolean(reply)));
@@ -294,6 +383,21 @@ function tap(square) {
   go(next, (finished ? 'أحسنت! خلّصت اختبار الخط. ' : 'صحيح! ') + move.san + (reply ? ' · رد الخصم: ' + reply : '') + (note ? ' · ' + note : ''), 'correct');
 }
 
+function renderMiddlegame(){
+  const complete=ply===activeLine.moves.length&&(!practice||finished);
+  const plan=state.color==='w'?activeLine.white:activeLine.black;
+  $('middlegame-check').hidden=!complete||!plan;
+  if(!complete||!plan)return;
+  $('middlegame-prompt').textContent='الافتتاحية خلصت. أنهي خطة أنسب للون اللي بتلعب بيه في المسار ده؟';
+  const wrongPlans=['حرّك الوزير مبكرًا بحثًا عن هجوم، حتى لو باقي القطع لسه مش متطورة.','ادفع بيادق جناح الملك من غير حساب تهديد الخصم أو أمان ملكك.'];
+  const choices=[...wrongPlans];choices.splice((activeLine.moves.length+Number(state.color==='b'))%3,0,plan);
+  $('middlegame-options').replaceChildren(...choices.map(choice=>{
+    const b=button(choice,()=>{middleAnswer=choice;renderMiddlegame();});
+    if(middleAnswer===choice)b.dataset.answer=choice===plan?'correct':'retry';
+    return b;
+  }));
+  $('middlegame-feedback').textContent=middleAnswer===null?'':middleAnswer===plan?'أحسنت! دي خطة تعليمية مناسبة للخط ده، لكن راجع تهديدات الخصم قبل تنفيذها.':'راجع أمان الملك وتطوير القطع وبنية البيادق. اختار الخطة المرتبطة بالوضع.';
+}
 function render(message, result = '') {
   const opening = catalog.get(activeId);
   const entries=studyLines(state.id,state.color);
@@ -345,6 +449,16 @@ function render(message, result = '') {
   $('progress-fill').style.width = (mode==='dynamic'?(finished?100:0):(activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0)) + '%';
   $('progress-fill').parentElement?.classList.toggle('dynamic-progress',mode==='dynamic'&&!finished);
   renderBoard();
+  $('visual-tools').hidden=practice;
+  $('visual-toggle').setAttribute('aria-pressed',String(visualEnabled));
+  $('visual-legend').hidden=!visualEnabled;
+  $('hint-tools').hidden=!practice||finished;
+  $('hint-button').disabled=hintLevel>=4;
+  $('hint-count').textContent=hintLevel+' / 4';
+  $('hint-text').hidden=!practice||finished||!hintLevel;
+  $('hint-text').textContent=hintCopy(expectedMove());
+  renderMiddlegame();
+  renderScores();
   $('previous-ply').disabled = ply === 0 || practice;
   $('next-ply').disabled = ply === activeLine.moves.length || practice;
   $('learn-mode').setAttribute('aria-pressed', String(!practice));
@@ -495,10 +609,13 @@ $('dynamic-mode').onclick = () => selectMode('dynamic');
 $('retry-test').onclick = () => restartMode(mode);
 $('review-learn').onclick = () => selectMode('learn');
 $('start-ply').onclick = () => go(0);
+$('visual-toggle').onclick=()=>{visualEnabled=!visualEnabled;render($('move-note').textContent,$('move-note').dataset.result??'');persist();};
+$('hint-button').onclick=()=>{if(!expectedMove()||hintLevel>=4)return;hintLevel++;positionDirty=true;render($('move-note').textContent,$('move-note').dataset.result??'');persist();};
 
 renderPicker();
 renderSaved();
 renderReview();
+renderStarter();
 if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply),state.color).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
 else if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(mode);
 else go(state.ply);
