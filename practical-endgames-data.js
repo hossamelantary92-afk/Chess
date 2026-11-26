@@ -444,3 +444,37 @@ export const endgameLessons = [
   }
 ];
 export const drawLessons = endgameLessons.find(x => x.title === 'Stalemate & Other Draws');
+
+endgameLessons.push({title:'Minor Piece Endgames – Foundations',positions:[
+  {
+    "title": "Wrong-Colored Bishop – Rook Pawn",
+    "fen": "k7/8/PK6/8/8/8/8/2B5 b - - 0 1",
+    "goal": "draw",
+    "line": "Kb8 a7+ Ka8",
+    "prompts": [
+      "حافظ على إمكانية العودة إلى زاوية الترقية.",
+      "ارجع إلى a8 بعد الكش."
+    ],
+    "note": "الفيل على c1 لا يسيطر على a8. الملك المدافع يستطيع البقاء قرب زاوية الترقية، ولذلك لا يكفي تفوق الأبيض بفيل وبيدق رخ."
+  },
+  {
+    "title": "Knight vs Passed Pawn",
+    "fen": "7k/P7/2n5/8/8/8/8/7K b - - 0 1",
+    "goal": "draw",
+    "line": "Nxa7",
+    "prompts": [
+      "أوقف الترقية بأخذ البيدق بالحصان."
+    ],
+    "note": "بعد أخذ البيدق يبقى حصان وملك ضد ملك؛ لا توجد مادة كافية للمات."
+  },
+  {
+    "title": "Opposite-Colored Bishops – Remove the Passer",
+    "fen": "7k/8/P7/8/2b5/8/4B3/7K b - - 0 1",
+    "goal": "draw",
+    "line": "Bxa6",
+    "prompts": [
+      "أزل البيدق المار باستخدام الفيل."
+    ],
+    "note": "بعد أخذ البيدق يتبقى فيلان مختلفا اللون وملكان دون بيادق. المثال يوضح إزالة مصدر الخطر، وليس قاعدة أن كل نهايات الفيلين المختلفين تعادل."
+  }
+]});
