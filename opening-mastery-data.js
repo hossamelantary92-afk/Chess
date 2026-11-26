@@ -48,7 +48,7 @@ openGame.profile = ['Beginner', 'تطوير طبيعي', 'بتنافس على ا
 openGame.lines = ['0','1','9'].map((id,index) => {
   const opening = catalog.get(id);
   const line = opening.lines[0];
-  return {...line, id: index === 0 ? '' : 'open-game-'+id, name: opening.name+' · '+line.name,
+  return {...line, openingId:id, variationName:line.name, id: index === 0 ? '' : 'open-game-'+id, name: opening.name+' · '+line.name,
     idea: 'بعد 1.e4 e5 2.Nf3 Nc6، اختيار الأبيض بيحدد الفرع. '+(line.idea ?? opening.summary)};
 });
 catalog.get('0').lines.push({
