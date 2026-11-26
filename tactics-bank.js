@@ -238,3 +238,9 @@ advancedThemes['التركيبات التكتيكية']='Tactical Combinations';
 tacticalLessons['التركيبات التكتيكية']={detect:'ابحث عن الملك المكشوف والمدافع المثبت والقطع المتعاونة.',calculate:'رتب الكشات والأخذ والتهديدات، ثم افحص أقوى رد في كل مرحلة.',mistake:'لا تبدأ التضحية قبل حساب النقلة النهائية.'};
 const combinationNotes={'morphy-opera':'تضحية الوزير وإلهاء الحصان ثم مات بالرخ.','clearance-95':'تضحية الرخ وإخلاء العمود ثم مات بالوزير.','reti-tartakower-1910':'استدراج الملك ثم كش مزدوج ومات.','anderssen-dufresne-1852':'إلهاء المدافعين وتضحية الوزير ثم شبكة مات.','fischer-byrne-1956':'كشات مكتشفة متتابعة ثم استرداد الوزير.','lasker-bauer-1889':'إزالة غطاء الملك بتضحيتين ثم إدخال الرخ والوزير.','kasparov-topalov-1999':'تضحية رخ واستدراج الملك ومطاردته.','active-pieces-trap':'تضحية ظاهرية بالوزير ثم شبكة مات.'};
 for(const p of bank)if(combinationNotes[p.id]){p.combination=true;p.combinationNote=combinationNotes[p.id];}
+
+themes['تكتيكات النهايات']='استغلال الترقية والبيادق المارة والتضحية وفخاخ التعادل في المواقف قليلة القطع.';
+advancedThemes['تكتيكات النهايات']='Endgame Tactics';
+tacticalLessons['تكتيكات النهايات']={detect:'حدد البيادق المارة ومربعات الترقية وموقع الملكين.',calculate:'احسب سباق البيادق مع الكشات وإمكانية الأخذ والخنق.',mistake:'لا ترقِّ تلقائيًا إلى وزير ولا تفترض أن كل بيدق مار يفوز.'};
+bank.push({...row('pawn-breakthrough-103','تكتيكات النهايات',2,'8/ppp5/8/PPP5/8/8/7k/4K3 w - - 0 1','b6 axb6 c6 bxc6 a6','اختراق البيادق: b6 يفتح الطريق بتضحيتين. إذا أخذ الأسود ببيدق a يتقدم c6 ثم a6؛ وإذا أخذ ببيدق c نعكس الفكرة. في الفرعين ينتج بيدق مار، لكن المثال لا يثبت الفوز أمام كل دفاع.','ابدأ بالبيدق الأوسط.'),branches:[["b6","axb6","c6","bxc6","a6"],["b6","cxb6","a6","bxa6","c6"]],examReady:false,demonstration:true,endgame:true});
+for(const p of bank)if(['saavedra-study-1895','underpromotion-rook-stalemate','underpromotion-82-0','defensive-sacrifice-101'].includes(p.id))p.endgame=true;
