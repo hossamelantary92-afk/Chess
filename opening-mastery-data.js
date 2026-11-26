@@ -57,6 +57,13 @@ catalog.get('0').lines.push({
   idea: 'راجع إمتى تفتح الوسط لو خصمك أخّر تطويره.',
   notes: {6: 'الأسود منع Ng5 ولسه مطوّرش حصان g8.', 7: 'd4 يتحدّى e5 فورًا. راجع مين يقدر يلعب بأمان بعد الفتح.'}
 });
+catalog.get('0').lines.push({
+ id:'italian-hungarian',name:'Hungarian Defense · Quiet Development',start:6,
+ moves:'e4 e5 Nf3 Nc6 Bc4 Be7 d3 Nf6 O-O O-O Nc3 d6'.split(' '),
+ idea:'الأسود يختار ...Be7 بعد دخول الإيطالي. الأبيض يطوّر قطعه بهدوء ويؤمّن الملك.',
+ notes:{6:'...Be7 يطوّر الفيل ويجهّز التبييت؛ لسه إحنا داخل الإيطالي.',7:'d3 يدعم e4 ويفتح قطر فيل c1.',9:'التبييت يحمي الملك ويجهّز الرخ.',11:'Nc3 يطوّر الحصان ويزيد السيطرة على الوسط.'},
+ white:'أمّن الملك وطوّر باقي القطع ثم قيّم توقيت d4.',black:'أمّن الملك ونافس على الوسط مع مراقبة d4.'
+});
 catalog.get('6').lines.push({
   id: 'qgd-transposition', name: 'Transposition · 1...Nf6', start: 6,
   moves: ['d4', 'Nf6', 'c4', 'e6', 'Nc3', 'd5', ...catalog.get('6').lines[0].moves.slice(6)],
@@ -158,12 +165,44 @@ export function essentialLines(id,color,entries=studyLines(id,color)){
  const pick=(item,lineId='')=>entries.find(e=>e.id===item&&e.line.id===lineId);
  let core;
  if(id==='open-game')core=['0','1','9'].map(i=>pick(i));
- else if(id==='0')core=[pick('0'),pick('0','two-knights-quiet'),pick('0','italian-center')];
+ else if(id==='0')core=[pick('0'),pick('0','italian-center'),pick('0','two-knights-quiet'),pick('0','italian-hungarian')];
  else if(id==='5')core=[pick('5'),pick('5','caro-advance'),pick('5','caro-exchange')];
  else core=primary.slice(0,3);
  const replyIds=color==='w'&&['0','1','9'].includes(id)?['3','5','4','10']:color==='w'&&id==='6'?['kid','dutch']:color==='w'&&id==='2'?['dutch']: [];
  const replies=replyIds.map(i=>i==='3'?pick(i,'sicilian-alapin-d5'):pick(i)).filter(e=>e&&responses.includes(e));
  return [...new Set([...core.filter(Boolean),...replies])];
+}
+// Teaching categories describe the actual move that selects each route.
+const moveLabel=(moves,index)=>Math.floor(index/2)+1+(index%2?'...':'.')+moves[index];
+export function replyGroup(id,color,entry){
+ const moves=entry.line.moves;
+ const name=catalog.get(id).name;
+ const isolate=value=>'\u2066'+value+'\u2069';
+ if(entry.opponentResponse&&color==='w'){
+   return {key:'external',label:['0','1','9'].includes(id)?'دفاعات أخرى قبل دخول الافتتاحية':'مسارات أخرى للرد على بداية الأبيض',external:true,move:moveLabel(moves,1)};
+ }
+ if(color==='w'&&['0','1','9','6'].includes(id)){
+   const index=id==='6'?3:5;
+   const prefix=id==='6'?['d4','d5','c4']:id==='0'?['e4','e5','Nf3','Nc6','Bc4']:id==='1'?['e4','e5','Nf3','Nc6','Bb5']:['e4','e5','Nf3','Nc6','d4'];
+   if(prefix.every((san,i)=>moves[i]===san)&&moves[index]){
+     const reply=moveLabel(moves,index);
+     const rank=id==='0'?(['Bc5','Nf6','Be7','h6'].indexOf(moves[index])+1||99):0;
+     return {key:'inside:'+reply,label:'رد الأسود داخل '+isolate(name)+' · '+isolate(reply),move:reply,rank};
+   }
+ }
+ if(color==='w'&&['english-white','reti-white','2'].includes(id)&&moves[1]){
+   const reply=moveLabel(moves,1);
+   return {key:'first:'+reply,label:'رد الأسود الأول · '+isolate(reply),move:reply,rank:0};
+ }
+ if(color==='b'&&id==='open-game'&&moves[4]){
+   const reply=moveLabel(moves,4);
+   return {key:'white:'+reply,label:'اختيار الأبيض · '+isolate(reply),move:reply,rank:0};
+ }
+ if(color==='b'&&id==='5'&&moves[4]){
+   const reply=moveLabel(moves,4);
+   return {key:'white:'+reply,label:'اختيار الأبيض · '+isolate(reply),move:reply,rank:0};
+ }
+ return {key:'main',label:color==='w'?'خطوط الافتتاحية':'خطوط الدفاع وردود الأبيض',rank:0};
 }
 export function matchingLines(id,prefix,color){
  return studyLines(id,color).filter(({line})=>line.moves.length>=prefix.length&&prefix.every((san,i)=>line.moves[i]===san));
