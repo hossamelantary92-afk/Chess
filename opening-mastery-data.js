@@ -1,5 +1,5 @@
 import {Chess} from './chess.js';
-import {openings} from './opening-library.js?v=7';
+import {openings} from './opening-library.js?v=8';
 import {openingBranches} from './opening-branches.js?v=8';
 
 const profiles = [
