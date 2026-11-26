@@ -67,7 +67,7 @@ function renderPicker() {
   setOptions($('opening-family'),families.map(f=>f.id),family,id=>families.find(f=>f.id===id).label);
   const openings=families.find(f=>f.id===family)?.openings ?? openingChoices(state.color,state.first);
   setOptions($('opening'), openings, state.id, id => catalog.get(id).name);
-  $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
+  $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، ثم Slav، وبعدهم King’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
 }
 
 function renderOpeningInfo(opening) {
@@ -181,8 +181,13 @@ function reviewMistake(m) {
   renderPicker();go(m.ply,'راجع الموقف اللي أخطأت فيه. العب النقلة المطلوبة.');
   document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});
 }
-function resolveMistake(prefix) {
-  for(let i=mistakes.length-1;i>=0;i--)if(mistakes[i].origin.color===state.color&&mistakes[i].prefix.join(' ')===prefix.join(' '))mistakes.splice(i,1);
+function resolveMistake(prefix,san) {
+  for(let i=mistakes.length-1;i>=0;i--){
+    const m=mistakes[i];
+    if(m.origin.color!==state.color||m.prefix.join(' ')!==prefix.join(' '))continue;
+    const line=catalog.get(m.activeId).lines.find(l=>l.id===m.line);
+    if(line?.moves[m.ply]===san||(mode==='dynamic'&&m.origin.id===state.id))mistakes.splice(i,1);
+  }
   renderReview();
 }
 function dynamicMove(san) {
@@ -191,7 +196,7 @@ function dynamicMove(san) {
   if(!matchingLines(state.id,after).length) {
     recordMistake(san);render('النقلة قانونية، لكن مش من الردود المدروسة في المسار ده. جرّب تاني.','retry');persist();return;
   }
-  resolveMistake(prefix);correct++;
+  resolveMistake(prefix,san);correct++;
   const reply=randomOpponent(after);if(reply)after.push(reply);
   const candidates=matchingLines(state.id,after),entry=pickLine(candidates);
   useEntry(entry);
@@ -255,7 +260,7 @@ function tap(square) {
     persist();
     return;
   }
-  resolveMistake(activeLine.moves.slice(0,ply));
+  resolveMistake(activeLine.moves.slice(0,ply),move.san);
   correct++;
   const note = activeLine.notes?.[ply + 1] ?? '';
   const reply = activeLine.moves[ply + 1];
@@ -280,7 +285,10 @@ function render(message, result = '') {
     const names=[...new Set(candidates.map(e=>lineIdentity(e.id,e.line).opening.name))];
     shownOpening=state.id==='open-game'&&(ply<5||names.length!==1)?'Open Game':names.length===1?names[0]:catalog.get(state.id).name;
     shownCategory=state.id==='open-game'?'Open Game':catalog.get(state.id).name;
-    shownVariation=finished?identity.variation:'Dynamic Responses';
+    const identified=candidates.length===1&&ply>=Math.max(5,(activeLine.start??0)+1);
+    const notation=identity.variation.match(/(?:\d+\.{1,3}|\.{3})\s*([KQRBN]?[a-h]?[1-8]?x?[a-h][1-8][+#]?)/g)??[];
+    const nameSafe=notation.every(token=>activeLine.moves.slice(0,ply).includes(token.replace(/^\d*\.+\s*/,'')));
+    shownVariation=finished||(identified&&nameSafe)?identity.variation:'Dynamic Responses';
     if(!finished)$('profile').textContent='';
   }
   $('active-opening').textContent = shownOpening;
@@ -301,15 +309,15 @@ function render(message, result = '') {
   $('session-result-title').textContent=mode==='dynamic'?'Dynamic Session Complete':'Test Complete';
   $('session-result-text').textContent='دقة المحاولات: '+(attempts?Math.round(100*correct/attempts):0)+'% · '+correct+' إجابة صحيحة من '+attempts+' محاولة.';
   const pendingMistake=mistakes.find(m=>m.origin.id===state.id&&m.origin.color===state.color);
-  $('review-play').hidden=!pendingMistake&&!lastMistake;
-  $('review-play').onclick=()=>{const m=pendingMistake??lastMistake;if(m)reviewMistake(m);};
+  $('review-play').hidden=!pendingMistake;
+  $('review-play').onclick=()=>{if(pendingMistake)reviewMistake(pendingMistake);};
   $('learn-controls').hidden = practice;
   $('test-controls').hidden = !practice;
   $('test-score').textContent = 'صحيح: \u2066' + correct + ' / ' + attempts + '\u2069' + (finished ? ' · اكتمل الاختبار' : '');
   $('turn-status').textContent = finished ? 'اختبار مكتمل' : ply === activeLine.moves.length ? 'اكتمل الخط' : (practice ? 'دورك · ' : 'الدور · ') + (chess.turn() === 'w' ? 'White' : 'Black');
   $('line-progress').textContent = mode==='dynamic'&&!finished ? String(ply)+' plies' : ply + ' / ' + activeLine.moves.length;
   $('move-note').dataset.result = result;
-  $('move-note').textContent = message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : 'العب النقلة التالية من الذاكرة.') : explanation());
+  $('move-note').textContent = message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : mode==='dynamic'?'العب ردك على الوضع الحالي.':'العب النقلة التالية من الذاكرة.') : explanation());
   $('opening-explanation').hidden = practice && !finished;
   $('move-list').replaceChildren(...activeLine.moves.slice(0, practice ? ply : undefined).map((san, index) => {
     const chip = button(`${index % 2 ? '…' : Math.floor(index / 2) + 1 + '.'}${san}`, () => go(index + 1));
