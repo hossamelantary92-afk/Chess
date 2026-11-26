@@ -176,3 +176,27 @@ const groupKey=(el)=>el.querySelector('summary')?.textContent.trim();
 let opened=[];try{opened=JSON.parse(sessionStorage.getItem('rook-home-open-v183')||'[]');if(!Array.isArray(opened))opened=[]}catch{}
 for(const el of groupsOnHome)el.open=opened.includes(groupKey(el));
 for(const el of groupsOnHome)el.addEventListener('toggle',()=>{try{sessionStorage.setItem('rook-home-open-v183',JSON.stringify(groupsOnHome.filter(x=>x.open).map(groupKey)))}catch{}});
+
+ // Dedicated category views retain the original live lesson cards and handlers.
+const category=new URLSearchParams(location.search).get('section');
+const activeStage=stages.find(s=>s.id===category);
+const stageNodes=[...home.querySelectorAll('.learning-stage')];
+for(const node of stageNodes){
+ const stage=stages.find(s=>node.classList.contains('learning-stage-'+s.id));
+ if(!stage)continue;
+ const summary=node.querySelector('summary');
+ if(activeStage){
+  if(stage.id!==activeStage.id){node.remove();continue}
+  node.open=true;summary.hidden=true;summary.style.setProperty('display','none','important');
+  for(const unit of node.querySelectorAll('.unified-unit'))unit.open=true;
+  for(const unit of node.querySelectorAll('.unified-unit>summary'))unit.addEventListener('click',e=>e.preventDefault());
+ }else{
+  const link=document.createElement('a');link.className='category-entry';link.href='index.html?section='+encodeURIComponent(stage.id);link.append(...summary.childNodes);const arrow=link.querySelector('.group-chevron');if(arrow)arrow.textContent='‹';node.replaceWith(link);
+ }
+}
+if(activeStage){
+ const heading=document.createElement('div');heading.className='category-heading';
+ const back=document.createElement('a');back.href='index.html#home';back.textContent='→ الرئيسية';
+ const title=document.createElement('h2');title.textContent=activeStage.title;
+ heading.append(back,title);home.before(heading);home.classList.add('category-content');
+}
