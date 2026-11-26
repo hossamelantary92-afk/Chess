@@ -54,7 +54,7 @@ function renderOpeningInfo(opening) {
   const profile = opening.profile;
   $('profile').textContent = profile?.[0] ?? '';
   $('profile').title = profile?.[1] ?? '';
-  const fields = profile ? [['الميزة', profile[2]], ['خد بالك', profile[3]]] : [];
+  const fields = profile ? [['أسلوب اللعب', profile[1]], ['الميزة', profile[2]], ['خد بالك', profile[3]]] : [];
   $('trade-offs').replaceChildren(...fields.flatMap(([label, value]) => [element('dt', label), element('dd', value)]));
   $('trade-offs').hidden = !fields.length;
 }
