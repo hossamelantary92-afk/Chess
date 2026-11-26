@@ -41,7 +41,7 @@ export const themes={
 
 // Historical moves with original instructional explanations.
 const morphy=new Chess();for(const m of 'e4 e5 Nf3 d6 d4 Bg4 dxe5 Bxf3 Qxf3 dxe5 Bc4 Nf6 Qb3 Qe7 Nc3 c6 Bg5 b5 Nxb5 cxb5 Bxb5+ Nbd7 O-O-O Rd8 Rxd7 Rxd7 Rd1 Qe6 Bxd7+ Nxd7'.split(' '))morphy.move(m);
-bank.push(row('morphy-opera','كش مات',2,morphy.fen(),'Qb8+ Nxb8 Rd8#','من مباراة الأوبرا، مورفي ١٨٥٨: Qb8+ يجبر الحصان على ترك d7، ثم Rd8 مات. الشرح أصلي. مصدر السجل: chess.com/terms/opera-game-chess','ابحث عن كش بالوزير يفتح طريق الرخ للمات.'));
+bank.push(row('morphy-opera','الإلهاء',3,morphy.fen(),'Qb8+ Nxb8 Rd8#','من مباراة الأوبرا، مورفي ١٨٥٨: Qb8+ يجبر الحصان على ترك d7، ثم Rd8 مات. الشرح أصلي. مصدر السجل: chess.com/terms/opera-game-chess','ابحث عن كش بالوزير يفتح طريق الرخ للمات.'));
 const capa=new Chess();for(const m of 'd4 d5 c4 e6 Nc3 Nf6 Nf3 Be7 Bg5 O-O e3 Nbd7 Rc1 b6 cxd5 exd5 Qa4 Bb7 Ba6 Bxa6 Qxa6 c5 Bxf6 Nxf6 dxc5 bxc5 O-O Qb6 Qe2 c4 Rfd1 Rfd8 Nd4 Bb4 b3 Rac8 bxc4 dxc4 Rc2 Bxc3 Rxc3 Nd5 Rc2 c3 Rdc1 Rc5 Nb3 Rc6 Nd4 Rc7 Nb5 Rc5 Nxc3 Nxc3 Rxc3 Rxc3 Rxc3 Qb2 Qxb2'.split(' '))capa.move(m);
 bank.push(row('capablanca-backrank','كش مات',2,capa.fen(),'Rd1#','فرع تعليمي بعد مباراة برنشتاين–كابابلانكا ١٩١٤: لو أخذ الأبيض الوزير بـQxb2، يكون Rd1 ماتًا. المباراة الأصلية انتهت قبل هذا الفرع باستسلام الأبيض.','الأسود يلعب؛ افحص الصف الأول وبيادق الملك.'));
 // Mirrored training counterparts make the learner play Black; not new historical games.
@@ -81,3 +81,9 @@ export const tacticalLessons={
 bank.push(row("rook-mate-black-new","كش مات",1,"4r1k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1","Re1#","الرخ يغلق الصف الأول، وبيادق الأبيض تمنع هروب الملك. افحص الحجب والأخذ قبل إعلان المات.","افحص الصف الأول."));
 bank.push(row("loose-bishop-black-new","قطعة غير محمية",1,"6k1/8/3b4/8/5R2/8/8/6K1 b - - 0 1","Bxf4","الفيل يأخذ الرخ غير المحمي عبر e5. افحص أمان الفيل بعد الأخذ.","تتبع قطر الفيل."));
 bank.push(row("queen-mate-black-new","كش مات",1,"8/8/8/8/8/5kq1/8/7K b - - 0 1","Qg2#","الوزير محمي بالملك ويغلق مربعات الهروب حول h1.","ابحث عن كش بوزير محمي."));
+export const advancedThemes={"الإلهاء":"Deflection","الاستدراج":"Decoy","التحميل الزائد":"Overloading","قطع خط الدفاع":"Interference","النقلة البينية":"Zwischenzug"};
+themes["الإلهاء"]="إجبار المدافع على ترك مهمة دفاعية مهمة."; tacticalLessons["الإلهاء"]={"detect":"ابحث عن قطعة تحمي هدفًا ويمكن تهديدها أو إجبارها على الأخذ بعيدًا عنه.","calculate":"احسب ردود المدافع البديلة قبل التضحية.","mistake":"لا تفترض أن الخصم مضطر للأخذ."};
+themes["الاستدراج"]="جذب قطعة الخصم إلى مربع يجعلها عرضة لتكتيك."; tacticalLessons["الاستدراج"]={"detect":"ابحث عن مربع يؤدي وصول الملك أو الوزير إليه إلى شوكة أو مات.","calculate":"احسب النقلات الإجبارية التي تجذب الهدف ثم نفّذ الفكرة.","mistake":"قد يرفض الخصم الطعم."};
+themes["التحميل الزائد"]="مدافع واحد مسؤول عن أكثر من مهمة لا يستطيع تنفيذها معًا."; tacticalLessons["التحميل الزائد"]={"detect":"حدد القطع التي تحمي هدفين أو مربع مات وقطعة أخرى.","calculate":"احسب أي مهمة دفاعية ستنهار بعد التهديد الأول.","mistake":"وجود مهمتين لا يعني أن المدافع عاجز عن أدائهما."};
+themes["قطع خط الدفاع"]="وضع قطعة بين مدافع والهدف الذي يحميه."; tacticalLessons["قطع خط الدفاع"]={"detect":"تتبع خطوط الرخ والفيل والوزير وابحث عن مربع تقاطع.","calculate":"احسب الأخذ والحجب والتهديد الناتج بعد قطع الخط.","mistake":"قد يتمكن الخصم من إزالة القطعة الحاجبة."};
+themes["النقلة البينية"]="نقلة إجبارية بين نقلتين متوقعتين، تغير نتيجة الحساب."; tacticalLessons["النقلة البينية"]={"detect":"قبل الاسترداد التلقائي افحص الكشات والتهديدات الأقوى.","calculate":"احسب رد الخصم ثم عد إلى الاسترداد إن ظل ممكنًا.","mistake":"تأكد أن تأجيل الاسترداد لا يضيّع المادة."};
