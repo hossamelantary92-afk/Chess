@@ -7,7 +7,7 @@
   <title>Opening Mastery | رُخ</title>
   <link rel="stylesheet" href="style.css?v=32">
   <link rel="stylesheet" href="club.css?v=59">
-  <link rel="stylesheet" href="opening-mastery.css?v=6">
+  <link rel="stylesheet" href="opening-mastery.css?v=7">
 </head>
 <body class="mastery-page">
 <header><a class="brand" href="index.html">♜ <span>رُخ</span></a><a class="mastery-home" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>الرئيسية</a></header>
@@ -15,8 +15,7 @@
   <div class="mastery-heading"><div><span class="mastery-kicker">ROOK / OPENINGS</span><h1 lang="en" dir="ltr">Opening Mastery</h1></div></div>
   <div class="mastery-layout">
     <section class="mastery-setup study-panel" aria-label="إعداد التدريب">
-      <div class="mastery-section-title"><h2 lang="en">Opening Setup</h2><button id="toggle-setup" type="button" aria-expanded="true" aria-controls="setup-fields"><span id="setup-toggle-label">طي</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="var(--om-surface)"/><circle cx="15" cy="17" r="2.5" fill="var(--om-surface)"/></svg></button></div>
-      <p id="setup-summary" dir="ltr" hidden></p>
+      <div class="mastery-section-title"><div class="setup-title-copy"><h2 lang="en" id="setup-title">Opening Setup</h2><p id="setup-summary" dir="ltr" hidden></p></div><button id="toggle-setup" type="button" aria-expanded="true" aria-controls="setup-fields"><span id="setup-toggle-label">طي</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="var(--om-surface)"/><circle cx="15" cy="17" r="2.5" fill="var(--om-surface)"/></svg></button></div>
       <div id="setup-fields">
       <div id="mastery-color" class="mastery-actions" role="group" aria-label="لون اللعب">
         <button type="button" data-color="w" lang="en"><span class="side-emblem white-emblem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v6M9 6h6M6 20h12M7 17h10l2-6-4 2-3-4-3 4-4-2z"/></svg></span><span>White</span></button>
@@ -24,24 +23,21 @@
       </div>
       <div class="mastery-fields">
         <label id="first-move-field"><span class="field-caption">نقلة الأبيض</span><select id="first-move" dir="ltr"></select></label>
-        <label id="family-field"><span class="field-caption">عائلة الافتتاحيات</span><select id="opening-family" dir="ltr"></select></label>
         <label id="opening-label"><span class="field-caption">الافتتاحية</span><select id="opening" dir="ltr"></select></label>
         <label id="line-field"><span class="field-caption">التفريعة</span><select id="opening-line" dir="ltr"></select></label>
       </div>
-      <p class="learning-order-note" id="learning-order-note"></p>
+
       </div>
     </section>
     <section class="mastery-training study-panel" aria-label="رقعة التدريب">
-      <div class="mastery-route" aria-label="مسار التعلم" dir="ltr"><span>01 Learn</span><i></i><span>02 Test</span><i></i><span>03 Dynamic</span><i></i><span>04 Review</span></div>
       <div id="mastery-mode" class="mastery-actions mastery-modes" role="group" aria-label="طريقة التدريب">
-        <button type="button" id="learn-mode" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5a4 4 0 0 1 4 4v11a4 4 0 0 0-4-4H3zM21 5h-5a4 4 0 0 0-4 4v11a4 4 0 0 1 4-4h5z"/></svg><span><strong lang="en">Learn</strong><small>شاهد النقلات</small></span></button>
-        <button type="button" id="test-mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1" fill="var(--om-surface)"/><path d="m8 14 3 3 5-6"/></svg><span><strong lang="en">Test Yourself</strong><small>اختبر نفسك</small></span></button>
-        <button type="button" id="dynamic-mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h3c5 0 7 14 12 14h3m-4-4 4 4-4 4M3 19h3c2 0 3-2 4-4m4-6c1-2 2-4 4-4h3m-4-4 4 4-4 4"/></svg><span><strong lang="en">Dynamic</strong><small>ردود متغيرة</small></span></button>
+        <button type="button" id="learn-mode" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5a4 4 0 0 1 4 4v11a4 4 0 0 0-4-4H3zM21 5h-5a4 4 0 0 0-4 4v11a4 4 0 0 1 4-4h5z"/></svg><span><strong lang="en">Learn</strong></span></button>
+        <button type="button" id="test-mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1" fill="var(--om-surface)"/><path d="m8 14 3 3 5-6"/></svg><span><strong lang="en">Test</strong></span></button>
+        <button type="button" id="dynamic-mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h3c5 0 7 14 12 14h3m-4-4 4 4-4 4M3 19h3c2 0 3-2 4-4m4-6c1-2 2-4 4-4h3m-4-4 4 4-4 4"/></svg><span><strong lang="en">Dynamic</strong></span></button>
       </div>
-      <p id="mode-guide" class="mode-guide"></p>
       <div class="mastery-section-title mastery-active"><div class="active-opening-copy"><span id="active-category" dir="ltr" hidden></span><h2 id="active-opening" lang="en" dir="ltr"></h2><div class="opening-subtitle" dir="ltr"><span id="active-variation"></span><span id="profile"></span></div></div><span id="line-progress" dir="ltr"></span></div>
       <div class="mastery-progress" aria-hidden="true"><span id="progress-fill"></span></div>
-      <div class="mastery-board-bar"><strong id="turn-status"></strong><span id="training-mode-label" lang="en" dir="ltr"></span></div>
+      <div class="mastery-board-bar"><strong id="turn-status"></strong></div>
       <div id="mastery-board" class="study-board" aria-label="رقعة شطرنج" role="group"></div>
       <div class="mastery-actions" id="learn-controls" dir="ltr">
         <button id="start-ply" type="button" aria-label="Restart" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 7M3 4v7h7"/></svg></button>
@@ -72,10 +68,11 @@
       <div class="mastery-section-title"><h2 lang="en">My Repertoire</h2><button id="save-opening" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>احفظ الاختيار</button></div>
       <div id="saved-openings"></div><p id="save-status" role="status"></p>
       <section class="mastery-extra" id="review-section"><h3 lang="en">Opening Review</h3><p id="review-summary"></p><div id="review-items"></div></section>
+      <details class="mastery-learning-help"><summary lang="en">Learning Guide</summary><p>Learn → Test → Dynamic → Review</p><p>شاهد النقلات وافهم هدفها، ثم اختبر خطًا محددًا. بعد ذلك واجه ردودًا متنوعة من الخطوط المدروسة وراجع أخطاءك.</p><p id="learning-order-note"></p></details>
       <div class="mastery-extra"><h3 lang="en">More Opening Practice</h3><div class="mastery-actions"><a href="training.html#trainer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4v12a4 4 0 0 0 4 4h8M6 8h8a4 4 0 0 0 4-4"/><path d="m15 17 3 3-3 3M15 1l3 3 3-3"/></svg><span>Unexpected Moves</span></a><a href="training.html#exam"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span>Mixed Opening Test</span></a><a href="index.html#opening-traps"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 20h19zM12 9v5M12 17h.01"/></svg><span>Traps &amp; Gambits</span></a></div></div>
     </section>
   </div>
 </main>
-<script type="module" src="opening-mastery.js?v=6"></script>
+<script type="module" src="opening-mastery.js?v=7"></script>
 </body>
 </html>
