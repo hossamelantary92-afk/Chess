@@ -64,10 +64,27 @@ function draw(){const box=$('#labBoard');const fs=flipped?[...files].reverse():[
 }b.onclick=()=>play(sq);paintSquare(b,markup)}$('#labTurn').textContent=done?'انتهى الموقف':c.turn()==='w'?'الأبيض يلعب':'الأسود يلعب';$('#labLevel').textContent=mode==='exam'?'اختبار بلا تلميحات':mode==='mixed'?'فكّر قبل النقل':queue[n].level===1?'أساسي':queue[n].level===2?'متوسط':'متقدم'}
 function explainLine(p){
  const box=$('#labSolutionDetail');box.replaceChildren();if(!p.line)return;
- const b=new Chess(p.fen), steps=[];let forced=true;
- for(let i=0;i<p.line.length;i++){const choices=b.moves();if(i%2===1&&choices.length!==1)forced=false;const m=b.move(p.line[i]);steps.push({san:m.san,role:i%2===0?'نقلتك':'رد الخصم',choices:choices.length});}
- const heading=document.createElement('strong');heading.textContent=b.isCheckmate()&&forced?'مات بخط إجباري':p.line.length>1?'خط تعليمي · افحص الردود البديلة':'الفكرة التطبيقية';box.append(heading);
- for(const step of steps){const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #7773';const label=document.createElement('span');label.textContent=step.role+(step.role==='رد الخصم'?' · '+step.choices+' رد قانوني':'');const san=document.createElement('b');san.dir='ltr';san.textContent=step.san;row.append(label,san);box.append(row);}
+ const b=new Chess(p.fen), steps=[], actual=c.history(), line=actual.length===p.line.length?actual:p.line;let forced=true;
+ const names={p:'البيدق',n:'الحصان',b:'الفيل',r:'الرخ',q:'الوزير',k:'الملك'};
+ const values={p:1,n:3,b:3,r:5,q:9,k:0};
+ const side=b.turn();const score=()=>b.board().flat().filter(Boolean).reduce((s,x)=>s+(x.color===side?1:-1)*values[x.type],0);const initial=score();
+ for(let i=0;i<line.length;i++){
+  const choices=b.moves();if(i%2===1&&choices.length!==1)forced=false;
+  const m=b.move(line[i]);const mate=b.isCheckmate(),check=b.isCheck();
+  const notes=[];
+  if(m.captured)notes.push('أخذ '+names[m.captured]+' على '+m.to+' ('+values[m.captured]+' نقاط مادة).');
+  if(m.promotion)notes.push('ترقية البيدق إلى '+names[m.promotion]+'.');
+  if(mate)notes.push('كش مات: لا يوجد أخذ أو حجب أو هروب قانوني.');
+  else if(check)notes.push('كش يجبر الخصم على معالجة تهديد الملك؛ عدد الردود القانونية: '+b.moves().length+'.');
+  else if(!m.captured&&!m.promotion)notes.push('نقلة دون كش أو أخذ: افحص التهديد الجديد ومربعات السيطرة.');
+  if(i%2===1)notes.push(choices.length===1?'هذا هو الرد القانوني الوحيد.':'هذا رد من '+choices.length+' ردود قانونية؛ ليس بالضرورة الأقوى.');
+  steps.push({san:m.san,role:i%2===0?'نقلتك':'رد الخصم',notes:notes.join(' ')});
+ }
+ const heading=document.createElement('strong');heading.textContent=b.isCheckmate()&&forced?'مات بخط إجباري':p.line.length>1?'تحليل الخط المعروض':'تحليل النقلة';box.append(heading);
+ for(const step of steps){const row=document.createElement('div');row.style.cssText='padding:9px 0;border-bottom:1px solid #7773';const top=document.createElement('div');top.style.cssText='display:flex;justify-content:space-between;gap:8px';const label=document.createElement('span');label.textContent=step.role;const san=document.createElement('b');san.dir='ltr';san.textContent=step.san;top.append(label,san);const detail=document.createElement('div');detail.style.cssText='font-size:13px;line-height:1.7;margin-top:4px';detail.textContent=step.notes;row.append(top,detail);box.append(row);}
+ const summary=document.createElement('div');summary.style.cssText='padding:9px 0;font-size:13px;line-height:1.7';const delta=score()-initial;summary.textContent=b.isCheckmate()?'النتيجة: كش مات.':'صافي تغير المادة في الخط المعروض: '+(delta>0?'+':'')+delta+' نقطة. هذا ليس تقييمًا كاملًا للموقف.';box.append(summary);
+ if(p.acceptedMoves?.length>1){const alt=document.createElement('div');alt.style.cssText='font-size:13px;line-height:1.7;padding:6px 0';alt.textContent='حلول أخذ بديلة متحققة: '+p.acceptedMoves.join(' / ');box.append(alt);}
+ const lesson=tacticalLessons[p.theme];if(lesson){const takeaway=document.createElement('div');takeaway.style.cssText='padding:8px 0;font-size:13px;line-height:1.7';takeaway.textContent='في مبارياتك: '+lesson.detect+' '+lesson.mistake;box.append(takeaway);}
 }
 function finish(revealed=false){if(revealed)verdict=null;done=true;$('#labIntro').hidden=true;$('#labMethod').textContent='';$('#labLesson').style.display='none';const p=queue[n];if(!revealed)counted.add(p.id);if(!failed&&!hints&&!revealed)firstCounted.add(p.id);round=counted.size;roundFirst=firstCounted.size;if(!revealed&&!log.solved.includes(p.id))log.solved.push(p.id);if(!failed&&!hints&&!revealed)log.review=log.review.filter(x=>x!==p.id);$('#labExplanation').hidden=false;$('#labExplainText').textContent=p.explain;explainLine(p);renderTheme(p.theme,englishTheme[p.theme]);$('#labTask').textContent=revealed?'راجع الفكرة وجربها تاني':'أحسنت، اكتملت الفكرة';$('#labFeedback').textContent=revealed?'عرض الحل لا يُحسب إجابة صحيحة.':failed||hints?'حل صحيح. كرر الموقف لاحقًا دون تلميح.':'حل صحيح من أول محاولة دون مساعدة.';$('#labNext').hidden=false;$('#labNext').textContent=n===queue.length-1?'نتيجة الجولة':'الموقف التالي';$('#labHint').hidden=true;$('#labAnswer').hidden=true;$('#labSkip').hidden=true;draw();save()}
 function rejectMove(square,message){
