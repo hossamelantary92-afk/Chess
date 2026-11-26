@@ -42,6 +42,15 @@ for (const [id, name, moves, , summary] of supplements) {
   catalog.set(id, {name, summary, lines: [{id: '', name: 'Main Line', moves: moves.split(' ')}]});
 }
 
+// A general 1...e5 repertoire continues into actual playable lines.
+const openGame = catalog.get('open-game');
+openGame.profile = ['Beginner', 'تطوير طبيعي', 'بتنافس على المركز وبتجهّز القطع للتبييت.', 'بعد ...Nc6 لازم تتعامل مع اختيار الأبيض، مش تفرض ترتيب واحد.'];
+openGame.lines = ['0','1','9'].map((id,index) => {
+  const opening = catalog.get(id);
+  const line = opening.lines[0];
+  return {...line, id: index === 0 ? '' : 'open-game-'+id, name: opening.name+' · '+line.name,
+    idea: 'بعد 1.e4 e5 2.Nf3 Nc6، اختيار الأبيض بيحدد الفرع. '+(line.idea ?? opening.summary)};
+});
 catalog.get('0').lines.push({
   id: 'italian-h6', name: 'Unexpected Moves · 3...h6', start: 6,
   moves: 'e4 e5 Nf3 Nc6 Bc4 h6 d4 exd4 O-O'.split(' '),
