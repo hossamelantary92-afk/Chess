@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=191';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=192';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -597,10 +597,10 @@ function render(message, result = '') {
   $('decision-prompt').textContent = chessText(decision?.prompt ?? '');
   $('decision-feedback').textContent = '';
   $('decision-options').replaceChildren(...(decision?.choices ?? []).map(([san,reason]) => {
-    const option = button(san, () => { $('decision-feedback').textContent = reason; });
-    option.dir = 'ltr'; return option;
+    const option = button(san, () => { const correct=decision.choices.findIndex(c=>c[0]===san)===decision.correct; $('decision-feedback').textContent = (Number.isInteger(decision.correct)?(correct?'أحسنت! ':'راجع الفكرة. '):'')+reason; });
+    option.dir = /[\u0600-\u06ff]/.test(san)?'rtl':'ltr'; return option;
   }));
-  $('decision-jump').onclick = () => go(activeLine.start ?? 0);
+  $('decision-jump').onclick = () => go(decision?.ply ?? activeLine.start ?? 0);
   const links = [];
   function addLink(label,href,external=false) { const a=element('a',label);a.href=href;if(external){a.target='_blank';a.rel='noopener noreferrer';}links.push(a); }
   const video=activeLine.video ?? displayOpening.video;
