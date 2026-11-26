@@ -14,8 +14,9 @@ const linkedId = query.get('opening');
 const linkedColor = query.get('color') === 'b' ? 'b' : 'w';
 const linkedFirst = firstMoves.find(first => openingChoices('b', first).includes(linkedId)) ?? 'e4';
 const linked = normalizeSelection({color: linkedColor, first: linkedFirst, id: linkedId, line: query.get('line') ?? '', ply: 0, mode: query.get('mode')});
-const restored = normalizeSelection(stored?.view);
-const state = valid(linked) ? linked : valid(restored) ? restored : {color: 'w', first: 'e4', id: '0', line: '', ply: 0};
+// A fresh visit starts a new lesson; retain saved repertoire and learning results only.
+// Explicit lesson links still open their requested color and opening.
+const state = valid(linked) ? linked : {color: 'w', first: 'e4', id: '0', line: '', ply: 0, mode: 'learn'};
 if (valid(linked)) history.replaceState(history.state, '', location.pathname);
 const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
 let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
@@ -28,7 +29,7 @@ let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn
 let chess, ply, lastMove, selected, practice = mode !== 'learn';
 const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.map(m=>({...m,origin:normalizeSelection(m.origin)})).filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
 let reviewTarget = typeof state.reviewTarget==='string'?state.reviewTarget:null;
-if(reviewTarget&&stored?.view?.id!==state.id)reviewTarget=reviewTarget.replace('|'+stored.view.id+'|','|'+state.id+'|');
+
 const mistakeKey=m=>m.origin.color+'|'+m.origin.id+'|'+m.prefix.join(' ');
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
@@ -630,3 +631,6 @@ renderStarter();
 if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply),state.color).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
 else if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(mode);
 else go(state.ply);
+
+// Safari can restore a closed/navigated-away page from its back-forward cache.
+window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
