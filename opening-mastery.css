@@ -136,3 +136,71 @@
 .mastery-page #setup-fields #line-field{grid-column:1/-1}
 .mastery-page .mastery-section-title{margin-bottom:6px}
 }
+
+/* v5 — unified compact controls and opening / variation hierarchy */
+.mastery-page { --om-control:#32362d; --om-accent:#a8cd72; }
+.mastery-page svg { width:18px;height:18px;stroke-width:1.65; }
+.mastery-page #toggle-setup { min-height:36px;padding:5px 9px;font-size:12px;border-color:var(--om-edge); }
+.mastery-page #toggle-setup[aria-expanded="true"] svg{transform:none}
+.mastery-page #mastery-color,.mastery-page .mastery-modes { gap:4px;padding:3px;background:#242720;border:1px solid var(--om-edge);border-radius:11px; }
+.mastery-page #mastery-color button,.mastery-page .mastery-modes button { min-height:44px;border:1px solid transparent;background:transparent;gap:7px;border-radius:8px; }
+.mastery-page #mastery-color button[aria-pressed="true"],.mastery-page .mastery-modes button[aria-pressed="true"] {background:#425335;border-color:#759650;color:#f3f8eb;}
+.side-emblem { width:24px;height:24px;flex:0 0 24px;border-radius:6px;display:inline-grid;place-items:center;border:1px solid #767c68; }
+.side-emblem svg { width:18px;height:18px; }
+.white-emblem { background:#e9e3d2;color:#383a30;border-color:#d3cbb8; }
+.black-emblem { background:#24271f;color:#e1e6d7; }
+.mastery-page .mastery-modes button { direction:ltr;justify-content:center; }
+.mastery-page .mastery-modes button strong { font-size:14px; }
+.mastery-page .mastery-modes button small { font-size:10px;line-height:1.2; }
+.mastery-page .mastery-modes button svg{color:var(--om-muted)}
+.mastery-page .mastery-modes button[aria-pressed="true"] svg{color:var(--om-accent)}
+.mastery-page #setup-fields .mastery-fields{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6px 8px;}
+.mastery-page #setup-fields #first-move-field{grid-column:1;grid-row:1}
+.mastery-page #setup-fields #opening-label{grid-column:2;grid-row:1}
+.mastery-page #setup-fields #first-move-field[hidden]+#opening-label{grid-column:1/-1}
+.mastery-page #setup-fields #line-field{grid-column:1/-1}
+.mastery-page .field-caption{display:block;line-height:1.2;font-size:11px;margin-bottom:3px}
+.mastery-page main select:not([multiple]){appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23c0c9ad' stroke-width='1.65' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:18px;padding:7px 34px 7px 10px;margin:0;min-height:44px;border-radius:8px;line-height:1.25;text-overflow:ellipsis;}
+.mastery-page .active-opening-copy{display:flex;flex-direction:column;align-items:flex-start;gap:3px;}
+#active-category{font:600 10px/1.15 system-ui;color:var(--om-muted);letter-spacing:.3px}
+#active-opening{font-size:clamp(1.14rem,3.8vw,1.4rem);line-height:1.2}
+.opening-subtitle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+#active-variation{font:500 12px/1.3 system-ui;color:var(--om-muted);overflow-wrap:anywhere}
+#profile:not(:empty){font:600 10px/1.3 system-ui;background:#384631;color:#bbd69e;border-radius:5px;padding:3px 6px}
+.mastery-icon-heading{display:flex;align-items:center;gap:7px;direction:ltr}
+.mastery-icon-heading svg{color:var(--om-accent)}
+#response-caption{margin:4px 0 9px!important}
+#tree-branches>div{padding:9px;gap:10px;grid-template-columns:minmax(0,1fr) auto}
+#tree-branches>div>div{display:grid;gap:3px}
+#tree-branches strong{text-align:right;font-size:.89rem}
+.branch-variation{font:500 11px/1.4 system-ui;color:var(--om-accent);text-align:right}
+#tree-branches small{font-size:.77rem;margin:0}
+.mastery-page #tree-branches .branch-move{min-width:52px;min-height:40px;background:#414b35;border-color:#657a4e;font:700 13px/1.2 system-ui}
+.mastery-page #opening-explanation>h2{margin-bottom:10px}
+.idea-card{margin-top:6px}
+.idea-card h3{margin:0 0 6px}
+.mastery-page .idea-card p{margin:5px 0!important}
+.mastery-plan h3 .side-emblem{width:23px;height:23px;flex-basis:23px}
+.mastery-plans{margin-top:8px}
+.mastery-page #save-opening{min-height:38px;padding:5px 9px;border-color:#60744c;color:#c9dfa9}
+.mastery-page #saved-openings>div{background:#292c25;border:1px solid var(--om-edge);border-radius:10px;padding:4px;gap:4px}
+.mastery-page #saved-openings .repertoire-entry{display:flex;align-items:center;gap:9px;min-width:0;background:transparent;border:0;padding:5px;text-align:left;direction:ltr}
+.repertoire-entry>span:last-child{display:grid;gap:3px;min-width:0}
+.repertoire-entry strong{font-size:13px;line-height:1.35;overflow-wrap:anywhere}
+.repertoire-entry small{font-size:11px;color:var(--om-muted)}
+.repertoire-mark{height:30px;width:30px;flex:0 0 30px;border:1px solid #777f6a;border-radius:7px;display:grid;place-items:center;font-size:12px}
+.white-mark{background:#e9e3d2;color:#383a30}.black-mark{background:#24271f;color:#e1e6d7}
+.mastery-page #saved-openings .repertoire-remove{display:grid;place-items:center;width:40px;min-height:40px;border:0;background:transparent;color:var(--om-muted);padding:0}
+.mastery-page #saved-openings .repertoire-remove:hover{background:#43332c;color:#e4b6a1}
+.mastery-extra .mastery-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;direction:ltr}
+.mastery-extra a{justify-content:center;gap:7px;padding:8px 5px;text-align:center;background:var(--om-control);font-weight:600;min-height:44px;line-height:1.3}
+.mastery-extra a svg{color:var(--om-accent);width:16px;height:16px}
+.mastery-extra a:last-child{grid-column:1/-1}
+@media(max-width:800px){
+.mastery-page .mastery-setup{padding:8px 10px}
+.mastery-page #mastery-color{margin:0 0 7px}
+.mastery-page .mastery-training .mastery-modes{margin:0 0 8px}
+.mastery-page .mastery-heading{margin-bottom:6px}
+.mastery-page .mastery-active{margin-bottom:7px}
+}
+@media(max-width:350px){.mastery-page .mastery-modes button{gap:4px}.mastery-page .mastery-modes button strong{font-size:12px}.mastery-extra a{font-size:11px}}
