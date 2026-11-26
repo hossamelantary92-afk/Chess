@@ -238,3 +238,44 @@
 #review-items small{color:var(--om-muted);font:500 11px/1.4 system-ui}
 .mastery-page #review-items button{min-height:40px;padding:5px 9px;color:var(--om-accent)}
 .mastery-progress.dynamic-progress{background:repeating-linear-gradient(90deg,#4c623c 0 12px,#34392e 12px 18px)}
+
+/* v7 — board-first focus layout, one opening picker and quiet controls */
+.mastery-page .setup-title-copy{display:grid;gap:4px;min-width:0}
+.mastery-page .setup-title-copy #setup-summary{font-size:12px;line-height:1.35;overflow-wrap:anywhere;text-align:right}
+.mastery-page .mastery-setup:has(#setup-fields[hidden]) .mastery-section-title{margin-bottom:0}
+.mastery-page #toggle-setup{min-height:40px;flex-shrink:0}
+.mastery-page #setup-fields .mastery-fields{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:7px}
+.mastery-page #setup-fields #first-move-field{grid-column:1;grid-row:1}
+.mastery-page #setup-fields #opening-label{grid-column:2;grid-row:1}
+.mastery-page #setup-fields #first-move-field[hidden]+#opening-label{grid-column:1/-1}
+.mastery-page #setup-fields #line-field{grid-column:1/-1;grid-row:auto}
+.mastery-page .mastery-training .mastery-modes{direction:ltr;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 0 10px}
+.mastery-page .mastery-training .mastery-modes button{min-height:44px;flex-direction:row;gap:6px;padding:5px 4px}
+.mastery-page .mastery-training .mastery-modes button strong{font-size:13px}
+.mastery-page .mastery-training .mastery-modes button svg{width:16px;height:16px}
+.mastery-page .mastery-board-bar{padding:5px 0;min-height:22px;font-size:11px}
+.mastery-page .mastery-board-bar strong{font-weight:500;color:var(--om-muted)}
+.mastery-page .mastery-progress{height:3px}
+.mastery-page .mastery-active{margin-bottom:6px}
+.mastery-page .active-opening-copy{gap:2px}
+.mastery-page .mastery-learning-help{margin-top:10px;padding:9px 0;border-top:1px solid var(--om-edge)}
+.mastery-page .mastery-learning-help summary{cursor:pointer;color:var(--om-muted);font-weight:600}
+.mastery-page .mastery-learning-help p{font-size:12px;line-height:1.6}
+@media(max-width:800px){
+.mastery-page > header{height:48px;padding-inline:12px}
+.mastery-page .brand{font-size:24px}.mastery-page .brand span{font-size:23px}
+.mastery-page .mastery-home{min-height:36px;padding:6px 9px}
+.mastery-page main{padding-top:7px;padding-inline:9px}
+.mastery-page .mastery-heading{margin-bottom:7px}
+.mastery-page h1{font-size:1.28rem}
+.mastery-page .mastery-layout{gap:8px}
+.mastery-page .mastery-training{padding:9px}
+.mastery-page .mastery-setup{padding:9px 10px}
+.mastery-page .mastery-training .mastery-modes{margin-bottom:8px}
+.mastery-page #active-opening{font-size:1.1rem}
+.mastery-page #active-category{font-size:10px}
+.mastery-page #active-variation{font-size:11px}
+.mastery-page .opening-subtitle{gap:5px}
+.mastery-page #mastery-board{width:100%}
+}
+@media(max-width:350px){.mastery-page .mastery-training .mastery-modes button{gap:3px}.mastery-page .mastery-training .mastery-modes button strong{font-size:11px}}
