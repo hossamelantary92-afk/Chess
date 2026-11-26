@@ -91,6 +91,11 @@ catalog.set('reti-white',{name:'Réti Opening',summary:'ابدأ بـ Nf3 وطو
 {id:'reti-nf6',name:'Against ...Nf6',moves:'Nf3 Nf6 c4 g6 g3 Bg7 Bg2 O-O O-O d6'.split(' '),idea:'التطوير المرن يسمح بالانتقال لبناء إنجليزي حسب نقلات الطرفين.'}
 ]});
 catalog.set('london-black',{...catalog.get('2'),name:'Defense vs London System',summary:'لو الأبيض طوّر الفيل إلى f4، نافس مركز d4 وطوّر قطعك. اختار الرد حسب وضع البيادق، مش بالتقليد.',lines:catalog.get('2').lines});
+catalog.set('dutch',{name:'Dutch Defense',summary:'1...f5 يسيطر على e4 مقابل إضعاف جناح الملك. اختار البناء حسب مركز الأبيض.',profile:['Advanced','سيطرة على e4','فرص هجوم مضاد على جناح الملك.','راقب أمان الملك وكسر e4.'],source:'https://www.chess.com/openings/Dutch-Defense',lines:[
+{id:'',name:'Classical Dutch',start:2,moves:'d4 f5 g3 Nf6 Bg2 e6 Nf3 Be7 O-O O-O c4 d6 Nc3'.split(' '),idea:'الأسود يطوّر الفيل إلى e7 ويحتفظ بإمكانية ...e5.',notes:{2:'...f5 يسيطر على e4 لكنه يضعف حماية الملك.',6:'...e6 يدعم f5 ويفتح طريق الفيل.',12:'...d6 يحضّر ...e5.'},white:'نافس على e4 وطوّر فيل c1 قبل فتح المركز.',black:'حضّر ...e5 بعد حساب ضغط الأبيض على المركز.',question:'ما هدف ...d6؟',answer:'دعم الكسر المركزي ...e5.'},
+{id:'dutch-stonewall',name:'Stonewall Variation',start:2,moves:'d4 f5 g3 Nf6 Bg2 e6 Nf3 d5 O-O Bd6 c4 c6 Nc3 O-O'.split(' '),idea:'بيادق c6 وd5 وe6 وf5 تشكل جدارًا يسيطر على e4 لكنه يترك e5 ضعيفًا.',notes:{8:'...d5 يثبت السيطرة على e4.',10:'...Bd6 يوجه الفيل نحو h2.',12:'...c6 يدعم d5.'},white:'استهدف e5 وراقب فرص تبادل الفيل الأسود النشط.',black:'طوّر فيل c8 بخطة مناسبة، واستغل e4 دون إهمال الملك.',question:'ما المربع الضعيف في بناء Stonewall؟',answer:'e5 لا يمكن لبيادق d5 وf5 مهاجمته.'},
+{id:'dutch-leningrad',name:'Leningrad Variation',start:2,moves:'d4 f5 g3 Nf6 Bg2 g6 Nf3 Bg7 O-O O-O c4 d6 Nc3'.split(' '),idea:'الأسود يضع الفيل على g7 ويحضّر ...e5 حسب الوضع.',notes:{6:'...g6 يجهز الفيانكيتو.',8:'...Bg7 يطور الفيل على القطر الطويل.',12:'...d6 يدعم ...e5.'},white:'اضغط على المركز وراقب ضعف جناح الملك الأسود.',black:'نسّق القطع قبل ...e5، واحسب فتح المركز قبل دفع بيادق إضافية.',question:'ما الفرق عن Classical Dutch؟',answer:'الفيل يتطور إلى g7 بدل e7، مما يغير الضغط على المركز.'}
+]});
 const defenses = {
   e4: ['open-game','5','10','4','3','11','12'],
   d4: ['qgd','london-black','slav','kid','dutch','7'],
