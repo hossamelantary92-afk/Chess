@@ -581,3 +581,41 @@ endgameLessons.push({title:'Queen Endgames – Foundations',positions:[
     "note": "الوزير على g7 محمي بالملك ويغطي h8 وh7 وg8."
   }
 ]});
+
+endgameLessons.push({title:'Queen Endgames – Advanced',positions:[
+  {
+    "title": "Perpetual Check – Repetition",
+    "fen": "7k/6p1/7p/8/8/8/5Q2/6K1 w - - 0 1",
+    "goal": "draw",
+    "line": "Qf8+ Kh7 Qf5+ Kh8 Qf8+ Kh7 Qf5+ Kh8 Qf8+",
+    "prompts": [
+      "ابدأ الكش من الصف الثامن.",
+      "غيّر زاوية الكش.",
+      "كرر الموقف.",
+      "واصل تكرار الكش.",
+      "أكمل التكرار الثالث."
+    ],
+    "note": "فرع يوضح التكرار الثلاثي، وليس إثباتًا لإجبار الخصم على التكرار. الأبيض متفوق ماديًا في المثال."
+  },
+  {
+    "title": "Queen vs Rook – Double Attack",
+    "fen": "7k/8/8/8/3r4/8/5Q2/6K1 w - - 0 1",
+    "goal": "win",
+    "line": "Qf6+ Kg8 Qxd4",
+    "prompts": [
+      "ابحث عن كش يهاجم الرخ في الوقت نفسه.",
+      "خذ الرخ بعد تحرك الملك."
+    ],
+    "note": "الوزير على f6 يهاجم الملك على h8 والرخ على d4 على قطر واحد."
+  },
+  {
+    "title": "King Safety – Trade Queens",
+    "fen": "8/8/8/8/8/8/5qk1/K4Q2 w - - 0 1",
+    "goal": "draw",
+    "line": "Qxf2+ Kxf2",
+    "prompts": [
+      "بدّل الوزيرين للوصول إلى تعادل."
+    ],
+    "note": "بعد التبادل لا يتبقى سوى الملكين. التبديل يزيل خطر الكشات تمامًا."
+  }
+]});
