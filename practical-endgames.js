@@ -120,6 +120,44 @@ function rookMateChoose(sq){
 }
 $('rookMateReset').onclick=()=>{rGame=new Chess('8/8/4k3/8/8/3R4/8/4K3 w - - 0 1');rSelected=null;$('rookMateStatus').textContent='الأبيض يلعب — حقق المات.';rookMateDraw();};
 rookMateTrainer.addEventListener('toggle',()=>{if(rookMateTrainer.open&&!rGame)$('rookMateReset').click();});
+const bishopsMateTrainer=document.createElement('details');
+bishopsMateTrainer.className='unit-card';
+bishopsMateTrainer.innerHTML='<summary>Two Bishops Checkmate Mastery · تدريب المات بالفيلين</summary><p>نسّق الفيلين على اللونين، قرّب ملكك وادفع الخصم إلى الركن، واحمِ الفيلين من الأخذ. العب أي نقلة قانونية حتى المات. دفاع تدريبي تقريبي وليس Tablebase.</p><div class="training-links"><button class="premium-btn" id="bishopsMateReset">ابدأ / أعد التدريب</button></div><div class="frame"><div id="bishopsMateBoard" aria-label="رقعة المات بالفيلين"></div></div><p id="bishopsMateStatus" role="status"></p>';
+panel.querySelector('.lesson-head').after(bishopsMateTrainer);
+let bbGame,bbSelected;
+function bishopsMateDraw(){
+ const board=$('bishopsMateBoard');let i=0;
+ const targets=new Set(bbSelected?bbGame.moves({square:bbSelected,verbose:true}).map(m=>m.to):[]);
+ for(const rank of '87654321')for(const file of 'abcdefgh'){
+ const sq=file+rank,p=bbGame.get(sq),btn=squareAt(board,i++);
+ btn.type='button';btn.className=(('abcdefgh'.indexOf(file)+Number(rank))%2?'dark':'')+(bbSelected===sq?' selected':'')+(targets.has(sq)?' legal':'');
+ btn.disabled=bbGame.isGameOver();btn.setAttribute('aria-label',sq);
+ paintSquare(btn,p?'<img class="piece" src="pieces/'+p.color+p.type.toUpperCase()+'.svg" alt="" draggable="false">':'');
+ btn.onclick=()=>bishopsMateChoose(sq);
+ }
+}
+function bishopsMateDefense(g){
+ let best=null,score=-Infinity;
+ for(const m of g.moves({verbose:true})){
+ g.move(m.san);const captured=m.captured==='b',draw=g.isDraw(),mateThreat=g.moves().some(s=>s.endsWith('#'));
+ const king=g.board().flat().find(p=>p?.type==='k'&&p.color==='b');
+ const center=king?Math.min('abcdefgh'.indexOf(king.square[0]),7-'abcdefgh'.indexOf(king.square[0]),Number(king.square[1])-1,8-Number(king.square[1])):0;
+ const value=captured||draw?10000:(mateThreat?-1000:0)+center*10;
+ g.undo();if(value>score){score=value;best=m.san;}
+ }return best;
+}
+function bishopsMateChoose(sq){
+ if(bbGame.isGameOver())return;
+ if(bbGame.get(sq)?.color==='w'){bbSelected=bbSelected===sq?null:sq;bishopsMateDraw();return;}
+ if(!bbSelected)return;
+ const m=bbGame.moves({square:bbSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
+ bbGame.move(m.san);bbSelected=null;
+ if(!bbGame.isGameOver()){const reply=bishopsMateDefense(bbGame);if(reply)bbGame.move(reply);}
+ $('bishopsMateStatus').textContent=bbGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(bbGame.history().length/2)+' نقلة.':bbGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الفيل.':'نسّق الفيلين وقرّب ملكك لدفع الخصم نحو الركن.';
+ bishopsMateDraw();
+}
+$('bishopsMateReset').onclick=()=>{bbGame=new Chess('8/8/4k3/8/8/2BB4/8/4K3 w - - 0 1');bbSelected=null;$('bishopsMateStatus').textContent='الأبيض يلعب — حقق المات.';bishopsMateDraw();};
+bishopsMateTrainer.addEventListener('toggle',()=>{if(bishopsMateTrainer.open&&!bbGame)$('bishopsMateReset').click();});
 const picker = $('endgamePicker');
 const levelLabels = {1:'أساسي',2:'متوسط',3:'متقدم'};
 const learningOrder = [];
