@@ -276,3 +276,6 @@ bank.push({...row("calculation-111-visual",'حساب النقلات',2,"6k1/8/3r
 
 // V152: enumerate all immediate mating solutions, not just the illustrative line.
 for(const p of bank){if(p.line.length===1&&p.line[0].endsWith('#')){const mates=new Chess(p.fen).moves().filter(m=>m.endsWith('#'));p.acceptedMoves=mates;if(mates.length>1)p.explain+=' الحلول الأخرى التي تحقق المات فورًا مقبولة أيضًا: '+mates.filter(m=>m!==p.line[0]).join('، ')+'.';}}
+
+// V153: distinguish a scripted continuation from a uniquely forced reply sequence.
+for(const p of bank){if(p.line.length<2)continue;const b=new Chess(p.fen);let unique=true;for(let n=0;n<p.line.length;n++){if(n%2===1&&b.moves().length!==1)unique=false;b.move(p.line[n]);}p.replyAudit=unique?'unique-replies':'illustrative';p.explain+=unique?' · في الخط المعروض، كل رد مسجل للخصم هو الرد القانوني الوحيد.':' · الخط المعروض فرع تعليمي؛ توجد ردود قانونية أخرى للخصم، ولم يُثبت أنه أقوى دفاع.';}
