@@ -31,11 +31,10 @@ const supplements = [
 export const catalog = new Map(openings.map(([name, , moves, summary, notes], index) => {
   const branches = openingBranches[index];
   return [String(index), {
-    name, summary, index, profile: profiles[index], source: branches?.source,
+    name, summary, index, profile: profiles[index], source: branches?.source, video: branches?.video,
     lines: (branches?.lines ?? [{id: '', name: 'Main Line'}]).map(line => ({
-      ...line, moves: (line.moves ?? moves).split(' '), notes: line.notes ?? Object.fromEntries(
-        (line.moves ? [] : notes ?? []).map((note, ply) => [ply + 1, note])
-      )
+      ...line, moves: (line.moves ?? moves).split(' '), notes: {...Object.fromEntries((notes ?? []).map((note, ply) => [ply + 1, note]).filter(([ply]) =>
+        (line.moves ?? moves).split(' ').slice(0, ply).join(' ') === moves.split(' ').slice(0, ply).join(' '))), ...line.notes}
     }))
   }];
 }));
@@ -56,7 +55,7 @@ catalog.get('6').lines.push({
 });
 
 const defenses = {
-  e4: ['open-game', '10', '5', '4', '3', '11', '12'],
+  e4: ['open-game', '5', '4', '3', '10', '11', '12', '0', '1', '9', '8'],
   d4: ['6', '2', 'dutch', '7'],
   c4: ['english-symmetrical', 'english-reversed'],
   Nf3: ['d5-vs-nf3'],
@@ -64,7 +63,7 @@ const defenses = {
 };
 export const firstMoves = Object.keys(defenses);
 export function openingChoices(color, first) {
-  return color === 'w' ? ['0', '2', '9', '6', '1', '8'] : defenses[first] ?? defenses.e4;
+  return color === 'w' ? ['0', '2', '9', '6', '1', '3', '4', '5', '10', '11', '12', '7', '8', 'dutch', 'english-symmetrical', 'english-reversed', 'd5-vs-nf3'] : defenses[first] ?? defenses.e4;
 }
 
 export function positionKey(chess) {
