@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {openings} from './opening-library.js?v=7';
-import {openingBranches} from './opening-branches.js?v=7';
+import {openingBranches} from './opening-branches.js?v=8';
 
 const profiles = [
   ['Beginner', 'تطوير هادي', 'الفيل بينشط على c4 والتبييت قريب.', 'توقيت d4 بيتغير مع كل رد.'],
