@@ -279,3 +279,16 @@
 .mastery-page #mastery-board{width:100%}
 }
 @media(max-width:350px){.mastery-page .mastery-training .mastery-modes button{gap:3px}.mastery-page .mastery-training .mastery-modes button strong{font-size:11px}}
+
+/* v9 — readable labels that stay outside the native selector focus ring */
+.mastery-page #setup-fields .mastery-fields{gap:10px 8px}
+.mastery-page #setup-fields .field-caption{display:block;position:static;font:600 14px/1.5 'Noto Sans Arabic',system-ui,sans-serif;color:var(--om-text);margin:0 0 5px;opacity:1;visibility:visible;transform:none}
+.mastery-page #setup-fields label:focus-within .field-caption,.mastery-page #setup-fields .field-caption:focus-within{color:var(--om-accent);opacity:1;visibility:visible}
+.mastery-page #setup-fields main select,.mastery-page #setup-fields select{margin:0;min-height:44px}
+.mastery-page #setup-fields select:focus,.mastery-page #setup-fields select:focus-visible{outline:2px solid var(--om-accent);outline-offset:-2px;border-color:var(--om-accent)}
+.mastery-page .line-field-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.mastery-page #setup-fields .line-field-heading .field-caption{margin:0}
+.mastery-page #toggle-all-lines{background:transparent;border:0;box-shadow:none;color:var(--om-accent);min-height:36px;padding:5px 4px;font-size:12px;white-space:nowrap}
+.mastery-page #toggle-all-lines[aria-pressed="true"]{color:var(--om-text);background:transparent;border:0}
+.mastery-page #toggle-all-lines:focus-visible{outline-offset:-2px}
+@media(max-width:350px){.mastery-page #setup-fields .field-caption{font-size:13px}.mastery-page #toggle-all-lines{font-size:11px}}
