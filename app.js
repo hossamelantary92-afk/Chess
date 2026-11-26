@@ -192,12 +192,7 @@ function updateOpeningPlan(){
 }
 function renderOpeningActions(){$('#actions').innerHTML='';if(practice){action('تلميح',hint);action('ابدأ من جديد',()=>{practice=true;resetOpening();feedback('دورك: العب النقلة المدروسة.');renderOpeningActions()});}else{action('اختبر نفسك',()=>{practice=true;history.replaceState(null,'',openingRoute(idx,true,openingBranchId));resetOpening();feedback('دورك: حرّك القطعة على الرقعة. الخصم هيرد تلقائيًا.');renderOpeningActions()},true)}action('جرّب الردود غير المتوقعة',()=>location.assign('training.html#trainer'));updatePlayback();$('#focusMode').textContent=practice?'اختبر نفسك':'وضع التعلّم'}
 load=function(){$('#openingBranches')?.remove();if(section!=='openings'||!openingBranch())openingBranchId='';document.body.dataset.section=section;baseLoad();if(section==='openings'){$('#title').textContent=openings[idx][0];if(!$('#focusMode')){const m=document.createElement('span');m.id='focusMode';$('#boardLabel').after(m)}renderOpeningBranches();renderOpeningActions();renderMoves();feedback(openingExplanation())}else{$('#moveCaption').textContent='';$('#focusMode')?.remove();$('#playback').innerHTML=''}saveSession()};
-const homeNumber=new Intl.NumberFormat('ar-EG');
-const homePercentage=new Intl.NumberFormat('ar-EG',{style:'percent',maximumFractionDigits:0});
 function renderHomeStats(){
-  $('#homeCompleted').textContent=homeNumber.format(completedLessons());
-  $('#homeCorrect').textContent=homeNumber.format(stats.correct);
-  $('#homeAccuracy').textContent=stats.attempts?homePercentage.format(stats.correct/stats.attempts):'—';
   const sectionPath=lastSession&&paths.find(p=>p[0]===lastSession.section);
   $('#resumeTitle').textContent=sectionPath?`كمّل رحلتك في ${sectionPath[2]}`:'ابدأ بإتقان الرقعة';
   $('#resume').textContent=sectionPath?'كمّل تدريبك':'ابدأ التدريب';
