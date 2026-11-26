@@ -283,3 +283,6 @@ for(const p of bank){if(p.line.length<2)continue;const b=new Chess(p.fen);let un
 // V154: conservative difficulty calibration for direct tactical goals.
 const calibratedLevels={"capablanca-backrank":1,"scholar-target":1};
 for(const p of bank){if(Object.hasOwn(calibratedLevels,p.id))p.level=calibratedLevels[p.id];}
+
+// V161: compare verified candidate moves rather than memorizing one continuation.
+bank.push({...row("calculation-161-candidates","حساب النقلات",3,"7k/8/5K2/8/8/8/4Q3/8 w - - 0 1","Qe7 Kg8 Qg7#","لا يوجد مات في نقلة واحدة. توجد خمس بدايات تحقق المات في نقلتين: Kf7 وKg6 وQe7 وQg4 وQg2. قارن المربعات التي يمنعها كل اختيار، ثم تخيل رد الملك والمات النهائي. الخط المعروض مثال واحد، وليس الحل الوحيد.","حدد النقلات الهادئة المرشحة واحسب رد الملك لكل منها."),task:"قارن خمس نقلات مرشحة للمات في نقلتين",examReady:false,demonstration:true,replyAudit:"unique-replies"});
