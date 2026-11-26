@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {lessons} from './middlegame-data.js?v=119';
+import {lessons} from './middlegame-data.js?v=121';
 import {positions, priorities, reviews} from './position-evaluation.js?v=2';
 
 import {activityLessons} from './piece-activity-data.js';
@@ -164,8 +164,8 @@ function load(item) {
   $('midOpponent').hidden = true;
   $('midLesson').value = item.id;
   $('midTitle').textContent = item.title;
-  $('midLevel').hidden = !evaluation;
-  $('midLevel').textContent = item.level ?? '';
+  $('midLevel').hidden = !evaluation && section !== 'middlegame';
+  $('midLevel').textContent = section === 'middlegame' ? `${item.category} · ${item.level}` : item.level ?? '';
   $('midContext').hidden = evaluation;
   $('midContext').textContent = item.context ?? '';
   $('midStep').textContent = evaluation ? 'إيه الأولوية في الوضع ده؟' : 'اختار الخطة الأنسب للموقف';
@@ -423,6 +423,13 @@ function route() {
       const group = document.createElement('optgroup');
       group.label = level;
       group.append(...items.filter(item => item.level === level).map(item => new Option(item.title, item.id)));
+      picker.append(group);
+    }
+  } else if (section === 'middlegame') {
+    for (const category of new Set(items.map(item => item.category))) {
+      const group = document.createElement('optgroup');
+      group.label = category;
+      group.append(...items.filter(item => item.category === category).map(item => new Option(`${followedUp.has(item.id) ? '✓ ' : ''}${item.title}`, item.id)));
       picker.append(group);
     }
   } else {
