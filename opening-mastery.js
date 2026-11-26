@@ -328,6 +328,7 @@ function renderArrow(move){
 }
 function renderBoard() {
   const teaching=!practice&&visualEnabled&&lastMove;
+  const centers=[],targets=[];
   const hint=practice&&hintLevel>=3?expectedMove():null;
   renderArrow(teaching?lastMove:hintLevel>=4?hint:null);
   const legal = practice && !finished && selected ? chess.moves({square: selected, verbose: true}).map(move => move.to) : [];
@@ -337,11 +338,14 @@ function renderBoard() {
     const row = Math.floor(squareIndex / 8);
     const square = 'abcdefgh'[file] + (8 - row);
     const piece = chess.get(square);
+    const center=teaching&&['d4','e4','d5','e5'].includes(square)&&chess.attackers(square,lastMove.color).includes(lastMove.to);
+    const target=teaching&&piece&&piece.color!==lastMove.color&&chess.attackers(square,lastMove.color).includes(lastMove.to);
+    if(center&&!target)centers.push(square);
+    if(target)targets.push(square);
     const cell = squareAt(board, index);
     cell.className = ['tile', (file + row) % 2 && 'shaded', selected === square && 'picked',
       legal.includes(square) && 'legal', (lastMove?.from === square || lastMove?.to === square) && 'recent',
-      teaching&&['d4','e4','d5','e5'].includes(square)&&chess.attackers(square,lastMove.color).includes(lastMove.to)&&'teach-center',
-      teaching&&piece&&piece.color!==lastMove.color&&chess.attackers(square,lastMove.color).includes(lastMove.to)&&'teach-target',
+      center&&!target&&'teach-center', target&&'teach-target',
       hint?.to===square&&'hint-target'].filter(Boolean).join(' ');
     if (index % 8 === 0) cell.dataset.rank = square[1]; else delete cell.dataset.rank;
     if (index >= 56) cell.dataset.file = square[0]; else delete cell.dataset.file;
@@ -351,6 +355,12 @@ function renderBoard() {
     cell.onclick = () => tap(square);
     paintSquare(cell, piece ? `<img src="pieces/${piece.color}${piece.type.toUpperCase()}.svg" alt="" draggable="false">` : '');
   }
+  const ltr=value=>'\u2066'+value+'\u2069';
+  $('visual-legend').textContent=teaching?[
+    'السهم: '+ltr(lastMove.from+' → '+lastMove.to),
+    centers.length?'الأخضر: سيطرة على '+ltr(centers.sort().join('، ')):'',
+    targets.length?'الذهبي: قطع خصم يهاجمها بعد النقلة على '+ltr(targets.sort().join('، ')):''
+  ].filter(Boolean).join(' · '):'السهم: مسار النقلة · الأخضر: السيطرة على المركز · الذهبي: قطع الخصم المهاجَمة بعد النقلة';
 }
 
 function tap(square) {
