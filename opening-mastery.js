@@ -406,6 +406,17 @@ function renderMiddlegame(){
   const plan=authoredPlan??'راجع التهديدات والكش والأخذ أولًا، وبعدها قيّم أمان الملك وتطوير القطع والمركز قبل اختيار خطة.';
   $('middlegame-check').hidden=!complete;
   if(!complete)return;
+  const checks=[
+    ['Threats','هل يوجد كش أو أخذ أو تهديد مباشر؟ افحص نقلات الطرفين قبل وضع خطة.'],
+    ['King Safety','هل الملكان آمنان؟ هل فتح المركز يخدمك أم يعرّض ملكك للخطر؟'],
+    ['Pawn Structure','حدد البيادق الضعيفة والأعمدة المفتوحة وكسر المركز الممكن. احسب التبادلات قبل دفع البيدق.'],
+    ['Worst Piece','حدد أقل قطعك نشاطًا وابحث عن مربع آمن يحسن دورها دون خسارة مادة.'],
+    ['Candidate Moves','اختر نقلتين أو ثلاثًا تحقق هدفك، واحسب أقوى رد متوقع قبل الاختيار.']
+  ];
+  $('middlegame-checklist').replaceChildren(...checks.map(([label,detail])=>{
+    const li=document.createElement('li');const strong=document.createElement('strong');strong.textContent=label;li.append(strong,document.createTextNode(' — '+detail));return li;
+  }));
+  $('middlegame-turn').textContent=chess.turn()===state.color?'دورك الآن: طبّق التقييم قبل اختيار النقلة.':'دور الخصم الآن: توقّع رده قبل تنفيذ خطتك.';
   $('middlegame-prompt').textContent=authoredPlan?'الخط خلص. أنهي خطة تعليمية أنسب للون اللي بتلعب بيه؟':'الخط التدريبي خلص، حتى لو الافتتاحية لسه مستمرة. إيه أول خطوة في تقييم الوضع؟';
   const wrongPlans=['حرّك الوزير مبكرًا بحثًا عن هجوم، حتى لو باقي القطع لسه مش متطورة.','ادفع بيادق جناح الملك من غير حساب تهديد الخصم أو أمان ملكك.'];
   const choices=[...wrongPlans];choices.splice((activeLine.moves.length+Number(state.color==='b'))%3,0,plan);
@@ -414,7 +425,7 @@ function renderMiddlegame(){
     if(middleAnswer===choice)b.dataset.answer=choice===plan?'correct':'retry';
     return b;
   }));
-  $('middlegame-feedback').textContent=middleAnswer===null?'':middleAnswer===plan?(authoredPlan?'أحسنت! دي خطة تعليمية مناسبة للخط ده، لكن راجع تهديدات الخصم قبل تنفيذها.':'أحسنت! التقييم الأول يساعدك تختار خطة مناسبة بدل حفظ نقلات زيادة.'):'راجع أمان الملك وتطوير القطع وبنية البيادق. اختار الخطة المرتبطة بالوضع.';
+  $('middlegame-feedback').textContent=middleAnswer===null?'':middleAnswer===plan?(authoredPlan?'أحسنت! دي خطة تعليمية مناسبة للخط ده. حدد القطعة التي تحتاج تحسينًا، واختر كسر المركز فقط إذا كان آمنًا بعد حساب الرد.':'أحسنت! التقييم الأول يساعدك تختار خطة مناسبة بدل حفظ نقلات زيادة.'):'راجع أمان الملك وتطوير القطع وبنية البيادق. اختار الخطة المرتبطة بالوضع.';
 }
 function render(message, result = '') {
   const opening = catalog.get(activeId);
