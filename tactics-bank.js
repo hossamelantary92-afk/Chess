@@ -279,3 +279,7 @@ for(const p of bank){if(p.line.length===1&&p.line[0].endsWith('#')){const mates=
 
 // V153: distinguish a scripted continuation from a uniquely forced reply sequence.
 for(const p of bank){if(p.line.length<2)continue;const b=new Chess(p.fen);let unique=true;for(let n=0;n<p.line.length;n++){if(n%2===1&&b.moves().length!==1)unique=false;b.move(p.line[n]);}p.replyAudit=unique?'unique-replies':'illustrative';p.explain+=unique?' · في الخط المعروض، كل رد مسجل للخصم هو الرد القانوني الوحيد.':' · الخط المعروض فرع تعليمي؛ توجد ردود قانونية أخرى للخصم، ولم يُثبت أنه أقوى دفاع.';}
+
+// V154: conservative difficulty calibration for direct tactical goals.
+const calibratedLevels={"capablanca-backrank":1,"scholar-target":1};
+for(const p of bank){if(Object.hasOwn(calibratedLevels,p.id))p.level=calibratedLevels[p.id];}
