@@ -427,19 +427,21 @@ function render(message, result = '') {
   $('toggle-all-lines').textContent=showAllLines?'الأساسية فقط':'كل التفريعات';
   $('toggle-all-lines').setAttribute('aria-pressed',String(showAllLines));
   const grouped=new Map();
-  for(const e of visible){
-    const group=replyGroup(state.id,state.color,e);
-    if(!grouped.has(group.key))grouped.set(group.key,{...group,items:[]});
-    grouped.get(group.key).items.push(e);
+  const ordered=visible.map(e=>({e,route:replyGroup(state.id,state.color,e)})).sort((a,b)=>Number(Boolean(a.route.external))-Number(Boolean(b.route.external))||(a.route.rank??0)-(b.route.rank??0));
+  for(const {e,route} of ordered){
+    const key=route.external?'external':'main';
+    const label=route.external?route.label:state.color==='w'?'ردود الأسود داخل الافتتاحية':'ردود الأبيض وخطوط الدفاع';
+    if(!grouped.has(key))grouped.set(key,{label,items:[]});
+    grouped.get(key).items.push({e,route});
   }
-  const groups=[...grouped.values()].sort((a,b)=>Number(Boolean(a.external))-Number(Boolean(b.external))||(a.rank??0)-(b.rank??0)).map(group=>{
+  const groups=[...grouped.values()].map(group=>{
     const g=document.createElement('optgroup');g.label=group.label;
-    g.append(...group.items.map(e=>{
+    g.append(...group.items.map(({e,route})=>{
       const info=lineIdentity(e.id,e.line);
-      const route=replyGroup(state.id,state.color,e);
       let label=optionLabel(e);
-      if(route.external)label=route.move+' · '+info.opening.name+(showAllLines?' · '+info.variation:'');
-      else if(state.color==='w'&&state.id==='0'&&e.id==='0'&&e.line.moves[5]==='Bc5')label=(e.line.moves[8]==='d4'?'5.d4':'5.d3')+' · '+info.variation;
+      if(route.external)label=info.opening.name+(showAllLines?' · '+info.variation:'');
+      else if(state.color==='w'&&state.id==='0'&&e.id==='0'&&e.line.moves[5]==='Bc5'&&!showAllLines)label=info.variation;
+      if(route.move&&!label.startsWith(route.move+' '))label=route.move+' · '+label;
       return new Option(label,entryKey(e));
     }));
     return g;
