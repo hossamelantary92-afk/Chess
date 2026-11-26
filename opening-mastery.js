@@ -45,12 +45,18 @@ function renderPicker() {
   $('first-move-field').hidden = state.color === 'w';
   setOptions($('first-move'), firstMoves, state.first, move => move);
   setOptions($('opening'), openingChoices(state.color, state.first), state.id, id => catalog.get(id).name);
-  const opening = catalog.get(state.id);
-  $('opening-context').textContent = state.color === 'b' ? 'الرد على ' + state.first + ' · ' + opening.lines[0].moves.slice(0, 2).join(' ') : 'بداية الأبيض: ' + opening.lines[0].moves[0] + ' · رد الأسود النموذجي: ' + (opening.lines[0].moves[1] ?? '—');
+}
+
+function renderOpeningInfo(opening) {
+  const moves = activeLine.moves;
+  const ltr = value => '\u2066' + value + '\u2069';
+  $('opening-context').textContent = 'بداية الأبيض: ' + ltr(moves[0]) + ' · رد الأسود النموذجي: ' + ltr(moves[1] ?? '—');
   const profile = opening.profile;
-  $('profile').textContent = profile ? profile.slice(0, 2).join(' · ') : opening.summary;
+  $('profile').textContent = profile?.[0] ?? '';
+  $('profile').title = profile?.[1] ?? '';
   const fields = profile ? [['الميزة', profile[2]], ['خد بالك', profile[3]]] : [];
   $('trade-offs').replaceChildren(...fields.flatMap(([label, value]) => [element('dt', label), element('dd', value)]));
+  $('trade-offs').hidden = !fields.length;
 }
 
 function element(tagName, value) {
@@ -77,7 +83,7 @@ function renderSaved() {
       $('save-status').textContent = persist() ? 'الاختيار اتشال.' : 'تعذّر الحفظ في المتصفح.';
     });
     remove.setAttribute('aria-label', `شيل ${label}`);
-    row.append(button(label, () => choose(entry)), remove);
+    row.append(button(label, () => { choose(entry); document.querySelector('.mastery-setup')?.scrollIntoView({block:'start'}); }), remove);
     return row;
   }));
   if (!saved.length) $('saved-openings').append(element('p', 'اختياراتك هتظهر هنا بعد الحفظ.'));
@@ -125,6 +131,8 @@ function renderBoard() {
     const cell = squareAt(board, index);
     cell.className = ['tile', (file + row) % 2 && 'shaded', selected === square && 'picked',
       legal.includes(square) && 'legal', (lastMove?.from === square || lastMove?.to === square) && 'recent'].filter(Boolean).join(' ');
+    if (index % 8 === 0) cell.dataset.rank = square[1]; else delete cell.dataset.rank;
+    if (index >= 56) cell.dataset.file = square[0]; else delete cell.dataset.file;
     cell.setAttribute('aria-label', piece ? `${square} · ${pieceNames[piece.type]} ${piece.color === 'w' ? 'أبيض' : 'أسود'}` : square);
     cell.setAttribute('aria-disabled', String(!practice || finished));
     cell.tabIndex = practice && !finished ? 0 : -1;
@@ -163,7 +171,11 @@ function tap(square) {
 function render(message, result = '') {
   const opening = catalog.get(activeId);
   setOptions($('opening-line'), opening.lines.map(line => line.id), activeLine.id,
-    id => `${opening.name} · ${opening.lines.find(line => line.id === id).name}`);
+    id => opening.lines.find(line => line.id === id).name);
+  renderOpeningInfo(opening);
+  $('active-opening').textContent = opening.name;
+  $('training-mode-label').textContent = practice ? 'TEST' : 'LEARN';
+  $('progress-fill').style.width = (activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0) + '%';
   renderBoard();
   $('previous-ply').disabled = ply === 0 || practice;
   $('next-ply').disabled = ply === activeLine.moves.length || practice;
@@ -171,52 +183,64 @@ function render(message, result = '') {
   $('test-mode').setAttribute('aria-pressed', String(practice));
   $('learn-controls').hidden = practice;
   $('test-controls').hidden = !practice;
-  $('test-score').textContent = 'صحيح: ' + correct + ' / ' + attempts + (finished ? ' · اكتمل الاختبار' : '');
+  $('test-score').textContent = 'صحيح: \u2066' + correct + ' / ' + attempts + '\u2069' + (finished ? ' · اكتمل الاختبار' : '');
   $('turn-status').textContent = finished ? 'اختبار مكتمل' : ply === activeLine.moves.length ? 'اكتمل الخط' : (practice ? 'دورك · ' : 'الدور · ') + (chess.turn() === 'w' ? 'White' : 'Black');
   $('line-progress').textContent = ply + ' / ' + activeLine.moves.length;
   $('move-note').dataset.result = result;
   $('move-note').textContent = message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : 'العب النقلة التالية من الذاكرة.') : explanation());
-  for (const id of ['profile','trade-offs','opening-context','opening-explanation']) $(id).hidden = practice && !finished;
+  $('opening-explanation').hidden = practice && !finished;
   $('move-list').replaceChildren(...activeLine.moves.slice(0, practice ? ply : undefined).map((san, index) => {
     const chip = button(`${index % 2 ? '…' : Math.floor(index / 2) + 1 + '.'}${san}`, () => go(index + 1));
     chip.disabled = practice;
     if (index + 1 === ply) chip.setAttribute('aria-current', 'step');
     return chip;
   }));
-  const choices = practice ? [] : [...(tree.get(positionKey(chess))?.values() ?? [])];
-  $('tree-branches').replaceChildren(...choices.map(entries => {
+  // At the starting position, do not suggest unrelated first moves. On our turn
+  // limit the alternatives to the selected opening; on the opponent's turn,
+  // keep valid deviations and transpositions from this position.
+  const opponentTurn = chess.turn() !== state.color;
+  const options = practice || ply === 0 ? [] : [...(tree.get(positionKey(chess))?.values() ?? [])];
+  const choices = options.map(entries => opponentTurn ? entries : entries.filter(entry => entry.id === activeId)).filter(entries => entries.length);
+  const meaningful = choices.length > 1 || (choices.length === 1 && choices[0][0].move.san !== activeLine.moves[ply]);
+  $('response-panel').hidden = !meaningful;
+  $('response-caption').textContent = opponentTurn ? 'جرّب رد مختلف للخصم وشوف إزاي الخطة بتتغيّر.' : 'اختار تفريعة بديلة في نفس الافتتاحية.';
+  function switchBranch(entry, target, note) {
+    activeId = entry.id;
+    activeLine = entry.line;
+    if (openingChoices(state.color, state.first).includes(activeId)) { state.id = activeId; renderPicker(); }
+    go(target, note);
+  }
+  $('tree-branches').replaceChildren(...(meaningful ? choices : []).map(entries => {
     const next = entries.find(entry => entry.line === activeLine) ?? entries[0];
     const row = document.createElement('div');
+    row.dataset.main = String(next.move.san === activeLine.moves[ply]);
     const copy = document.createElement('div');
     const target = catalog.get(next.id);
     const history = activeLine.moves.slice(0, ply).join(' ');
     const alternate = entries.find(entry => entry.line.moves.slice(0, entry.ply - 1).join(' ') !== history);
-    copy.append(element('strong', target.name), element('small',
+    copy.append(element('strong', next.id === activeId ? next.line.name : target.name + ' · ' + next.line.name), element('small',
       next.line.notes?.[next.ply] ?? next.line.idea ?? next.line.name));
     if (alternate) {
       const switchOrder = button('Transposition', () => {
-        activeId = alternate.id;
-        activeLine = alternate.line;
-        go(alternate.ply - 1, 'وصلت لنفس الوضع بترتيب نقلات مختلف.');
+        switchBranch(alternate, alternate.ply - 1, 'وصلت لنفس الوضع بترتيب نقلات مختلف.');
       });
       switchOrder.lang = 'en';
       copy.append(switchOrder);
     }
     const jump = button(next.move.san, () => {
-      activeId = next.id;
-      activeLine = next.line;
-      go(next.ply);
+      switchBranch(next, next.ply);
     });
     jump.dir = 'ltr';
     row.append(copy, jump);
     return row;
   }));
-  $('tree-branches').previousElementSibling.hidden = practice;
-  $('tree-branches').hidden = practice;
   $('opening-summary').textContent = opening.summary;
-  $('line-idea').textContent = activeLine.idea ?? opening.summary;
-  $('white-plan').textContent = activeLine.white ? `White · ${activeLine.white}` : '';
-  $('black-plan').textContent = activeLine.black ? `Black · ${activeLine.black}` : '';
+  $('line-idea').textContent = activeLine.idea && activeLine.idea !== opening.summary ? activeLine.idea : '';
+  $('line-idea').hidden = !$('line-idea').textContent;
+  $('white-plan').textContent = activeLine.white ?? '';
+  $('black-plan').textContent = activeLine.black ?? '';
+  $('white-plan-card').hidden = !activeLine.white;
+  $('black-plan-card').hidden = !activeLine.black;
   $('opening-source').hidden = !opening.source;
   if (opening.source) $('opening-source').href = opening.source;
   $('review-question').hidden = !activeLine.question;
@@ -245,7 +269,7 @@ function render(message, result = '') {
 
 $('mastery-color').onclick = event => {
   const color = event.target.closest('[data-color]')?.dataset.color;
-  if (color) choose({color, first: state.first, id: openingChoices(color, state.first)[0]});
+  if (color && color !== state.color) choose({color, first: state.first, id: openingChoices(color, state.first)[0]});
 };
 $('first-move').onchange = event => choose({color: 'b', first: event.target.value, id: openingChoices('b', event.target.value)[0]});
 $('opening').onchange = event => choose({color: state.color, first: state.first, id: event.target.value});
