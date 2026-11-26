@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyOf, familyChoices, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=5';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=6';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -13,16 +13,18 @@ const query = new URLSearchParams(location.search);
 const linkedId = query.get('opening');
 const linkedColor = query.get('color') === 'b' ? 'b' : 'w';
 const linkedFirst = firstMoves.find(first => openingChoices('b', first).includes(linkedId)) ?? 'e4';
-const linked = {color: linkedColor, first: linkedFirst, id: linkedId, line: query.get('line') ?? '', ply: 0, mode: query.get('mode')};
-const state = valid(linked) ? linked : valid(stored?.view) ? stored.view : {color: 'w', first: 'e4', id: '0', line: '', ply: 0};
+const linked = normalizeSelection({color: linkedColor, first: linkedFirst, id: linkedId, line: query.get('line') ?? '', ply: 0, mode: query.get('mode')});
+const restored = normalizeSelection(stored?.view);
+const state = valid(linked) ? linked : valid(restored) ? restored : {color: 'w', first: 'e4', id: '0', line: '', ply: 0};
 if (valid(linked)) history.replaceState(history.state, '', location.pathname);
-const saved = Array.isArray(stored?.saved) ? stored.saved.filter(valid) : [];
+const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
 let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
 let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line) ?? catalog.get(activeId).lines[0];
 let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn';
 let chess, ply, lastMove, selected, practice = mode !== 'learn';
-const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
+const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.map(m=>({...m,origin:normalizeSelection(m.origin)})).filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
 let reviewTarget = typeof state.reviewTarget==='string'?state.reviewTarget:null;
+if(reviewTarget&&stored?.view?.id!==state.id)reviewTarget=reviewTarget.replace('|'+stored.view.id+'|','|'+state.id+'|');
 const mistakeKey=m=>m.origin.color+'|'+m.origin.id+'|'+m.prefix.join(' ');
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
@@ -63,6 +65,7 @@ function renderPicker() {
     button.setAttribute('aria-pressed', button.dataset.color === state.color);
   }
   $('first-move-field').hidden = state.color === 'w';
+  $('opening-field-caption').textContent=state.color==='w'?'اختار افتتاحيتك بالأبيض':'اختار دفاعك بالأسود';
   setOptions($('first-move'), firstMoves, state.first, move => move);
   const families=familyChoices(state.color,state.first);
   // One native group per family; all original opening identifiers remain selectable.
@@ -74,7 +77,7 @@ function renderPicker() {
   });
   $('opening').replaceChildren(...groups);
   $('opening').value=state.id;
-  $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، ثم Slav، وبعدهم King’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
+  $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي لو هتلعب e4 أو لندن لو هتلعب d4. اتعلم خط واحد وخططه الأول. لو الأسود غيّر رده، اختار الرد من قائمة التفريعات أو جرّب Dynamic. مش مطلوب تحفظ كل الافتتاحيات.':state.first==='e4'?'ابدأ بـ Open Game أو Caro–Kann. اتعلم الدفاع ضد ردود الأبيض المختلفة قبل الانتقال لدفاع جديد.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، واتعلم الدفاع ضد London كمان، وبعد كده جرّب Slav وKing’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
 }
 
 function renderOpeningInfo(opening) {
@@ -106,7 +109,8 @@ function renderSaved() {
   $('saved-openings').replaceChildren(...saved.map((entry, index) => {
     const row = document.createElement('div');
     const color = entry.color === 'w' ? 'White' : `Black · ${entry.first}`;
-    const label = `${catalog.get(entry.id).name} · ${color}`;
+    const savedName=catalog.get(entry.activeId??entry.id)?.name??catalog.get(entry.id).name;
+    const label = `${savedName} · ${color}`;
     const remove = button('شيل', () => {
       saved.splice(index, 1);
       renderSaved();
@@ -121,7 +125,7 @@ function renderSaved() {
     const mark = element('span', entry.color === 'w' ? 'W' : 'B');
     mark.className = 'repertoire-mark '+(entry.color === 'w' ? 'white-mark' : 'black-mark');
     const copy = element('span','');
-    copy.append(element('strong',catalog.get(entry.id).name),element('small',color));
+    copy.append(element('strong',savedName),element('small',color));
     load.append(mark,copy);
     row.append(load, remove);
     return row;
@@ -131,8 +135,10 @@ function renderSaved() {
 
 function choose(entry) {
   Object.assign(state, entry);
-  activeId = state.id;
-  activeLine = catalog.get(activeId).lines[0];
+  const requested=catalog.get(entry.activeId)?.lines.find(l=>l.id===(entry.line??''));
+  const first=studyLines(state.id,state.color)[0];
+  activeId=requested?entry.activeId:first.id;
+  activeLine=requested??first.line;
   renderPicker();
   restartMode(mode);
 }
@@ -143,7 +149,7 @@ function pickLine(entries) {
 }
 function useEntry(entry) { activeId=entry.id; activeLine=entry.line; }
 function randomOpponent(prefix) {
-  const choices=[...new Set(matchingLines(state.id,prefix).map(e=>e.line.moves[prefix.length]).filter(Boolean))];
+  const choices=[...new Set(matchingLines(state.id,prefix,state.color).map(e=>e.line.moves[prefix.length]).filter(Boolean))];
   return choices.length?choices[Math.floor(Math.random()*choices.length)]:null;
 }
 function restartMode(nextMode) {
@@ -154,7 +160,7 @@ function restartMode(nextMode) {
   if(mode==='dynamic') {
     const prefix=[];
     if(state.color==='b') {const reply=randomOpponent(prefix); if(reply)prefix.push(reply);}
-    const entry=pickLine(matchingLines(state.id,prefix));
+    const entry=pickLine(matchingLines(state.id,prefix,state.color));
     if(!entry) {mode='test'; practice=true; activeId=state.id; activeLine=catalog.get(activeId).lines[0];}
     else {useEntry(entry);go(prefix.length,'دورك. الخصم هيغيّر ردوده حسب المسار المدروس.');return;}
   }
@@ -185,7 +191,6 @@ function renderReview() {
 function reviewMistake(m) {
   Object.assign(state,m.origin);
   activeId=m.activeId; activeLine=catalog.get(activeId).lines.find(l=>l.id===m.line);
-  if(openingChoices(state.color,state.first).includes(activeId))state.id=activeId;
   mode='test';practice=true;finished=false;attempts=correct=0;reviewTarget=mistakeKey(m);
   renderPicker();go(m.ply,'راجع الموقف اللي أخطأت فيه. العب النقلة المطلوبة.');
   document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});
@@ -203,12 +208,12 @@ function resolveMistake(prefix,san) {
 function dynamicMove(san) {
   const prefix=activeLine.moves.slice(0,ply);
   const after=[...prefix,san];
-  if(!matchingLines(state.id,after).length) {
+  if(!matchingLines(state.id,after,state.color).length) {
     recordMistake(san);render('النقلة قانونية، لكن مش من الردود المدروسة في المسار ده. جرّب تاني.','retry');persist();return;
   }
   resolveMistake(prefix,san);correct++;
   const reply=randomOpponent(after);if(reply)after.push(reply);
-  const candidates=matchingLines(state.id,after),entry=pickLine(candidates);
+  const candidates=matchingLines(state.id,after,state.color),entry=pickLine(candidates);
   useEntry(entry);
   finished=!candidates.some(e=>e.line.moves.length>after.length);
   go(after.length,(finished?'أحسنت! خلّصت المسار. ':'صحيح! ')+san+(reply?' · رد الخصم: '+reply:''),'correct');
@@ -282,16 +287,31 @@ function tap(square) {
 
 function render(message, result = '') {
   const opening = catalog.get(activeId);
-  setOptions($('opening-line'), opening.lines.map(line => line.id), activeLine.id,
-    id => opening.lines.find(line => line.id === id).name);
-  $('line-field').hidden = mode==='dynamic'||opening.lines.length <= 1;
+  const entries=studyLines(state.id,state.color);
+  if(!entries.some(e=>e.id===activeId&&e.line.id===activeLine.id))entries.unshift({id:activeId,line:activeLine,opponentResponse:activeId!==state.id});
+  const entryKey=e=>e.id+':'+e.line.id;
+  const optionLabel=e=>{
+    const info=lineIdentity(e.id,e.line);
+    return e.id===state.id?info.variation:info.opening.name+' · '+info.variation;
+  };
+  const primary=entries.filter(e=>!e.opponentResponse), responses=entries.filter(e=>e.opponentResponse);
+  const groups=[];
+  for(const [label,items] of [['Main lines & variations',primary],['Against other Black replies',responses]]){
+    if(!items.length)continue;
+    const g=document.createElement('optgroup');g.label=label;
+    g.append(...items.map(e=>new Option(optionLabel(e),entryKey(e))));groups.push(g);
+  }
+  $('opening-line').replaceChildren(...groups);
+  $('opening-line').value=activeId+':'+activeLine.id;
+  $('line-field-caption').textContent=state.color==='w'?'التفريعة أو رد الأسود':'الخط أو رد الأبيض';
+  $('line-field').hidden = mode==='dynamic'||entries.length <= 1;
   renderSetup();
   const identity = lineIdentity(activeId, activeLine);
   const displayOpening = identity.opening;
   renderOpeningInfo(displayOpening);
   let shownOpening=displayOpening.name,shownCategory=identity.category.name,shownVariation=identity.variation;
   if(mode==='dynamic') {
-    const candidates=matchingLines(state.id,activeLine.moves.slice(0,ply));
+    const candidates=matchingLines(state.id,activeLine.moves.slice(0,ply),state.color);
     const names=[...new Set(candidates.map(e=>lineIdentity(e.id,e.line).opening.name))];
     shownOpening=state.id==='open-game'&&(ply<5||names.length!==1)?'Open Game':names.length===1?names[0]:catalog.get(state.id).name;
     shownCategory=state.id==='open-game'?'Open Game':catalog.get(state.id).name;
@@ -339,7 +359,9 @@ function render(message, result = '') {
   // keep valid deviations and transpositions from this position.
   const opponentTurn = chess.turn() !== state.color;
   const options = practice || ply === 0 ? [] : [...(tree.get(positionKey(chess))?.values() ?? [])];
-  const choices = options.map(entries => opponentTurn ? entries : entries.filter(entry => entry.id === activeId)).filter(entries => entries.length);
+  const scoped=studyLines(state.id,state.color);
+  const allowed=entry=>scoped.some(e=>e.id===entry.id&&e.line===entry.line)||entry.id===activeId;
+  const choices = options.map(entries => entries.filter(entry=>allowed(entry)&&(opponentTurn||entry.id===activeId))).filter(entries => entries.length);
   const meaningful = choices.length > 1 || (choices.length === 1 && choices[0][0].move.san !== activeLine.moves[ply]);
   $('response-panel').hidden = !meaningful;
   const atFork = !practice && ply === activeLine.moves.length && meaningful;
@@ -352,7 +374,6 @@ function render(message, result = '') {
   function switchBranch(entry, target, note) {
     activeId = entry.id;
     activeLine = entry.line;
-    if (openingChoices(state.color, state.first).includes(activeId)) { state.id = activeId; renderPicker(); }
     go(target, note);
   }
   $('tree-branches').replaceChildren(...(meaningful ? choices : []).map(entries => {
@@ -427,8 +448,10 @@ $('mastery-color').onclick = event => {
 $('first-move').onchange = event => choose({color: 'b', first: event.target.value, id: openingChoices('b', event.target.value)[0]});
 $('opening').onchange = event => choose({color: state.color, first: state.first, id: event.target.value});
 $('opening-line').onchange = event => {
-  activeLine = catalog.get(activeId).lines.find(line => line.id === event.target.value);
-  restartMode(mode);
+  const [id,...parts]=event.target.value.split(':');
+  const line=catalog.get(id)?.lines.find(l=>l.id===parts.join(':'));
+  if(!line)return;
+  activeId=id;activeLine=line;restartMode(mode);
 };
 $('save-opening').onclick = () => {
   const {id, first, color} = state;
@@ -444,11 +467,7 @@ $('next-ply').onclick = () => {
 $('toggle-setup').onclick = () => setSetupCollapsed(!setupCollapsed);
 function selectMode(nextMode) {
   if(mode!==nextMode) {
-    if(mode==='dynamic'&&nextMode!=='dynamic') {
-      if(openingChoices(state.color,state.first).includes(activeId))state.id=activeId;
-      else {activeId=state.id;activeLine=catalog.get(activeId).lines[0];}
-      renderPicker();
-    }
+    if(mode==='dynamic'&&nextMode!=='dynamic') renderPicker();
     restartMode(nextMode);
   }
   if (typeof matchMedia === 'function' && matchMedia('(max-width:800px)').matches) setSetupCollapsed(true);
@@ -463,6 +482,6 @@ $('start-ply').onclick = () => go(0);
 renderPicker();
 renderSaved();
 renderReview();
-if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply)).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
+if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply),state.color).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
 else if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(mode);
 else go(state.ply);
