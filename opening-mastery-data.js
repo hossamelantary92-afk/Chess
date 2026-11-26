@@ -63,18 +63,50 @@ catalog.get('6').lines.push({
   idea: 'بعد ...d5 وصلت لنفس الوضع اللي بيظهر بعد 1. d4 d5 2. c4 e6 3. Nc3 Nf6.'
 });
 
+// Stable lesson identifiers; order by educational accessibility, not absolute strength.
 const defenses = {
-  e4: ['open-game', '5', '4', '3', '10', '11', '12', '0', '1', '9', '8'],
-  d4: ['6', '2', 'dutch', '7'],
-  c4: ['english-symmetrical', 'english-reversed'],
+  e4: ['open-game','5','10','4','3','11','12','0','1','9','8'],
+  d4: ['6','2','dutch','7'],
+  c4: ['english-symmetrical','english-reversed'],
   Nf3: ['d5-vs-nf3'],
-  'Other Moves': ['larsen', 'bird']
+  'Other Moves': ['larsen','bird']
 };
+const whiteOrder = ['0','2','9','6','1','english-symmetrical','english-reversed','d5-vs-nf3','5','10','4','3','11','12','dutch','7','8','larsen','bird'];
 export const firstMoves = Object.keys(defenses);
 export function openingChoices(color, first) {
-  return color === 'w' ? ['0', '2', '9', '6', '1', '3', '4', '5', '10', '11', '12', '7', '8', 'dutch', 'english-symmetrical', 'english-reversed', 'd5-vs-nf3'] : defenses[first] ?? defenses.e4;
+  return color === 'w' ? whiteOrder : defenses[first] ?? defenses.e4;
 }
-
+// These are curriculum groupings, not a claim that every group is a single ECO family.
+const families = [
+  ['open','Open Games',['open-game','0','1','9']],
+  ['london','London System',['2']],
+  ['queen','Queen’s Gambit',['6']],
+  ['english','English Opening',['english-symmetrical','english-reversed']],
+  ['reti','Réti / 1.Nf3',['d5-vs-nf3']],
+  ['caro','Caro–Kann',['5','8']],
+  ['scandi','Scandinavian',['10']],
+  ['french','French Defense',['4']],
+  ['sicilian','Sicilian Defense',['3']],
+  ['pirc','Pirc Defense',['11']],
+  ['modern','Modern Defense',['12']],
+  ['dutch','Dutch Defense',['dutch']],
+  ['englund','Englund Gambit',['7']],
+  ['other','Other First Moves',['larsen','bird']]
+];
+export function familyOf(id) { return families.find(f=>f[2].includes(id))?.[0] ?? 'other'; }
+export function familyChoices(color,first) {
+  const allowed=openingChoices(color,first);
+  return [...new Set(allowed.map(familyOf))].map(id=>({id,label:families.find(f=>f[0]===id)[1],openings:allowed.filter(x=>familyOf(x)===id)}));
+}
+// Dynamic training stays inside the selected study repertoire. Opponent moves
+// are sampled from distinct legal, authored continuations, not engine guesses.
+export function dynamicLines(id) {
+  const ids=id==='open-game'?['0','1','9']:[id];
+  return ids.flatMap(id=>catalog.get(id).lines.map(line=>({id,line})));
+}
+export function matchingLines(id,prefix) {
+  return dynamicLines(id).filter(({line})=>line.moves.length>=prefix.length&&prefix.every((san,i)=>line.moves[i]===san));
+}
 export function positionKey(chess) {
   return chess.fen().split(' ').slice(0, 4).join(' ');
 }
