@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css?v=32">
   <link rel="stylesheet" href="club.css?v=59">
   <link rel="stylesheet" href="opening-mastery.css?v=10">
-</head>
+<style>.mastery-page #line-context{font-size:12px;line-height:1.55;color:var(--om-muted);margin:5px 0 0}</style></head>
 <body class="mastery-page">
 <header><a class="brand" href="index.html">♜ <span>رُخ</span></a><a class="mastery-home" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>الرئيسية</a></header>
 <main>
@@ -24,7 +24,7 @@
       <div class="mastery-fields">
         <label id="first-move-field"><span class="field-caption">نقلة الأبيض</span><select id="first-move" dir="ltr"></select></label>
         <label id="opening-label"><span class="field-caption" id="opening-field-caption">اختار افتتاحيتك</span><select id="opening" dir="ltr"></select></label>
-        <div id="line-field"><div class="line-field-heading"><label class="field-caption" id="line-field-caption" for="opening-line">التفريعة</label><button id="toggle-all-lines" type="button" aria-controls="opening-line" aria-pressed="false">كل التفريعات</button></div><select id="opening-line" dir="ltr"></select></div>
+        <div id="line-field"><div class="line-field-heading"><label class="field-caption" id="line-field-caption" for="opening-line">التفريعة</label><button id="toggle-all-lines" type="button" aria-controls="opening-line" aria-pressed="false">كل التفريعات</button></div><select id="opening-line" dir="ltr" aria-describedby="line-context"></select><p id="line-context" class="mastery-muted" hidden></p></div>
       </div>
 
       </div>
@@ -79,6 +79,6 @@
     </section>
   </div>
 </main>
-<script type="module" src="opening-mastery.js?v=10.2"></script>
+<script type="module" src="opening-mastery.js?v=10.3"></script>
 </body>
 </html>
