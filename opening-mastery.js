@@ -102,6 +102,11 @@ function renderPicker() {
   $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي لو هتلعب e4 أو لندن لو هتلعب d4. اتعلم خط واحد وخططه الأول. لو الأسود غيّر رده، اختار الرد من قائمة التفريعات أو جرّب Dynamic. مش مطلوب تحفظ كل الافتتاحيات.':state.first==='e4'?'ابدأ بـ Open Game أو Caro–Kann. اتعلم الدفاع ضد ردود الأبيض المختلفة قبل الانتقال لدفاع جديد.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، واتعلم الدفاع ضد London كمان، وبعد كده جرّب Slav وKing’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
 }
 
+// Isolate chess notation from surrounding RTL Arabic prose.
+function chessText(value) {
+  return String(value ?? '').replace(/(?<![\w])(?:\d+\s*\.(?:\.\.)?\s*)?(?:O-O-O|O-O|[KQRBN](?:[a-h1-8]{0,2})x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8])(?:=[QRBN])?[+#]?(?![\w])/g, token => '\u2066'+token+'\u2069');
+}
+
 function renderOpeningInfo(opening) {
   const moves = activeLine.moves;
   const ltr = value => '\u2066' + value + '\u2069';
@@ -110,7 +115,7 @@ function renderOpeningInfo(opening) {
   $('profile').textContent = profile?.[0] ?? '';
   $('profile').title = profile?.[1] ?? '';
   const fields = profile ? [['أسلوب اللعب', profile[1]], ['الميزة', profile[2]], ['خد بالك', profile[3]]] : [];
-  $('trade-offs').replaceChildren(...fields.flatMap(([label, value]) => [element('dt', label), element('dd', value)]));
+  $('trade-offs').replaceChildren(...fields.flatMap(([label, value]) => [element('dt', label), element('dd', chessText(value))]));
   $('trade-offs').hidden = !fields.length;
 }
 
@@ -286,7 +291,7 @@ function dynamicMove(san) {
   go(after.length,(finished?'أحسنت! خلّصت المسار. ':'صحيح! ')+san+(reply?' · رد الخصم: '+reply:''),'correct');
 }
 function explanation() {
-  if (!ply) return catalog.get(activeId).summary;
+  if (!ply) return 'اضغط Next لبدء الافتتاحية ومتابعة هدف كل نقلة.';
   const note = activeLine.notes?.[ply];
   if (note) return note;
   return (lastMove?.san ?? '') + ' — ' + ({p:'راجع تأثير البيدق على المركز وخطوط القطع.',n:'راجع المربعات اللي الحصان بقى يسيطر عليها.',b:'تابع قطر الفيل والهدف منه.',r:'راجع العمود أو الصف اللي الرخ بيدعمه.',q:'حدّد هدف الوزير بعد النقلة.',k:'راجع أمان الملك بعد النقلة.'}[lastMove?.piece] ?? 'راجع أثر النقلة على الوضع.');
@@ -374,7 +379,7 @@ function tap(square) {
   if (!selected) return;
   const move = chess.moves({square: selected, verbose: true}).find(move => move.to === square && (!move.promotion || move.promotion === 'q'));
   selected = null;
-  if (!move) { renderBoard(); $('move-note').textContent = 'النقلة دي غير قانونية. جرّب تاني.'; $('move-note').dataset.result = 'retry'; return; }
+  if (!move) { renderBoard(); $('move-note').textContent = chessText('النقلة دي غير قانونية. جرّب تاني.'); $('move-note').dataset.result = 'retry'; return; }
   attempts++;
   if(mode==='dynamic'){dynamicMove(move.san);return;}
   const expected = activeLine.moves[ply];
@@ -509,7 +514,7 @@ function render(message, result = '') {
   $('turn-status').textContent = finished ? 'اختبار مكتمل' : ply === activeLine.moves.length ? 'اكتمل الخط' : (practice ? 'دورك · ' : 'الدور · ') + (chess.turn() === 'w' ? 'White' : 'Black');
   $('line-progress').textContent = mode==='dynamic'&&!finished ? String(ply)+' plies' : ply + ' / ' + activeLine.moves.length;
   $('move-note').dataset.result = result;
-  $('move-note').textContent = message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : mode==='dynamic'?'العب ردك على الوضع الحالي.':'العب النقلة التالية من الذاكرة.') : explanation());
+  $('move-note').textContent = chessText(message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : mode==='dynamic'?'العب ردك على الوضع الحالي.':'العب النقلة التالية من الذاكرة.') : explanation()));
   $('opening-explanation').hidden = practice && !finished;
   $('move-list').replaceChildren(...activeLine.moves.slice(0, practice ? ply : undefined).map((san, index) => {
     const chip = button(`${index % 2 ? '…' : Math.floor(index / 2) + 1 + '.'}${san}`, () => go(index + 1));
@@ -569,24 +574,24 @@ function render(message, result = '') {
     row.append(copy, jump);
     return row;
   }));
-  $('opening-summary').textContent = displayOpening.summary;
-  $('line-idea').textContent = activeLine.idea && activeLine.idea !== displayOpening.summary ? activeLine.idea : '';
+  $('opening-summary').textContent = chessText(displayOpening.summary);
+  $('line-idea').textContent = chessText(activeLine.idea && activeLine.idea !== displayOpening.summary ? activeLine.idea : '');
   $('line-idea').hidden = !$('line-idea').textContent;
-  $('white-plan').textContent = activeLine.white ?? '';
-  $('black-plan').textContent = activeLine.black ?? '';
+  $('white-plan').textContent = chessText(activeLine.white ?? '');
+  $('black-plan').textContent = chessText(activeLine.black ?? '');
   $('white-plan-card').hidden = !activeLine.white;
   $('black-plan-card').hidden = !activeLine.black;
   $('opening-source').hidden = !displayOpening.source;
   if (displayOpening.source) $('opening-source').href = displayOpening.source;
   $('quick-check').hidden=!activeLine.question;
-  $('key-point').textContent=activeLine.notes?.[activeLine.start+1]??activeLine.idea??displayOpening.summary;
+  $('key-point').textContent=chessText(activeLine.notes?.[activeLine.start+1]??activeLine.idea??displayOpening.summary);
   $('review-question').hidden = !activeLine.question;
-  $('review-prompt').textContent = activeLine.question ?? '';
-  $('review-answer').textContent = activeLine.answer ?? '';
+  $('review-prompt').textContent = chessText(activeLine.question ?? '');
+  $('review-answer').textContent = chessText(activeLine.answer ?? '');
   $('review-question').open = false;
   const decision = activeLine.decision;
   $('decision-review').hidden = !decision || practice;
-  $('decision-prompt').textContent = decision?.prompt ?? '';
+  $('decision-prompt').textContent = chessText(decision?.prompt ?? '');
   $('decision-feedback').textContent = '';
   $('decision-options').replaceChildren(...(decision?.choices ?? []).map(([san,reason]) => {
     const option = button(san, () => { $('decision-feedback').textContent = reason; });
