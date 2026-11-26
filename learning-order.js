@@ -27,10 +27,13 @@ for (const [key, title, description, icon, href] of links) {
 }
 
 const stages = [
-  {id:'opening', title:'Openings', cards:['opening-mastery']},
-  {id:'middlegame', title:'Middlegame', cards:['middlegame','position-evaluation','safety','plans','piece-activity','tactics-guide','tactics','calculation','practical-decisions','model-games','psychology']},
-  {id:'finish', title:'Endgames & Checkmate', cards:['endings','practical-endgames','draws','mates','checkmate-patterns']},
-  {id:'resources', title:'Essentials', cards:['academy','basics','vision','game-tips','mixed','bullet']}
+  {id:'resources', title:'الأساسيات', cards:['academy','basics','vision','game-tips','psychology','bullet']},
+  {id:'opening', title:'الافتتاحيات', cards:['opening-mastery']},
+  {id:'middlegame', title:'منتصف اللعبة', cards:['middlegame','position-evaluation','safety','plans','piece-activity','practical-decisions']},
+  {id:'tactical', title:'التكتيكات والحساب', cards:['tactics','tactics-guide','calculation','mixed']},
+  {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','draws','mates','checkmate-patterns']},
+  {id:'games', title:'دراسة المباريات', cards:['model-games']},
+  {id:'progress', title:'التقييم وخطة التدريب', cards:[]}
 ];
 
 for (const card of cards.values()) {
@@ -38,11 +41,11 @@ for (const card of cards.values()) {
 }
 
 for (const stage of stages) {
-  const section = document.createElement('section');
+  const section = document.createElement('details');
   section.className = `learning-stage learning-stage-${stage.id}`;
   const headingId = `learning-title-${stage.id}`;
   section.setAttribute('aria-labelledby', headingId);
-  section.innerHTML = `<h2 class="home-section-title" id="${headingId}">${stage.title}</h2><div class="learning-grid"></div>`;
+  section.innerHTML = `<summary class="home-section-title" id="${headingId}">${stage.title}<span class="group-chevron" aria-hidden="true">⌄</span></summary><div class="learning-grid"></div>`;
   const grid = section.querySelector('.learning-grid');
   for (const key of stage.cards) {
     const card = cards.get(key);
@@ -68,7 +71,7 @@ for (const stage of stages) {
     const heading = document.getElementById('learning-title-' + stage.id);
     for(const item of jumps.children)item.removeAttribute('aria-current');
     jump.setAttribute('aria-current','location');
-    heading.tabIndex = -1;
+    heading.parentElement.open=true;heading.tabIndex = -1;
     heading.focus({preventScroll:true});
     heading.scrollIntoView({block:'start'});
   };
@@ -101,7 +104,7 @@ for (const stage of stages) {
       const summary=card.querySelector('small');
       if(summary)summary.textContent=label[1];
     }
-    if(key===stage.cards[0]){
+    if(key===stage.cards[0] && previews[stage.id]){
       const diagram=document.createElement('div');
       diagram.className='topic-preview'; diagram.setAttribute('aria-hidden','true');
       drawDiagram(diagram,previews[stage.id]);card.prepend(diagram);
@@ -147,3 +150,6 @@ for (const [key, card] of cards) {
   if (key==='tactics-guide') card.querySelector('small').textContent='اتعلّم تميّز الشوكة والتثبيت';
   if (key==='tactics') card.querySelector('small').textContent='اختار القطعة والعب النقلة اللي تكسبك أفضلية';
 }
+
+// Consolidate existing standalone home links without changing their destinations.
+for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],['assessmentTitle','progress'],['trainingPlanTitle','progress']]){const old=document.getElementById(id)?.closest('.home-summary');const grid=home.querySelector('.learning-stage-'+group+' .learning-grid');if(old&&grid){const link=old.querySelector('a');if(link){const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=link.getAttribute('href');const title=document.createElement('h3');title.textContent=old.querySelector('h2').textContent;const desc=document.createElement('small');desc.textContent=old.querySelector('p')?.textContent||'';card.append(title,desc);grid.append(card);old.remove()}}}
