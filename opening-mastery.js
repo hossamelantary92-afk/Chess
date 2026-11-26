@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=7';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=8';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -423,20 +423,39 @@ function render(message, result = '') {
   // Preserve the selected line (including old sessions or a branch reached on the board).
   const selectedEntry=entries.find(e=>e.id===activeId&&e.line.id===activeLine.id);
   const visible=showAllLines?entries:[...new Set([...essentials,selectedEntry].filter(Boolean))];
-  const primary=visible.filter(e=>!e.opponentResponse), responses=visible.filter(e=>e.opponentResponse);
   $('toggle-all-lines').hidden=entries.length<=essentials.length;
   $('toggle-all-lines').textContent=showAllLines?'الأساسية فقط':'كل التفريعات';
   $('toggle-all-lines').setAttribute('aria-pressed',String(showAllLines));
-  const groups=[];
-  for(const [label,items] of [['Main lines',primary],['Other Black replies',responses]]){
-    if(!items.length)continue;
-    const g=document.createElement('optgroup');g.label=label;
-    g.append(...items.map(e=>new Option(!showAllLines&&e.opponentResponse?lineIdentity(e.id,e.line).opening.name+' · ...'+e.line.moves[1]:optionLabel(e),entryKey(e))));groups.push(g);
+  const grouped=new Map();
+  for(const e of visible){
+    const group=replyGroup(state.id,state.color,e);
+    if(!grouped.has(group.key))grouped.set(group.key,{...group,items:[]});
+    grouped.get(group.key).items.push(e);
   }
+  const groups=[...grouped.values()].sort((a,b)=>Number(Boolean(a.external))-Number(Boolean(b.external))||(a.rank??0)-(b.rank??0)).map(group=>{
+    const g=document.createElement('optgroup');g.label=group.label;
+    g.append(...group.items.map(e=>{
+      const info=lineIdentity(e.id,e.line);
+      const route=replyGroup(state.id,state.color,e);
+      let label=optionLabel(e);
+      if(route.external)label=route.move+' · '+info.opening.name+(showAllLines?' · '+info.variation:'');
+      else if(state.color==='w'&&state.id==='0'&&e.id==='0'&&e.line.moves[5]==='Bc5')label=(e.line.moves[8]==='d4'?'5.d4':'5.d3')+' · '+info.variation;
+      return new Option(label,entryKey(e));
+    }));
+    return g;
+  });
   $('opening-line').replaceChildren(...groups);
   $('opening-line').value=activeId+':'+activeLine.id;
-  $('line-field-caption').textContent=state.color==='w'?'التفريعة / رد الأسود':'الخط / رد الأبيض';
+  $('line-field-caption').textContent=state.color==='w'?'رد الأسود والتفريعة':'رد الأبيض والخط';
   $('line-field').hidden = mode==='dynamic'||entries.length <= 1;
+  const selectedRoute=selectedEntry?replyGroup(state.id,state.color,selectedEntry):null;
+  const moveText=selectedRoute?.move?' ('+'\u2066'+selectedRoute.move+'\u2069'+')':'';
+  $('line-context').textContent=selectedRoute?.external
+    ? (['0','1','9'].includes(state.id)?'دفاع مختلف قبل دخول الافتتاحية':'مسار مختلف للرد على بداية الأبيض')+moveText+'.'
+    : selectedRoute?.key.startsWith('inside:')?'الافتتاحية بدأت بالفعل؛ ده رد الأسود داخلها'+moveText+'.'
+    : selectedRoute?.key.startsWith('white:')?'رد الأبيض هو اللي بيحدد المسار التالي'+moveText+'.'
+    : '';
+  $('line-context').hidden=!$('line-context').textContent;
   renderSetup();
   const identity = lineIdentity(activeId, activeLine);
   const displayOpening = identity.opening;
