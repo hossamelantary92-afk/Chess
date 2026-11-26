@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, positionKey, buildTree} from './opening-mastery-data.js?v=4';
+import {catalog, firstMoves, openingChoices, familyOf, familyChoices, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=5';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -19,7 +19,10 @@ if (valid(linked)) history.replaceState(history.state, '', location.pathname);
 const saved = Array.isArray(stored?.saved) ? stored.saved.filter(valid) : [];
 let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
 let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line) ?? catalog.get(activeId).lines[0];
-let chess, ply, lastMove, selected, practice = state.mode === 'test';
+let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn';
+let chess, ply, lastMove, selected, practice = mode !== 'learn';
+const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
+let lastMistake = null;
 let attempts = practice ? Math.max(0, Number(state.attempts) || 0) : 0;
 let correct = practice ? Math.min(attempts, Math.max(0, Number(state.correct) || 0)) : 0;
 let finished = practice && Boolean(state.finished);
@@ -29,7 +32,7 @@ const pieceNames = {p: 'بيدق', r: 'رخ', n: 'حصان', b: 'فيل', q: 'و
 
 function persist() {
   try {
-    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode: practice ? 'test' : 'learn', attempts, correct, finished, setupCollapsed}, saved}));
+    localStorage.setItem(key, JSON.stringify({view: {...state, activeId, line: activeLine.id, ply, mode, attempts, correct, finished, setupCollapsed}, saved, mistakes}));
     return true;
   } catch { return false; }
 }
@@ -51,7 +54,7 @@ function renderSetup() {
   $('setup-toggle-label').textContent = setupCollapsed ? 'تعديل' : 'طي';
   $('toggle-setup').setAttribute('aria-label', setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات');
   const identity = lineIdentity(activeId, activeLine);
-  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + identity.opening.name + ' · ' + identity.variation;
+  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + (mode==='dynamic' ? catalog.get(state.id).name+' · Dynamic' : identity.opening.name + ' · ' + identity.variation);
 }
 function setSetupCollapsed(value) { setupCollapsed = value; renderSetup(); persist(); }
 function renderPicker() {
@@ -60,7 +63,11 @@ function renderPicker() {
   }
   $('first-move-field').hidden = state.color === 'w';
   setOptions($('first-move'), firstMoves, state.first, move => move);
-  setOptions($('opening'), openingChoices(state.color, state.first), state.id, id => catalog.get(id).name);
+  const families=familyChoices(state.color,state.first), family=familyOf(state.id);
+  setOptions($('opening-family'),families.map(f=>f.id),family,id=>families.find(f=>f.id===id).label);
+  const openings=families.find(f=>f.id===family)?.openings ?? openingChoices(state.color,state.first);
+  setOptions($('opening'), openings, state.id, id => catalog.get(id).name);
+  $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
 }
 
 function renderOpeningInfo(opening) {
@@ -120,15 +127,76 @@ function choose(entry) {
   activeId = state.id;
   activeLine = catalog.get(activeId).lines[0];
   renderPicker();
-  restartMode(practice);
+  restartMode(mode);
 }
 
-function restartMode(test) {
-  practice = test;
+function pickLine(entries) {
+  // Prefer a playable continuation over a line that has already ended.
+  return entries.reduce((best,e)=>!best||e.line.moves.length>best.line.moves.length?e:best,null);
+}
+function useEntry(entry) { activeId=entry.id; activeLine=entry.line; }
+function randomOpponent(prefix) {
+  const choices=[...new Set(matchingLines(state.id,prefix).map(e=>e.line.moves[prefix.length]).filter(Boolean))];
+  return choices.length?choices[Math.floor(Math.random()*choices.length)]:null;
+}
+function restartMode(nextMode) {
+  mode=nextMode; practice=mode!=='learn';
   attempts = correct = 0;
   finished = false;
-  const start = test && state.color === 'b' ? Math.min(1, activeLine.moves.length) : 0;
-  go(start, test ? 'دورك. اختار القطعة والمربع من غير ما تشوف النقلات الجاية.' : '');
+  lastMistake=null;
+  if(mode==='dynamic') {
+    const prefix=[];
+    if(state.color==='b') {const reply=randomOpponent(prefix); if(reply)prefix.push(reply);}
+    const entry=pickLine(matchingLines(state.id,prefix));
+    if(!entry) {mode='test'; practice=true; activeId=state.id; activeLine=catalog.get(activeId).lines[0];}
+    else {useEntry(entry);go(prefix.length,'دورك. الخصم هيغيّر ردوده حسب المسار المدروس.');return;}
+  }
+  const start = practice && state.color === 'b' ? Math.min(1, activeLine.moves.length) : 0;
+  go(start, practice ? 'دورك. اختار القطعة والمربع من غير ما تشوف النقلات الجاية.' : '');
+}
+function recordMistake(san) {
+  const origin={id:state.id,first:state.first,color:state.color};
+  const prefix=activeLine.moves.slice(0,ply);
+  const entry={origin,activeId,line:activeLine.id,ply,prefix,san};
+  const existing=mistakes.findIndex(m=>m.origin.id===origin.id&&m.origin.color===origin.color&&m.prefix.join(' ')===prefix.join(' '));
+  if(existing>=0)mistakes.splice(existing,1);
+  mistakes.unshift(entry); if(mistakes.length>40)mistakes.length=40;
+  lastMistake=entry; renderReview();
+}
+function renderReview() {
+  $('review-summary').textContent=mistakes.length?mistakes.length+' موقف محتاج مراجعة. اختار موقف وجرّب النقلة مرة تانية.':'مفيش أخطاء مسجلة للمراجعة حاليًا.';
+  $('review-items').replaceChildren(...mistakes.slice(0,10).map(m=>{
+    const row=element('div','');
+    const copy=element('span','');
+    const line=catalog.get(m.activeId).lines.find(l=>l.id===m.line);
+    copy.append(element('strong',lineIdentity(m.activeId,line).opening.name),element('small',(m.origin.color==='w'?'White':'Black')+' · '+(m.ply+1)+' · '+m.san));
+    row.append(copy,button('Review',()=>reviewMistake(m)));return row;
+  }));
+}
+function reviewMistake(m) {
+  Object.assign(state,m.origin);
+  activeId=m.activeId; activeLine=catalog.get(activeId).lines.find(l=>l.id===m.line);
+  if(openingChoices(state.color,state.first).includes(activeId))state.id=activeId;
+  mode='test';practice=true;finished=false;attempts=correct=0;lastMistake=null;
+  renderPicker();go(m.ply,'راجع الموقف اللي أخطأت فيه. العب النقلة المطلوبة.');
+  document.querySelector('.mastery-training')?.scrollIntoView({block:'start'});
+}
+function resolveMistake(prefix) {
+  for(let i=mistakes.length-1;i>=0;i--)if(mistakes[i].origin.color===state.color&&mistakes[i].prefix.join(' ')===prefix.join(' '))mistakes.splice(i,1);
+  renderReview();
+}
+function dynamicMove(san) {
+  const prefix=activeLine.moves.slice(0,ply);
+  const after=[...prefix,san];
+  if(!matchingLines(state.id,after).length) {
+    recordMistake(san);render('النقلة قانونية، لكن مش من الردود المدروسة في المسار ده. جرّب تاني.','retry');persist();return;
+  }
+  resolveMistake(prefix);correct++;
+  const reply=randomOpponent(after);if(reply)after.push(reply);
+  const candidates=matchingLines(state.id,after),entry=pickLine(candidates);
+  useEntry(entry);
+  finished=!candidates.some(e=>e.line.moves.length>after.length);
+  go(after.length,(finished?'أحسنت! خلّصت المسار. ':'صحيح! ')+san+(reply?' · رد الخصم: '+reply:''),'correct');
 }
 function explanation() {
   if (!ply) return catalog.get(activeId).summary;
@@ -179,12 +247,15 @@ function tap(square) {
   selected = null;
   if (!move) { renderBoard(); $('move-note').textContent = 'النقلة دي غير قانونية. جرّب تاني.'; $('move-note').dataset.result = 'retry'; return; }
   attempts++;
+  if(mode==='dynamic'){dynamicMove(move.san);return;}
   const expected = activeLine.moves[ply];
   if (move.san !== expected) {
+    recordMistake(move.san);
     render('نقلة قانونية، لكنها مش النقلة المطلوبة في التفريعة دي. جرّب تاني. ده مش معناه إنها غلط في مباراة حقيقية.', 'retry');
     persist();
     return;
   }
+  resolveMistake(activeLine.moves.slice(0,ply));
   correct++;
   const note = activeLine.notes?.[ply + 1] ?? '';
   const reply = activeLine.moves[ply + 1];
@@ -198,27 +269,45 @@ function render(message, result = '') {
   const opening = catalog.get(activeId);
   setOptions($('opening-line'), opening.lines.map(line => line.id), activeLine.id,
     id => opening.lines.find(line => line.id === id).name);
-  $('line-field').hidden = opening.lines.length <= 1;
+  $('line-field').hidden = mode==='dynamic'||opening.lines.length <= 1;
   renderSetup();
   const identity = lineIdentity(activeId, activeLine);
   const displayOpening = identity.opening;
   renderOpeningInfo(displayOpening);
-  $('active-opening').textContent = displayOpening.name;
-  $('active-category').textContent = identity.category.name;
-  $('active-category').hidden = identity.category === displayOpening;
-  $('active-variation').textContent = identity.variation;
-  $('training-mode-label').textContent = practice ? 'TEST' : 'LEARN';
-  $('progress-fill').style.width = (activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0) + '%';
+  let shownOpening=displayOpening.name,shownCategory=identity.category.name,shownVariation=identity.variation;
+  if(mode==='dynamic') {
+    const candidates=matchingLines(state.id,activeLine.moves.slice(0,ply));
+    const names=[...new Set(candidates.map(e=>lineIdentity(e.id,e.line).opening.name))];
+    shownOpening=state.id==='open-game'&&(ply<5||names.length!==1)?'Open Game':names.length===1?names[0]:catalog.get(state.id).name;
+    shownCategory=state.id==='open-game'?'Open Game':catalog.get(state.id).name;
+    shownVariation=finished?identity.variation:'Dynamic Responses';
+    if(!finished)$('profile').textContent='';
+  }
+  $('active-opening').textContent = shownOpening;
+  $('active-category').textContent = shownCategory;
+  $('active-category').hidden = shownCategory === shownOpening;
+  $('active-variation').textContent = shownVariation;
+  $('training-mode-label').textContent = mode.toUpperCase();
+  $('mode-guide').textContent=mode==='learn'?'شاهد النقلات وافهم الفكرة، ثم جرّب الاختبار.':mode==='test'?'اختبر حفظ خط محدد من البداية.':'واجه ردودًا متغيرة من الخطوط المدروسة؛ أكتر من رد ممكن يكون مقبول.';
+  $('progress-fill').style.width = (mode==='dynamic'?(finished?100:0):(activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0)) + '%';
+  $('progress-fill').parentElement?.classList.toggle('dynamic-progress',mode==='dynamic'&&!finished);
   renderBoard();
   $('previous-ply').disabled = ply === 0 || practice;
   $('next-ply').disabled = ply === activeLine.moves.length || practice;
   $('learn-mode').setAttribute('aria-pressed', String(!practice));
-  $('test-mode').setAttribute('aria-pressed', String(practice));
+  $('test-mode').setAttribute('aria-pressed', String(mode==='test'));
+  $('dynamic-mode').setAttribute('aria-pressed', String(mode==='dynamic'));
+  $('session-result').hidden=!practice||!finished;
+  $('session-result-title').textContent=mode==='dynamic'?'Dynamic Session Complete':'Test Complete';
+  $('session-result-text').textContent='دقة المحاولات: '+(attempts?Math.round(100*correct/attempts):0)+'% · '+correct+' إجابة صحيحة من '+attempts+' محاولة.';
+  const pendingMistake=mistakes.find(m=>m.origin.id===state.id&&m.origin.color===state.color);
+  $('review-play').hidden=!pendingMistake&&!lastMistake;
+  $('review-play').onclick=()=>{const m=pendingMistake??lastMistake;if(m)reviewMistake(m);};
   $('learn-controls').hidden = practice;
   $('test-controls').hidden = !practice;
   $('test-score').textContent = 'صحيح: \u2066' + correct + ' / ' + attempts + '\u2069' + (finished ? ' · اكتمل الاختبار' : '');
   $('turn-status').textContent = finished ? 'اختبار مكتمل' : ply === activeLine.moves.length ? 'اكتمل الخط' : (practice ? 'دورك · ' : 'الدور · ') + (chess.turn() === 'w' ? 'White' : 'Black');
-  $('line-progress').textContent = ply + ' / ' + activeLine.moves.length;
+  $('line-progress').textContent = mode==='dynamic'&&!finished ? String(ply)+' plies' : ply + ' / ' + activeLine.moves.length;
   $('move-note').dataset.result = result;
   $('move-note').textContent = message || (practice ? (finished ? 'اكتمل الاختبار. راجع الخط أو أعد الاختبار.' : 'العب النقلة التالية من الذاكرة.') : explanation());
   $('opening-explanation').hidden = practice && !finished;
@@ -288,6 +377,8 @@ function render(message, result = '') {
   $('black-plan-card').hidden = !activeLine.black;
   $('opening-source').hidden = !displayOpening.source;
   if (displayOpening.source) $('opening-source').href = displayOpening.source;
+  $('quick-check').hidden=!activeLine.question;
+  $('key-point').textContent=activeLine.notes?.[activeLine.start+1]??activeLine.idea??displayOpening.summary;
   $('review-question').hidden = !activeLine.question;
   $('review-prompt').textContent = activeLine.question ?? '';
   $('review-answer').textContent = activeLine.answer ?? '';
@@ -317,10 +408,11 @@ $('mastery-color').onclick = event => {
   if (color && color !== state.color) choose({color, first: state.first, id: openingChoices(color, state.first)[0]});
 };
 $('first-move').onchange = event => choose({color: 'b', first: event.target.value, id: openingChoices('b', event.target.value)[0]});
+$('opening-family').onchange=event=>{const family=familyChoices(state.color,state.first).find(f=>f.id===event.target.value);if(family)choose({color:state.color,first:state.first,id:family.openings[0]});};
 $('opening').onchange = event => choose({color: state.color, first: state.first, id: event.target.value});
 $('opening-line').onchange = event => {
   activeLine = catalog.get(activeId).lines.find(line => line.id === event.target.value);
-  restartMode(practice);
+  restartMode(mode);
 };
 $('save-opening').onclick = () => {
   const {id, first, color} = state;
@@ -334,16 +426,27 @@ $('next-ply').onclick = () => {
   else if (!$('response-panel').hidden) $('response-panel').scrollIntoView({block:'nearest',behavior:'smooth'});
 };
 $('toggle-setup').onclick = () => setSetupCollapsed(!setupCollapsed);
-function selectMode(test) {
-  if (practice !== test) restartMode(test);
+function selectMode(nextMode) {
+  if(mode!==nextMode) {
+    if(mode==='dynamic'&&nextMode!=='dynamic') {
+      if(openingChoices(state.color,state.first).includes(activeId))state.id=activeId;
+      else {activeId=state.id;activeLine=catalog.get(activeId).lines[0];}
+      renderPicker();
+    }
+    restartMode(nextMode);
+  }
   if (typeof matchMedia === 'function' && matchMedia('(max-width:800px)').matches) setSetupCollapsed(true);
 }
-$('learn-mode').onclick = () => selectMode(false);
-$('test-mode').onclick = () => selectMode(true);
-$('retry-test').onclick = () => restartMode(true);
+$('learn-mode').onclick = () => selectMode('learn');
+$('test-mode').onclick = () => selectMode('test');
+$('dynamic-mode').onclick = () => selectMode('dynamic');
+$('retry-test').onclick = () => restartMode(mode);
+$('review-learn').onclick = () => selectMode('learn');
 $('start-ply').onclick = () => go(0);
 
 renderPicker();
 renderSaved();
-if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(true);
+renderReview();
+if (mode==='dynamic'&&(!Number.isInteger(state.ply)||!matchingLines(state.id,activeLine.moves.slice(0,state.ply)).length||(state.color==='b'&&state.ply===0))) restartMode(mode);
+else if (practice && (state.ply == null || (state.color === 'b' && state.ply === 0))) restartMode(mode);
 else go(state.ply);
