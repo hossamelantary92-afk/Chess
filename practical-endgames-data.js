@@ -504,7 +504,7 @@ export const endgameLessons = [
       },
       {
         "title": "Opposite-Colored Bishops – Remove the Passer",
-        "fen": "7k/8/P7/8/2b5/8/4B3/7K b - - 0 1",
+        "fen": "7k/8/P7/8/2b5/4B3/8/7K b - - 0 1",
         "goal": "draw",
         "line": "Bxa6",
         "prompts": [
@@ -598,7 +598,7 @@ export const endgameLessons = [
     "positions": [
       {
         "title": "Queen Exchange – Promote After Trade",
-        "fen": "8/4P3/4K3/8/8/8/5qk1/5Q2 w - - 0 1",
+        "fen": "8/4P3/4K3/8/8/6k1/5q2/5Q2 w - - 0 1",
         "goal": "win",
         "line": "Qxf2+ Kxf2 e8=Q",
         "prompts": [
@@ -665,7 +665,7 @@ export const endgameLessons = [
       },
       {
         "title": "King Safety – Trade Queens",
-        "fen": "8/8/8/8/8/8/5qk1/K4Q2 w - - 0 1",
+        "fen": "8/8/8/8/8/6k1/5q2/K4Q2 w - - 0 1",
         "goal": "draw",
         "line": "Qxf2+ Kxf2",
         "prompts": [
