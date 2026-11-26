@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=30';
+import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=31';
 import {exercises} from './safety.js?v=58';
 const englishTheme = {...advancedThemes,
   'قطعة غير محمية': 'Hanging Piece',
@@ -55,7 +55,8 @@ function renderTheme(arabic='',english=''){
   $('#labThemeEnglish').textContent=english;
   $('#labTheme').hidden=!(arabic||english);
 }
-function load(){const p=queue[n];const lesson=$('#labLesson');lesson.replaceChildren();lesson.hidden=mode!=='learn';lesson.style.display=mode==='learn'?'grid':'none';if(mode==='learn'&&tacticalLessons[p.theme]){for(const [label,key] of [['كيف تكتشفه؟','detect'],['كيف تحسبه؟','calculate'],['خطأ شائع','mistake']]){const box=document.createElement('div');box.style.cssText='padding:10px 12px;border:1px solid #7775;border-radius:10px';const title=document.createElement('strong');title.textContent=label;const body=document.createElement('p');body.style.margin='5px 0 0';body.textContent=tacticalLessons[p.theme][key];box.append(title,body);lesson.append(box);}}$('#labIntro').hidden=false;$('#labFlip').disabled=false;$('#labRetry').disabled=false;$('#labMethod').textContent=mode==='learn'?'١. افحص كشاتك. ٢. افحص الأخذ والتهديدات. ٣. احسب رد الخصم قبل النقل.':'';c=new Chess(p.fen);flipped=c.turn()==='b';ply=0;selected=null;hints=0;failed=false;done=false;last=null;verdict=null;$('#labCount').textContent=`${n+1} / ${queue.length}`;if(mode==='learn')renderTheme('',englishTheme[p.theme]);else renderTheme('اقرأ الوضع بنفسك');$('#labTask').textContent=mode!=='learn'?'ما النقلة المناسبة هنا؟':p.defense?'حافظ على قطعتك':p.demonstration?p.theme+' · مثال تعليمي':p.theme;$('#labIntro').textContent=mode==='learn'?(themes[p.theme]||'افحص التهديد ثم اختر نقلة آمنة.'):'ابحث عن تهديد للملك، أو فرصة لكسب قطعة، أو قطعة تحتاج إنقاذًا.';$('#labFeedback').textContent=p.defense&&mode==='learn'?'انقل القطعة المهددة إلى مربع آمن.':'حرّك القطعة على الرقعة. قد تحتاج الفكرة إلى أكثر من نقلة.';$('#labSteps').textContent='';$('#labExplanation').hidden=true;$('#labNext').hidden=true;$('#labHint').hidden=mode==='exam';$('#labAnswer').hidden=mode==='exam';$('#labSkip').hidden=mode!=='exam';draw();save()}
+let activeLine=[];
+function load(){const p=queue[n];activeLine=p.line||[];if(p.branches?.length&&mode!=='exam'&&mode!=='mixed')activeLine=p.branches[Math.floor(Math.random()*p.branches.length)];const lesson=$('#labLesson');lesson.replaceChildren();lesson.hidden=mode!=='learn';lesson.style.display=mode==='learn'?'grid':'none';if(mode==='learn'&&tacticalLessons[p.theme]){for(const [label,key] of [['كيف تكتشفه؟','detect'],['كيف تحسبه؟','calculate'],['خطأ شائع','mistake']]){const box=document.createElement('div');box.style.cssText='padding:10px 12px;border:1px solid #7775;border-radius:10px';const title=document.createElement('strong');title.textContent=label;const body=document.createElement('p');body.style.margin='5px 0 0';body.textContent=tacticalLessons[p.theme][key];box.append(title,body);lesson.append(box);}}$('#labIntro').hidden=false;$('#labFlip').disabled=false;$('#labRetry').disabled=false;$('#labMethod').textContent=mode==='learn'?'١. افحص كشاتك. ٢. افحص الأخذ والتهديدات. ٣. احسب رد الخصم قبل النقل.':'';c=new Chess(p.fen);flipped=c.turn()==='b';ply=0;selected=null;hints=0;failed=false;done=false;last=null;verdict=null;$('#labCount').textContent=`${n+1} / ${queue.length}`;if(mode==='learn')renderTheme('',englishTheme[p.theme]);else renderTheme('اقرأ الوضع بنفسك');$('#labTask').textContent=mode!=='learn'?'ما النقلة المناسبة هنا؟':p.defense?'حافظ على قطعتك':p.demonstration?p.theme+' · مثال تعليمي':p.theme;$('#labIntro').textContent=mode==='learn'?(themes[p.theme]||'افحص التهديد ثم اختر نقلة آمنة.'):'ابحث عن تهديد للملك، أو فرصة لكسب قطعة، أو قطعة تحتاج إنقاذًا.';$('#labFeedback').textContent=p.defense&&mode==='learn'?'انقل القطعة المهددة إلى مربع آمن.':'حرّك القطعة على الرقعة. قد تحتاج الفكرة إلى أكثر من نقلة.';$('#labSteps').textContent='';$('#labExplanation').hidden=true;$('#labNext').hidden=true;$('#labHint').hidden=mode==='exam';$('#labAnswer').hidden=mode==='exam';$('#labSkip').hidden=mode!=='exam';draw();save()}
 function draw(){const box=$('#labBoard');const fs=flipped?[...files].reverse():[...files],rs=flipped?[1,2,3,4,5,6,7,8]:[8,7,6,5,4,3,2,1];const legal=selected&&mode!=='exam'?c.moves({square:selected,verbose:true}).map(m=>m.to):[];for(const [ri,r]of rs.entries())for(const[fi,f]of fs.entries()){const sq=f+r,p=c.get(sq),b=squareAt(box,ri*8+fi);let markup='';b.className=((files.indexOf(f)+r)%2?'dark ':'')+(selected===sq?'selected ':'')+(last&&(last.from===sq||last.to===sq)?'last ':'')+(legal.includes(sq)?'legal':'');b.setAttribute('role','gridcell');b.setAttribute('aria-label',sq+(p?' '+labels[p.type]+' '+(p.color==='w'?'أبيض':'أسود'):''));markup=(p?`<img class="piece" src="pieces/${p.color+p.type.toUpperCase()}.svg" alt="" draggable="false">`:'')+(fi===0?`<small class="rank">${r}</small>`:'')+(ri===7?`<small class="file">${f}</small>`:'');if(verdict?.square===sq){
   const correct=verdict.kind==='correct';
   b.classList.add('answer-'+verdict.kind);
@@ -64,7 +65,7 @@ function draw(){const box=$('#labBoard');const fs=flipped?[...files].reverse():[
 }b.onclick=()=>play(sq);paintSquare(b,markup)}$('#labTurn').textContent=done?'انتهى الموقف':c.turn()==='w'?'الأبيض يلعب':'الأسود يلعب';$('#labLevel').textContent=mode==='exam'?'اختبار بلا تلميحات':mode==='mixed'?'فكّر قبل النقل':queue[n].level===1?'أساسي':queue[n].level===2?'متوسط':'متقدم'}
 function explainLine(p){
  const box=$('#labSolutionDetail');box.replaceChildren();if(!p.line)return;
- const b=new Chess(p.fen), steps=[], actual=c.history(), line=actual.length===p.line.length?actual:p.line;let forced=true;
+ const b=new Chess(p.fen), steps=[], actual=c.history(), line=actual.length===activeLine.length?actual:activeLine;let forced=true;
  const names={p:'البيدق',n:'الحصان',b:'الفيل',r:'الرخ',q:'الوزير',k:'الملك'};
  const values={p:1,n:3,b:3,r:5,q:9,k:0};
  const side=b.turn();const score=()=>b.board().flat().filter(Boolean).reduce((s,x)=>s+(x.color===side?1:-1)*values[x.type],0);const initial=score();
@@ -132,8 +133,8 @@ function play(sq,promotionChoice){
     finish();
     return;
   }
-  const acceptsMate=p.line[ply]?.endsWith('#')&&c.isCheckmate();
-  if(move.san!==p.line[ply]&&!acceptsMate&&!(ply===0&&p.acceptedMoves?.includes(move.san))){
+  const acceptsMate=activeLine[ply]?.endsWith('#')&&c.isCheckmate();
+  if(move.san!==activeLine[ply]&&!acceptsMate&&!(ply===0&&p.acceptedMoves?.includes(move.san))){
     c.undo();
     rejectMove(sq,'نقلة قانونية، لكنها تختلف عن الخط التعليمي المحدد. قد توجد بدائل صحيحة؛ افحص الفكرة المطلوبة.');
     return;
@@ -141,18 +142,18 @@ function play(sq,promotionChoice){
   verdict={square:sq,kind:'correct'};
   last=move;
   ply++;
-  if(ply<p.line.length)last=c.move(p.line[ply++]);
+  if(ply<activeLine.length)last=c.move(activeLine[ply++]);
   $('#labSteps').textContent=c.history().join('  ');
-  if(ply>=p.line.length){
+  if(ply>=activeLine.length){
     finish();
   }else{
-    $('#labFeedback').textContent='صحيح. الخصم ردّ بالرد النموذجي المعروض؛ كمّل الفكرة.';
+    $('#labFeedback').textContent='صحيح. الخصم نفّذ ردًا تدريبيًا متحققًا؛ كمّل الحساب.';
     draw();
   }
 }
 function markAssisted(){if(!log.review.includes(queue[n].id))log.review.push(queue[n].id);save()}
-$('#labHint').onclick=()=>{if(mode==='exam')return;hints++;markAssisted();const p=queue[n];if(p.defense){$('#labFeedback').textContent=hints===1?`افحص القطعة السوداء على ${p.attacker}.`:`القطعة المهددة على ${p.target}. انقلها خارج الهجوم.`;if(hints>1){selected=p.target;draw()}return}if(hints===1)$('#labFeedback').textContent=p.hint;else{const clone=new Chess(c.fen()),m=clone.move(p.line[ply]);selected=m.from;draw();$('#labFeedback').textContent=hints===2?'ابدأ بالقطعة المحددة، وابحث عن مربع وصولها.':`النقلة المقصودة: ${p.line[ply]}`}};
-$('#labAnswer').onclick=()=>{if(mode==='exam')return;hints++;markAssisted();const p=queue[n];if(p.defense){for(const m of c.moves({square:p.target,verbose:true})){c.move(m);if(!c.isAttacked(m.to,c.turn())){last=m;break}c.undo()}}else{while(ply<p.line.length)last=c.move(p.line[ply++])}$('#labSteps').textContent=c.history().join('  ');finish(true)};
+$('#labHint').onclick=()=>{if(mode==='exam')return;hints++;markAssisted();const p=queue[n];if(p.defense){$('#labFeedback').textContent=hints===1?`افحص القطعة السوداء على ${p.attacker}.`:`القطعة المهددة على ${p.target}. انقلها خارج الهجوم.`;if(hints>1){selected=p.target;draw()}return}if(hints===1)$('#labFeedback').textContent=p.hint;else{const clone=new Chess(c.fen()),m=clone.move(activeLine[ply]);selected=m.from;draw();$('#labFeedback').textContent=hints===2?'ابدأ بالقطعة المحددة، وابحث عن مربع وصولها.':`النقلة المقصودة: ${activeLine[ply]}`}};
+$('#labAnswer').onclick=()=>{if(mode==='exam')return;hints++;markAssisted();const p=queue[n];if(p.defense){for(const m of c.moves({square:p.target,verbose:true})){c.move(m);if(!c.isAttacked(m.to,c.turn())){last=m;break}c.undo()}}else{while(ply<activeLine.length)last=c.move(activeLine[ply++])}$('#labSteps').textContent=c.history().join('  ');finish(true)};
 $('#labNext').onclick=()=>{if(n+1<queue.length){n++;load()}else{$('#labTask').textContent='الجولة مكتملة';$('#labIntro').hidden=false;$('#labIntro').textContent=`${round} من ${queue.length} حلول صحيحة، منها ${roundFirst} من أول محاولة دون تلميح.`;if(mode==='exam'){log.exam={score:roundFirst,total:queue.length,date:new Date().toISOString()};$('#labFeedback').textContent=`اختبار دون تلميحات: ${roundFirst} / ${queue.length} من أول محاولة. ${roundFirst>=8?'اجتزت حد ٨ من ١٠.':'راجع الأخطاء ثم جرّب اختبارًا آخر.'} النتيجة ليست تقييم Chess.com.`;save()}else $('#labFeedback').textContent='راجع أخطاءك أو ابدأ جولة جديدة. النتيجة هنا ليست تقييم Chess.com.';$('#labNext').hidden=true;$('#labTask').focus()}};
 $('#labRetry').onclick=()=>{const f=failed,h=hints;load();failed=f;hints=h};$('#labFlip').onclick=()=>{flipped=!flipped;draw()};$('#labHome').onclick=()=>location.hash='home';
 function start(review=false){for(const id of ['labMode','labDifficulty','labSide'])document.getElementById(id)._syncDirect?.();counted=new Set();firstCounted=new Set();round=0;roundFirst=0;n=0;topic=$('#labTopic').value;mode=review?'review':$('#labMode').value;$('#labTopicLabel').hidden=mode!=='learn';$('#labDifficultyLabel').hidden=mode!=='learn';$('#labSideLabel').hidden=mode!=='learn';queue=review?log.review.map(id=>all.find(p=>p.id===id)).filter(Boolean):mode==='mixed'?shuffle([...shuffle(bank.filter(p=>p.examReady)).slice(0,6),...shuffle(defs).slice(0,4)]):mode==='exam'?([...shuffle(bank.filter(p=>p.examReady&&!log.solved.includes(p.id))),...shuffle(bank.filter(p=>p.examReady&&log.solved.includes(p.id)))]).slice(0,10):all.filter(p=>(topic==='all'||p.theme===topic)&&($('#labDifficulty').value==='all'||p.level===Number($('#labDifficulty').value))&&($('#labSide').value==='all'||new Chess(p.fen).turn()===$('#labSide').value)).sort((a,b)=>a.level-b.level);if(!queue.length){$('#labLesson').style.display='none';$('#labIntro').hidden=true;$('#labMethod').textContent='';$('#labSteps').textContent='';$('#labExplanation').hidden=true;renderTheme();$('#labFlip').disabled=true;$('#labRetry').disabled=true;$('#labTask').textContent='لا توجد مواقف بهذه الاختيارات';$('#labFeedback').textContent='اختَر كل المستويات أو الأبيض والأسود لتوسيع النتائج.';done=true;$('#labCount').textContent='٠ مواقف';$('#labBoard').innerHTML='';$('#labHint').hidden=true;$('#labAnswer').hidden=true;$('#labNext').hidden=true;$('#labSkip').hidden=true;return}load()}
