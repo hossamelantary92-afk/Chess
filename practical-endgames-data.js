@@ -546,3 +546,38 @@ endgameLessons.push({title:'Minor Piece Endgames – Mastery',positions:[
     "note": "بعد أخذ الحصان يتبقى فيل ضد ملك. هذا مثال على التبديل للتعادل وليس مقارنة استراتيجية شاملة بين القطعتين."
   }
 ]});
+
+endgameLessons.push({title:'Queen Endgames – Foundations',positions:[
+  {
+    "title": "Queen Exchange – Promote After Trade",
+    "fen": "8/4P3/4K3/8/8/8/5qk1/5Q2 w - - 0 1",
+    "goal": "win",
+    "line": "Qxf2+ Kxf2 e8=Q",
+    "prompts": [
+      "بدّل الوزير مع كش.",
+      "رقّ البيدق بعد التبديل."
+    ],
+    "note": "قبل تبديل الوزراء احسب نهاية البيادق. هنا البيدق على الصف السابع والملك الأسود بعيد عن مربع الترقية."
+  },
+  {
+    "title": "Queen vs Passed Pawn – Control Promotion",
+    "fen": "7k/8/8/8/8/7K/p7/3Q4 w - - 0 1",
+    "goal": "win",
+    "line": "Qa1+ Kh7 Qxa2",
+    "prompts": [
+      "سيطر على مربع الترقية مع كش.",
+      "خذ البيدق بعد إبعاد الملك."
+    ],
+    "note": "الوزير يمنع الترقية بالسيطرة على a1 ثم يأخذ البيدق. هذا فرع تدريبي."
+  },
+  {
+    "title": "Queen and King – Avoid Stalemate",
+    "fen": "7k/5K2/8/6Q1/8/8/8/8 w - - 0 1",
+    "goal": "win",
+    "line": "Qg7#",
+    "prompts": [
+      "استخدم دعم الملك لإعطاء كش مات بدل حصر الملك دون كش."
+    ],
+    "note": "الوزير على g7 محمي بالملك ويغطي h8 وh7 وg8."
+  }
+]});
