@@ -7,59 +7,65 @@
   <title>Opening Mastery | رُخ</title>
   <link rel="stylesheet" href="style.css?v=32">
   <link rel="stylesheet" href="club.css?v=59">
-  <link rel="stylesheet" href="opening-mastery.css?v=2">
+  <link rel="stylesheet" href="opening-mastery.css?v=3">
 </head>
 <body class="mastery-page">
-<header><a class="brand" href="index.html">♜ <span>رُخ<small>ROOK CHESS ACADEMY</small></span></a><a href="index.html">الرئيسية</a></header>
+<header><a class="brand" href="index.html">♜ <span>رُخ</span></a><a class="mastery-home" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>الرئيسية</a></header>
 <main>
-  <h1 lang="en">Opening Mastery</h1>
+  <div class="mastery-heading"><div><span class="mastery-kicker">ROOK / OPENINGS</span><h1 lang="en" dir="ltr">Opening Mastery</h1></div></div>
   <div class="mastery-layout">
-    <aside class="study-panel">
-      <h2 lang="en">Opening Repertoire</h2>
+    <section class="mastery-setup study-panel" aria-label="إعداد التدريب">
+      <div class="mastery-section-title"><h2 lang="en">Opening Setup</h2><span id="profile"></span></div>
       <div id="mastery-color" class="mastery-actions" role="group" aria-label="لون اللعب">
-        <button type="button" data-color="w" lang="en">White</button>
-        <button type="button" data-color="b" lang="en">Black</button>
+        <button type="button" data-color="w" lang="en"><img src="pieces/wK.svg" alt="">White</button>
+        <button type="button" data-color="b" lang="en"><img src="pieces/bK.svg" alt="">Black</button>
       </div>
-      <label id="first-move-field">أول نقلة للأبيض<select id="first-move" dir="ltr"></select></label>
-      <label id="opening-label">اختار افتتاحية<select id="opening" dir="ltr"></select></label>
-      <p id="opening-context" class="mastery-muted"></p>
-      <p id="profile"></p>
-      <dl id="trade-offs"></dl>
-      <button id="save-opening" type="button" class="primary">احفظ الاختيار</button>
-      <h2 lang="en">My Opening Repertoire</h2>
-      <div id="saved-openings"></div>
-      <p id="save-status" role="status"></p>
-    </aside>
-    <section class="study-panel">
-      <h2 lang="en">Opening Training</h2>
+      <div class="mastery-fields">
+        <label id="first-move-field">أول نقلة للأبيض<select id="first-move" dir="ltr"></select></label>
+        <label id="opening-label">الافتتاحية<select id="opening" dir="ltr"></select></label>
+        <label id="line-field">التفريعة<select id="opening-line" dir="ltr"></select></label>
+      </div>
       <div id="mastery-mode" class="mastery-actions mastery-modes" role="group" aria-label="طريقة التدريب">
-        <button type="button" id="learn-mode" aria-pressed="true" lang="en"><strong>Learn</strong><small>شاهد النقلات</small></button>
-        <button type="button" id="test-mode" aria-pressed="false" lang="en"><strong>Test Yourself</strong><small>اختبر نفسك</small></button>
+        <button type="button" id="learn-mode" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5c3-1 6-1 9 1v15c-3-2-6-2-9-1zm18 0c-3-1-6-1-9 1v15c3-2 6-2 9-1z"/></svg><span><strong lang="en">Learn</strong><small>شاهد النقلات</small></span></button>
+        <button type="button" id="test-mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H5v17h14V4h-3M8 3h8v4H8zM8 13l3 3 5-5"/></svg><span><strong lang="en">Test Yourself</strong><small>اختبر نفسك</small></span></button>
       </div>
-      <label>اختار تفريعة<select id="opening-line" dir="ltr"></select></label>
-      <div class="mastery-board-bar"><strong id="turn-status"></strong><span id="line-progress"></span></div>
+    </section>
+    <section class="mastery-training study-panel" aria-label="رقعة التدريب">
+      <div class="mastery-section-title mastery-active"><h2 id="active-opening" lang="en" dir="ltr"></h2><span id="line-progress" dir="ltr"></span></div>
+      <div class="mastery-progress" aria-hidden="true"><span id="progress-fill"></span></div>
+      <div class="mastery-board-bar"><strong id="turn-status"></strong><span id="training-mode-label" lang="en" dir="ltr"></span></div>
       <div id="mastery-board" class="study-board" aria-label="رقعة شطرنج" role="group"></div>
-      <div class="mastery-actions" id="learn-controls">
-        <button id="previous-ply" type="button" lang="en">Previous</button>
-        <button id="next-ply" type="button" class="primary" lang="en">Next</button>
-        <button id="start-ply" type="button" lang="en">Restart</button>
+      <div class="mastery-actions" id="learn-controls" dir="ltr">
+        <button id="start-ply" type="button" aria-label="Restart" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 7M3 4v7h7"/></svg></button>
+        <button id="previous-ply" type="button" lang="en"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>Previous</button>
+        <button id="next-ply" type="button" class="primary" lang="en">Next<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
       </div>
       <div class="mastery-actions" id="test-controls" hidden><button id="retry-test" type="button" lang="en">Restart Test</button><span id="test-score" aria-live="polite"></span></div>
       <p id="move-note" role="status" aria-live="polite"></p>
       <div id="move-list" class="mastery-actions" dir="ltr" aria-label="نقلات الخط"></div>
-      <h3 lang="en">Responses & Variations</h3>
-      <div id="tree-branches"></div>
-      <section id="opening-explanation">
-      <h3 lang="en">Opening Ideas &amp; Plans</h3><p id="opening-summary"></p><p id="line-idea"></p><p id="white-plan"></p><p id="black-plan"></p>
+      <section id="response-panel" hidden><h3 lang="en">Responses &amp; Variations</h3><p id="response-caption"></p><div id="tree-branches"></div></section>
+    </section>
+    <section id="opening-explanation" class="study-panel mastery-explanation">
+      <h2 lang="en">Opening Ideas &amp; Plans</h2>
+      <p id="opening-context" class="mastery-muted"></p>
+      <p id="opening-summary"></p><p id="line-idea"></p>
+      <dl id="trade-offs"></dl>
+      <div class="mastery-plans">
+        <div id="white-plan-card" class="mastery-plan"><h3 lang="en"><img src="pieces/wK.svg" alt="">White Plan</h3><p id="white-plan"></p></div>
+        <div id="black-plan-card" class="mastery-plan"><h3 lang="en"><img src="pieces/bK.svg" alt="">Black Plan</h3><p id="black-plan"></p></div>
+      </div>
       <details id="review-question" hidden><summary id="review-prompt"></summary><p id="review-answer"></p></details>
       <section id="decision-review" hidden><h3 lang="en">Decision Practice</h3><p id="decision-prompt"></p><div id="decision-options" class="mastery-actions"></div><p id="decision-feedback" role="status"></p><button id="decision-jump" type="button">اعرض وضع القرار</button></section>
       <div id="opening-links" class="mastery-actions"></div>
-      <a id="opening-source" rel="noopener noreferrer" target="_blank" lang="en">Opening Reference</a>
-      </section>
-      <section class="mastery-extra"><h3 lang="en">More Opening Practice</h3><div class="mastery-actions"><a href="training.html#trainer">Unexpected Moves</a><a href="training.html#exam">Mixed Opening Test</a><a href="index.html#opening-traps">Traps &amp; Gambits</a></div></section>
+      <a id="opening-source" rel="noopener noreferrer" target="_blank" lang="en">Opening Reference ↗</a>
+    </section>
+    <section class="study-panel mastery-library" aria-label="الافتتاحيات المحفوظة">
+      <div class="mastery-section-title"><h2 lang="en">My Repertoire</h2><button id="save-opening" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>احفظ الاختيار</button></div>
+      <div id="saved-openings"></div><p id="save-status" role="status"></p>
+      <div class="mastery-extra"><h3 lang="en">More Opening Practice</h3><div class="mastery-actions"><a href="training.html#trainer">Unexpected Moves</a><a href="training.html#exam">Mixed Opening Test</a><a href="index.html#opening-traps">Traps &amp; Gambits</a></div></div>
     </section>
   </div>
 </main>
-<script type="module" src="opening-mastery.js?v=2"></script>
+<script type="module" src="opening-mastery.js?v=3"></script>
 </body>
 </html>
