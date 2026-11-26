@@ -297,3 +297,6 @@ bank.push({...row("calculation-164-visualization","حساب النقلات",2,"6
 
 // V165: only quiet candidates achieve the specified mating horizon.
 bank.push({...row("calculation-165-quiet","حساب النقلات",3,"k7/8/2K5/8/8/4Q3/8/8 w - - 0 1","Qe7 Kb8 Qb7#","لا يوجد مات في نقلة واحدة، ولا يحقق أي كش المات في نقلتين أمام كل الردود. الحلول الثلاثة كلها هادئة: Kb6 Kb8 Qe8#؛ Qe7 Kb8 Qb7#؛ Qb3 Ka7 Qb7#. تم فحص جميع النقلات الأولى والردود القانونية. ابحث عن تقييد مربعات الهروب بدل إعطاء كش بلا هدف.","ابحث عن نقلة هادئة تمنع الهروب."),task:"اكتشف النقلات الهادئة الثلاث للمات في نقلتين",examReady:false,demonstration:true});
+
+// V166: prophylaxis, contrasting an attractive activity with a concrete threat.
+bank.push({...row("calculation-166-prophylaxis","حساب النقلات",2,"3r2k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1","h3 Rd1+ Kh2","قبل تنشيط الرخ افحص تهديد الخصم: Ra7 يسمح بـ Rd1# فورًا. أما h3 فيفتح مربع هروب للملك؛ بعد Rd1+ يمكن Kh2 أو Rxd1. تم التحقق من عدم وجود مات فوري للأسود بعد h3. هذه نقلة وقائية ممكنة وليست الحل الوحيد أو إثباتًا لأفضل نقلة في الوضع.","ماذا سيلعب الأسود إذا أبعدت الرخ عن الصف الأول؟"),task:"امنع تهديد المات على الصف الخلفي قبل تنشيط الرخ",examReady:false,demonstration:true});
