@@ -53,7 +53,6 @@ function renderSetup() {
   $('setup-fields').hidden = setupCollapsed;
   $('setup-summary').hidden = !setupCollapsed;
   $('toggle-setup').setAttribute('aria-expanded', String(!setupCollapsed));
-  $('setup-title').textContent = setupCollapsed ? 'Opening Setup' : 'Opening Setup';
   $('setup-toggle-label').textContent = setupCollapsed ? 'تغيير' : 'تم';
   $('toggle-setup').setAttribute('aria-label', setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات');
   $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + catalog.get(state.id).name;
@@ -66,16 +65,13 @@ function renderPicker() {
   $('first-move-field').hidden = state.color === 'w';
   setOptions($('first-move'), firstMoves, state.first, move => move);
   const families=familyChoices(state.color,state.first);
-  const allowed=openingChoices(state.color,state.first);
-  // Native optgroups retain the family structure without a separate dropdown.
-  const groups=[];
-  for(const id of allowed){
-    const family=families.find(f=>f.openings.includes(id));
-    if(!family)continue;
-    let group=groups[groups.length-1];
-    if(!group||group.label!==family.label){group=document.createElement('optgroup');group.label=family.label;groups.push(group);}
-    group.append(new Option(catalog.get(id).name,id));
-  }
+  // One native group per family; all original opening identifiers remain selectable.
+  const groups=families.map(family=>{
+    const group=document.createElement('optgroup');
+    group.label=family.label;
+    group.append(...family.openings.map(id=>new Option(catalog.get(id).name,id)));
+    return group;
+  });
   $('opening').replaceChildren(...groups);
   $('opening').value=state.id;
   $('learning-order-note').textContent=state.color==='w'?'ابدأ بالإيطالي، ثم لندن، وبعدها الاسكتلندي وجامبيت الوزير.':state.first==='e4'?'ابدأ بـ Open Game، ثم Caro–Kann وScandinavian، وبعدهم French وSicilian.':state.first==='d4'?'ابدأ بـ Queen’s Gambit Declined، ثم Slav، وبعدهم King’s Indian وDutch.':'ابدأ بأول اختيار في القائمة، واتدرّب على خطوطه قبل الانتقال للدفاع التالي.';
