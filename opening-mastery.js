@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=190';
+import {catalog, firstMoves, openingChoices, familyChoices, normalizeSelection, studyLines, essentialLines, replyGroup, matchingLines, positionKey, buildTree} from './opening-mastery-data.js?v=191';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -576,6 +576,8 @@ function render(message, result = '') {
     return row;
   }));
   $('opening-summary').textContent = chessText(displayOpening.summary);
+  $('opening-mistakes').replaceChildren(...(displayOpening.commonMistakes??[]).map(t=>{const li=document.createElement('li');li.textContent=chessText(t);return li;}));
+  $('opening-mistakes-card').hidden=practice||!displayOpening.commonMistakes?.length;
   $('line-idea').textContent = chessText(activeLine.idea && activeLine.idea !== displayOpening.summary ? activeLine.idea : '');
   $('line-idea').hidden = !$('line-idea').textContent;
   $('white-plan').textContent = chessText(activeLine.white ?? '');
