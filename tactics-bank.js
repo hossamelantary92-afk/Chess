@@ -175,3 +175,4 @@ bank.push({...row("anderssen-dufresne-1852","الإلهاء",3,"1r2k1r1/pbppnp1p
 for(const p of bank){if(p.id==='promotion-check')p.acceptedMoves=['e8=Q#','e8=R#'];}
 
 bank.push({...row("underpromotion-82-0",'الترقية',2,"8/1P6/k7/8/K2B4/8/8/1R6 w - - 0 1","b8=N#","الترقية إلى حصان هنا تحقق المات الوحيد في نقلة واحدة، بخلاف الوزير. افحص طريقة هجوم الحصان ومربعات الهروب.",'ابحث عن مات في نقلة، ولا تفترض أن الوزير هو الأفضل.'),examReady:true,demonstration:false});
+bank.push({...row('underpromotion-rook-stalemate','الترقية',2,'8/k1P5/2K5/8/8/8/8/8 w - - 0 1','c8=R','الوزير على c8 يمنع جميع نقلات الملك الأسود دون كش، فيتعادل بالخنق. الرخ يترك للملك a6، ويحتفظ الأبيض بمادة كافية للفوز بنهاية ملك ورخ ضد ملك. الفيل والحصان وحدهما لا يكفيان للمات.','اختر ترقية تتجنب الخنق وتحتفظ بمادة كافية للمات.'),examReady:true,demonstration:false});
