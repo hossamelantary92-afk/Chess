@@ -13,10 +13,11 @@ const query = new URLSearchParams(location.search);
 const linkedId = query.get('opening');
 const linkedColor = query.get('color') === 'b' ? 'b' : 'w';
 const linkedFirst = firstMoves.find(first => openingChoices('b', first).includes(linkedId)) ?? 'e4';
-const linked = normalizeSelection({color: linkedColor, first: linkedFirst, id: linkedId, line: query.get('line') ?? '', ply: 0, mode: query.get('mode')});
-// A fresh visit starts a new lesson; retain saved repertoire and learning results only.
+const linked = linkedId ? normalizeSelection({color: linkedColor, first: linkedFirst, id: linkedId, line: query.get('line') ?? '', ply: 0, mode: query.get('mode')}) : null;
+// Restore the last lesson unless an explicit lesson link overrides it.
 // Explicit lesson links still open their requested color and opening.
-const state = valid(linked) ? linked : {color: 'w', first: 'e4', id: '0', line: '', ply: 0, mode: 'learn'};
+const restored = normalizeSelection(stored?.view);
+const state = valid(linked) ? linked : valid(restored) ? restored : {color: 'w', first: 'e4', id: '0', line: '', ply: 0, mode: 'learn'};
 if (valid(linked)) history.replaceState(history.state, '', location.pathname);
 const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
 let activeId = catalog.has(state.activeId) ? state.activeId : state.id;
