@@ -194,3 +194,7 @@ bank.push({...row('saavedra-study-1895','الترقية',3,'8/2P5/8/8/3r4/8/2K5/
 for(const p of bank){if(p.id==='zwischenzug-capture-check-84')p.branches=[p.line,['Qxh8+','Kf7','Rxd2']];if(p.id==='kasparov-topalov-1999')p.branches=[p.line,'Re7+ Qxe7 Qxd4+ Kb8 Qb6+ Bb7 Nc6+ Ka8 Qa7#'.split(' ')];}
 
 for(const p of bank){const entry=[{"id":"bishop-skewer-queen","branches":[["Bb5+","Kc8","Bxe8"],["Bb5+","Kd8","Bxe8"],["Bb5+","Ke7","Bxe8"],["Bb5+","Ke6","Bxe8"],["Bb5+","Kd6","Bxe8"],["Bb5+","Kc7","Bxe8"]]}].find(x=>x.id===p.id);if(entry)p.branches=entry.branches;}
+
+bank.push({...row('multi-mate-94','كش مات',1,'7k/5Q2/6K1/8/8/8/8/8 w - - 0 1','Qe8#','يوجد أكثر من مات مباشر: Qe8#، Qf8#، Qg7#، Qh7#. جميعها تمنع هروب الملك أو أخذ القطعة المهاجمة أو حجب الكش. اختر أيًا منها؛ لا فرق في النتيجة.','افحص جميع كشات الوزير ومربعات هروب الملك.'),acceptedMoves:["Qe8#","Qf8#","Qg7#","Qh7#"],examReady:true,demonstration:false});
+
+bank.push({...row('multi-mate-black-94','كش مات',1,'8/8/8/8/8/6k1/5q2/7K b - - 0 1','Qg2#','يوجد أكثر من مات مباشر: Qg2#، Qh2#، Qf1#، Qe1#. جميعها تمنع هروب الملك أو أخذ القطعة المهاجمة أو حجب الكش. اختر أيًا منها؛ لا فرق في النتيجة.','افحص جميع كشات الوزير ومربعات هروب الملك.'),acceptedMoves:["Qg2#","Qh2#","Qf1#","Qe1#"],examReady:true,demonstration:false});
