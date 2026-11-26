@@ -273,3 +273,6 @@ bank.push({...row("calculation-110-candidates",'حساب النقلات',2,"6k1/
 
 bank.push({...row("calculation-111-exchange",'حساب النقلات',2,"6k1/8/4r3/4q3/8/8/4R3/4R1K1 w - - 0 1","Rxe5 Rxe5 Rxe5","في الخط المعروض يأخذ الرخ الوزير ثم يسترد الأسود الرخ، ويأخذ الرخ الثاني رخ الأسود. صافي المكسب تسع نقاط (وزير ورخ مقابل رخ). هذا فرع تعليمي وليس إثباتًا لأقوى دفاع.","تخيل موضع الرخ الثاني بعد التبادل."),task:"احسب سلسلة الأخذ على عمود e",examReady:false,demonstration:true});
 bank.push({...row("calculation-111-visual",'حساب النقلات',2,"6k1/8/3r4/4N3/8/8/8/6K1 w - - 0 1","Nf7 Kxf7","هذا مثال على ضرورة فحص أمان مربع الوصول: الحصان ينتقل إلى f7 ثم يأخذه الملك في الرد المعروض. لا تعتمد على شكل النقلة قبل حساب رد الخصم.","هل يستطيع الملك الوصول إلى f7؟"),task:"تخيل أين ينتهي الحصان بعد رد الملك",examReady:false,demonstration:true});
+
+// V152: enumerate all immediate mating solutions, not just the illustrative line.
+for(const p of bank){if(p.line.length===1&&p.line[0].endsWith('#')){const mates=new Chess(p.fen).moves().filter(m=>m.endsWith('#'));p.acceptedMoves=mates;if(mates.length>1)p.explain+=' الحلول الأخرى التي تحقق المات فورًا مقبولة أيضًا: '+mates.filter(m=>m!==p.line[0]).join('، ')+'.';}}
