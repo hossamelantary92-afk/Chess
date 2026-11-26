@@ -214,7 +214,7 @@ function route(){
   const legacy=location.hash.match(/^#train\/openings\/(\d+)(?:\/(learn|practice)(?:\/([a-z0-9-]+))?)?$/);
   if(legacy){const params=new URLSearchParams({opening:String(Math.min(Number(legacy[1]),openings.length-1)),color:lastSession?.section==='openings'&&lastSession.idx===Number(legacy[1])?lastSession.side:'w',mode:legacy[2]==='practice'?'test':'learn'});if(legacy[3])params.set('line',legacy[3]);location.replace('opening-mastery.html?'+params);return}
   const match=location.hash.match(/^#train\/(openings|mates|tactics|vision|endings|basics)\/(\d+)\/(learn|practice)(?:\/([a-z0-9-]+))?$/);
-  if(!match){showHome();return}
+  if(!match){if(/^#fundamentals(?:\/[a-z0-9-]+)?$/.test(location.hash)){clearVisionResponse();isTraining=false;clearInterval(timer);document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=true;return}showHome();return}
   const key=match[1],n=Number(match[2]),mode=match[3]==='practice';
   const max=key==='openings'?openings.length:key==='mates'?8:key==='tactics'?6:key==='endings'?4:key==='basics'?5:1;
   const index=Math.min(n,max-1);
