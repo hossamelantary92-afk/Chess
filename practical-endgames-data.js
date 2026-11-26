@@ -619,3 +619,38 @@ endgameLessons.push({title:'Queen Endgames – Advanced',positions:[
     "note": "بعد التبادل لا يتبقى سوى الملكين. التبديل يزيل خطر الكشات تمامًا."
   }
 ]});
+
+endgameLessons.push({title:'Advanced Endgame Strategy',positions:[
+  {
+    "title": "Underpromotion – Avoid Stalemate",
+    "fen": "8/k1P5/2K5/8/8/8/8/8 w - - 0 1",
+    "goal": "win",
+    "line": "c8=R",
+    "prompts": [
+      "الترقية إلى وزير تؤدي إلى الردب. اختر قطعة تحقق الفوز دون ردب."
+    ],
+    "note": "الترقية إلى رخ تترك للملك الأسود نقلة قانونية، وتؤدي إلى نهاية رخ ضد ملك."
+  },
+  {
+    "title": "Zugzwang – Opposition",
+    "fen": "8/4k3/8/3K4/4P3/8/8/8 w - - 0 1",
+    "goal": "win",
+    "line": "Ke5 Kd7 Kf6",
+    "prompts": [
+      "خذ المعارضة المباشرة أمام الملك الأسود.",
+      "بعد ابتعاد الملك، اختر طريق الاختراق من الجانب الآخر."
+    ],
+    "note": "المعارضة تجبر الملك الأسود على ترك أحد الجانبين. في هذا الفرع يدخل الأبيض إلى f6 ويدعم تقدم البيدق."
+  },
+  {
+    "title": "Simplification – Trade into a Winning Pawn Ending",
+    "fen": "8/4P3/4K3/8/8/8/5rk1/5R2 w - - 0 1",
+    "goal": "win",
+    "line": "Rxf2+ Kxf2 e8=Q",
+    "prompts": [
+      "احسب نهاية البيادق قبل تبديل الرخين.",
+      "رقّ البيدق بعد التبديل."
+    ],
+    "note": "البيدق على الصف السابع والملك الأسود بعيد عن مربع الترقية؛ التبديل يحول التفوق إلى وزير."
+  }
+]});
