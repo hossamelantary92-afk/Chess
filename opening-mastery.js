@@ -400,6 +400,7 @@ function tap(square) {
   go(next, (finished ? 'أحسنت! خلّصت اختبار الخط. ' : 'صحيح! ') + move.san + (reply ? ' · رد الخصم: ' + reply : '') + (note ? ' · ' + note : ''), 'correct');
 }
 
+const strategicPositions={"r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQK2R b KQkq -":{"prompt":"أي قرار يؤمّن الملك الأسود مباشرة قبل التفكير في كسر المركز؟","choices":["O-O","d5"],"correct":0,"reasons":["التبييت قانوني ويؤمّن الملك نسبيًا؛ بعدها قيّم فتح المركز.","d5 كسر مركزي يستحق الحساب، لكنه لا يؤمّن الملك مباشرة."]},"r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq -":{"prompt":"أي نقلة تطوّر فيل f8 وتجهز التبييت؟","choices":["b5","Be7"],"correct":1,"reasons":["b5 يكسب مساحة ويهاجم الفيل لكنه لا يطوّر فيل f8.","Be7 يخرج الفيل ويجهز التبييت."]},"rnbqkb1r/pppn1ppp/4p3/3pP3/3P1P2/2N5/PPP3PP/R1BQKBNR b KQkq -":{"prompt":"أي كسر يهاجم قاعدة سلسلة بيادق الأبيض على d4 مباشرة؟","choices":["c5","f6"],"correct":0,"reasons":["c5 يهاجم d4، قاعدة السلسلة d4–e5.","f6 يهاجم رأس السلسلة e5 لا قاعدتها."]},"rn1qkbnr/pp2pppp/2p5/5b2/3P4/6N1/PPP2PPP/R1BQKBNR b KQkq -":{"prompt":"الحصان g3 يهاجم الفيل f5. أي نقلة تحفظ الفيل دون تبادله؟","choices":["e6","Bg6"],"correct":1,"reasons":["e6 لا يزيل الفيل من هجوم الحصان.","Bg6 يحفظ الفيل ويتيح استكمال التطوير."]},"r1bq1rk1/ppp2pbp/2np1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 w - -":{"prompt":"أي نقلة تغلق التوتر بين بيدقي d4 وe5 وتكسب مساحة؟","choices":["d5","dxe5"],"correct":0,"reasons":["d5 يغلق التوتر المباشر ويهاجم حصان c6؛ بعدها قيّم اللعب على الجناحين.","dxe5 يزيل التوتر بالتبادل لا بإغلاق المركز."]},"rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - -":{"prompt":"أي نقلة تنافس مركز الأبيض مباشرة ببيدق e؟","choices":["Kh8","e5"],"correct":1,"reasons":["Kh8 لا يهاجم المركز.","e5 ينافس d4؛ احسب التبادلات قبل التنفيذ."]},"r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ -":{"prompt":"أي نقلة تطوّر فيل f1 وتجهز التبييت؟","choices":["Bd3","a3"],"correct":0,"reasons":["Bd3 يطوّر الفيل ويفتح طريق التبييت.","a3 لا يطوّر الفيل."]},"rnbqk2r/ppp2ppp/3bpn2/3p4/3P4/4PNB1/PPP2PPP/RN1QKB1R b KQkq -":{"prompt":"أي نقلة تعرض تبادل الفيلين على g3؟","choices":["c5","Bxg3"],"correct":1,"reasons":["c5 يضغط على d4 لكنه لا يبادل الفيلين.","Bxg3 يزيل فيل الأبيض النشط مقابل فيلك؛ قيّم أثر استرداد البيدق."]}};
 function renderMiddlegame(){
   const complete=ply===activeLine.moves.length&&(!practice||finished);
   const authoredPlan=state.color==='w'?activeLine.white:activeLine.black;
@@ -417,6 +418,13 @@ function renderMiddlegame(){
     const li=document.createElement('li');const strong=document.createElement('strong');strong.textContent=label;li.append(strong,document.createTextNode(' — '+detail));return li;
   }));
   $('middlegame-turn').textContent=chess.turn()===state.color?'دورك الآن: طبّق التقييم قبل اختيار النقلة.':'دور الخصم الآن: توقّع رده قبل تنفيذ خطتك.';
+  const strategic=strategicPositions[positionKey(chess)];
+  $('strategic-position').hidden=!strategic;
+  if(strategic){
+    $('strategic-prompt').textContent=strategic.prompt;
+    $('strategic-options').replaceChildren(...strategic.choices.map((san,i)=>button(san,()=>{$('strategic-feedback').textContent=(i===strategic.correct?'أحسنت! ':'راجع الهدف. ')+strategic.reasons[i];})));
+    $('strategic-feedback').textContent='';
+  }
   $('middlegame-prompt').textContent=authoredPlan?'الخط خلص. أنهي خطة تعليمية أنسب للون اللي بتلعب بيه؟':'الخط التدريبي خلص، حتى لو الافتتاحية لسه مستمرة. إيه أول خطوة في تقييم الوضع؟';
   const wrongPlans=['حرّك الوزير مبكرًا بحثًا عن هجوم، حتى لو باقي القطع لسه مش متطورة.','ادفع بيادق جناح الملك من غير حساب تهديد الخصم أو أمان ملكك.'];
   const choices=[...wrongPlans];choices.splice((activeLine.moves.length+Number(state.color==='b'))%3,0,plan);
