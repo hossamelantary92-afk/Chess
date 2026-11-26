@@ -14,6 +14,7 @@ panel.innerHTML = `
   <nav class="training-links mid-nav"><a href="#home">الرئيسية</a></nav>
   <div class="lesson-head"><h2 lang="en">Practical Endgames</h2></div>
   <p>حدّد هدفك من النهاية، والعب خطّ التمرين على الرقعة.</p>
+  <div class="training-links mid-nav"><button class="premium-btn primary" id="endgameExam">اختبار النهايات</button><button class="premium-btn" id="endgameExitExam" hidden>إنهاء الاختبار</button></div><p id="endgameExamScore" role="status"></p>
   <label for="endgamePicker">اختار موقف</label>
   <select id="endgamePicker" class="premium-btn"></select>
   <div class="safety-layout">
@@ -72,6 +73,13 @@ let selected;
 let started;
 let outcome;
 let side;
+let exam = null;
+const examGroups = [1,8,11,14,16,17];
+function examScore(){ $('endgameExamScore').textContent = exam ? `الاختبار ${Math.min(exam.at+1,exam.queue.length)}/${exam.queue.length} · ${exam.results.filter(r=>r.ok).length} صحيحة` : ''; }
+function recordExam(ok){ if(!exam || exam.results.length>exam.at)return; exam.results.push({index,ok}); examScore(); }
+function exitExam(){exam=null;picker.disabled=false;$('endgameExam').hidden=false;$('endgameExitExam').hidden=true;examScore();open(index);}
+$('endgameExam').onclick=()=>{exam={at:0,results:[],queue:examGroups.map(i=>{const group=endgameLessons[i].positions;return exercises.indexOf(group[Math.floor(Math.random()*group.length)]);})};picker.disabled=true;$('endgameExam').hidden=true;$('endgameExitExam').hidden=false;open(exam.queue[0]);examScore();};
+$('endgameExitExam').onclick=exitExam;
 
 function drawBoard() {
   const board = $('endgameBoard');
@@ -109,15 +117,16 @@ function render(feedback = '') {
   $('endgameTitle').textContent = exercise.title;
   $('endgameGoals').hidden = started;
   $('endgamePromote').hidden = true;
-  $('endgameHint').hidden = !started || Boolean(outcome);
-  $('endgameRestart').hidden = !started;
-  $('endgameNext').hidden = outcome !== 'complete';
+  $('endgameHint').hidden = Boolean(exam) || !started || Boolean(outcome);
+  $('endgameRestart').hidden = Boolean(exam) || !started;
+  $('endgameNext').hidden = exam ? !outcome : outcome !== 'complete';
   $('endgameNext').textContent = learningOrder.indexOf(index) + 1 === learningOrder.length ? 'ارجع للموقف الأول' : 'الموقف التالي';
+  if(exam) $('endgameNext').textContent = exam.at===exam.queue.length-1?'النتيجة':'السؤال التالي';
   $('endgameReview').hidden = !outcome;
   $('endgameNote').textContent = outcome ? exercise.note : '';
   $('endgamePrompt').textContent = outcome === 'alternative' ? 'الخط ده انتهى بالتعادل. أعد المحاولة ودور على طريقة تستفيد من وضع القطع.' :
     outcome === 'complete' ? 'أكملت خطّ التمرين.' :
-    started ? exercise.prompts[step / 2] : `إنت بال${side === 'w' ? 'أبيض' : 'أسود'}. تختار تلعب على الفوز ولا تحافظ على التعادل؟`;
+    outcome === 'exam-wrong' ? 'راجع الشرح ثم انتقل للسؤال التالي.' : started ? (exam?'نفّذ النقلة المناسبة للهدف دون تلميح.':exercise.prompts[step / 2]) : `إنت بال${side === 'w' ? 'أبيض' : 'أسود'}. تختار تلعب على الفوز ولا تحافظ على التعادل؟`;
   $('endgameFeedback').textContent = feedback;
   drawBoard();
 }
@@ -162,6 +171,7 @@ function chooseSquare(square) {
 
 function play(san) {
   const exercise = exercises[index];
+  if(exam){const ok=san===line[0];chess.move(san);step=1;outcome=ok?'complete':'exam-wrong';recordExam(ok);selected=null;render(ok?'إجابة مطابقة للخط التعليمي.':`النقلة التعليمية: ${line[0]}. قد توجد بدائل صحيحة غير مقيمة.`);return;}
   const alternative = step === 0 && exercise.alternative?.split(' ');
   let feedback = '';
   $('endgamePromote').hidden = true;
@@ -206,6 +216,7 @@ function open(next) {
 for (const button of $('endgameGoals').querySelectorAll('button')) {
   button.onclick = () => {
     if (button.dataset.goal !== exercises[index].goal) {
+      if(exam){outcome='exam-wrong';recordExam(false);render('الهدف في التمرين: '+labels[exercises[index].goal]);return;}
       $('endgameFeedback').textContent = 'راجع المادة والبيدق الأقرب للترقية قبل ما تختار هدفك.';
       return;
     }
@@ -222,6 +233,7 @@ $('endgameRestart').onclick = () => {
   $('endgameGoals').querySelector('button').focus({preventScroll:true});
 };
 $('endgameNext').onclick = () => {
+  if(exam){exam.at++;if(exam.at<exam.queue.length){open(exam.queue[exam.at]);examScore();return;}const results=exam.results.slice();exitExam();$('endgameExamScore').textContent=`النتيجة ${results.filter(r=>r.ok).length}/${results.length} · راجع: ${results.filter(r=>!r.ok).map(r=>exercises[r.index].title).join('، ')||'لا أخطاء في الخطوط المختارة'}`;return;}
   open(learningOrder[(learningOrder.indexOf(index) + 1) % learningOrder.length]);
   $('endgameTitle').focus({preventScroll:true});
 };
@@ -230,7 +242,7 @@ picker.onchange = () => open(Number(picker.value));
 function route() {
   const draws = location.hash === '#draws';
   panel.hidden = !draws && location.hash !== '#practical-endgames';
-  if (panel.hidden) return;
+  if (panel.hidden) {if(exam)exitExam();return;}
   document.body.classList.add('training-view');
   document.body.dataset.section = 'practical-endgames';
   $('homeDashboard').hidden = true;
@@ -241,7 +253,7 @@ function route() {
 window.addEventListener('hashchange', route);
 route();
 
-keepView('endgame', () => panel.hidden ? null : {index, started, step, outcome}, saved => {
+keepView('endgame', () => panel.hidden || exam ? null : {index, started, step, outcome}, saved => {
   if (!exercises[saved.index]) return;
   open(saved.index);
   started = saved.started;
