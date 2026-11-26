@@ -512,3 +512,37 @@ endgameLessons.push({title:'Minor Piece Endgames – Advanced',positions:[
     "note": "الفيل على c8 يسيطر على h3، مربع تقدم البيدق الآخر. المثال يوضح سرعة تغيير الجناح بالقطر المفتوح."
   }
 ]});
+
+endgameLessons.push({title:'Minor Piece Endgames – Mastery',positions:[
+  {
+    "title": "Bishop Pair – Final Mate",
+    "fen": "7k/5K2/6B1/8/8/8/8/2B5 w - - 0 1",
+    "goal": "win",
+    "line": "Bb2#",
+    "prompts": [
+      "استخدم الفيل الثاني لإعطاء كش على القطر الطويل."
+    ],
+    "note": "الفيل على g6 يغطي h7، والملك يغطي g8 وg7، والفيل على b2 يعطي كش مات."
+  },
+  {
+    "title": "Knight Maneuver – Intercept Promotion",
+    "fen": "7k/P7/8/1n6/8/8/8/7K b - - 0 1",
+    "goal": "draw",
+    "line": "Nc7 a8=Q+ Nxa8",
+    "prompts": [
+      "سيطر على مربع الترقية a8.",
+      "خذ الوزير الجديد بالحصان."
+    ],
+    "note": "الحصان على c7 يراقب a8. إذا اختار الأبيض الترقية كما في الخط، ينتهي الموقف بالتعادل لعدم كفاية المادة."
+  },
+  {
+    "title": "Bishop vs Knight – Exchange to Draw",
+    "fen": "7k/8/8/3n4/4B3/8/7K/8 w - - 0 1",
+    "goal": "draw",
+    "line": "Bxd5",
+    "prompts": [
+      "أزل الحصان لتصل إلى نهاية بلا مادة كافية للمات."
+    ],
+    "note": "بعد أخذ الحصان يتبقى فيل ضد ملك. هذا مثال على التبديل للتعادل وليس مقارنة استراتيجية شاملة بين القطعتين."
+  }
+]});
