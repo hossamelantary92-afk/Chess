@@ -86,5 +86,30 @@ export const mateInTwo = [
         ]
       }
     }
+  },
+  {
+    "title": "Queen Sacrifice – Smothered Mate",
+    "fen": "5r1k/6pp/7N/8/2Q5/8/8/K7 w - - 0 1",
+    "explain": "التضحية بالوزير تجبر الرخ على احتلال g8، ثم Nf7# لأن قطع الأسود تسد مخارج الملك.",
+    "keys": {
+      "Qg8+": {
+        "Rxg8": [
+          "Nf7#"
+        ]
+      }
+    }
+  },
+  {
+    "title": "Forced Interposition – Back Rank",
+    "fen": "6k1/5ppp/8/8/8/8/4r3/K2RR3 w - - 0 1",
+    "explain": "الكش يجبر الرخ الأسود على الحجب بـ Re8، ثم يمكن أخذ الرخ بأي من الرخين الأبيضين لتحقيق المات.",
+    "keys": {
+      "Rd8+": {
+        "Re8": [
+          "Rdxe8#",
+          "Rexe8#"
+        ]
+      }
+    }
   }
 ];
