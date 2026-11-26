@@ -105,3 +105,34 @@
 .mastery-plans{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){#progress-fill{transition:none}}
+
+/* Keep the chessboard close to the top of the mobile screen. */
+#toggle-setup{display:flex;align-items:center;gap:5px;font-size:11px;min-height:34px;padding:5px 8px;background:transparent}
+#toggle-setup[aria-expanded="true"] svg{transform:rotate(180deg)}
+#setup-summary{font:600 13px/1.5 system-ui;text-align:left;color:var(--om-muted);margin:0!important;overflow-wrap:anywhere}
+#setup-fields .mastery-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+#setup-fields #first-move-field{grid-column:2;grid-row:1}
+#setup-fields #opening-label{grid-column:1;grid-row:1}
+#setup-fields #first-move-field[hidden]+#opening-label{grid-column:1/-1}
+#setup-fields #line-field{grid-column:1/-1}
+.mastery-training .mastery-modes{margin:0 0 12px}
+.mastery-training .mastery-modes button{min-height:44px;padding-block:5px}
+.active-opening-copy{min-width:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+#profile:empty{display:none}
+#response-panel[data-at-end="true"]{border:1px solid #78994f;border-radius:10px;padding:10px;background:#293025}
+#tree-branches>div>button{background:#414c35;border-color:#657a4e;color:#e1edd1}
+@media(max-width:800px){
+.mastery-page .mastery-kicker{display:none}
+.mastery-page main{padding-top:8px}
+.mastery-page .mastery-heading{margin-bottom:7px}
+.mastery-page h1{font-size:1.4rem}
+.mastery-page .mastery-setup{padding:9px}
+.mastery-page #mastery-color{margin-bottom:7px}
+.mastery-page #mastery-color button{min-height:44px}
+.mastery-page .mastery-training .mastery-modes{margin-bottom:9px}
+.mastery-page #setup-fields .mastery-fields{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.mastery-page #setup-fields #opening-label{grid-column:1}
+.mastery-page #setup-fields #first-move-field[hidden]+#opening-label{grid-column:1/-1}
+.mastery-page #setup-fields #line-field{grid-column:1/-1}
+.mastery-page .mastery-section-title{margin-bottom:6px}
+}
