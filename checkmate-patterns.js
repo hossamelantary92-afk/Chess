@@ -1,6 +1,6 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
-import {patterns} from './checkmate-patterns-data.js?v=208';
+import {patterns} from './checkmate-patterns-data.js?v=209';
 
 import {mateInTwo} from './mate-in-two-data.js';
 
