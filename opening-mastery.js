@@ -1,6 +1,6 @@
 import {Chess} from './chess.js';
 import {squareAt, paintSquare} from './board-cells.js';
-import {catalog, firstMoves, openingChoices, positionKey, buildTree} from './opening-mastery-data.js?v=3';
+import {catalog, firstMoves, openingChoices, positionKey, buildTree} from './opening-mastery-data.js?v=4';
 
 const $ = id => document.getElementById(id);
 const tree = buildTree();
@@ -39,12 +39,19 @@ function setOptions(select, values, selectedValue, label) {
   select.value = selectedValue;
 }
 
+function lineIdentity(id, line) {
+  const category = catalog.get(id);
+  const opening = catalog.get(line.openingId) ?? category;
+  return {opening, category, variation: line.variationName ?? line.name};
+}
 function renderSetup() {
   $('setup-fields').hidden = setupCollapsed;
   $('setup-summary').hidden = !setupCollapsed;
   $('toggle-setup').setAttribute('aria-expanded', String(!setupCollapsed));
-  $('setup-toggle-label').textContent = setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات';
-  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + catalog.get(activeId).name + (activeLine.id ? ' · '+activeLine.name : '');
+  $('setup-toggle-label').textContent = setupCollapsed ? 'تعديل' : 'طي';
+  $('toggle-setup').setAttribute('aria-label', setupCollapsed ? 'تغيير الإعدادات' : 'طي الإعدادات');
+  const identity = lineIdentity(activeId, activeLine);
+  $('setup-summary').textContent = (state.color === 'w' ? 'White' : 'Black · '+state.first) + ' · ' + identity.opening.name + ' · ' + identity.variation;
 }
 function setSetupCollapsed(value) { setupCollapsed = value; renderSetup(); persist(); }
 function renderPicker() {
@@ -91,8 +98,18 @@ function renderSaved() {
       renderSaved();
       $('save-status').textContent = persist() ? 'الاختيار اتشال.' : 'تعذّر الحفظ في المتصفح.';
     });
-    remove.setAttribute('aria-label', `شيل ${label}`);
-    row.append(button(label, () => { choose(entry); document.querySelector('.mastery-setup')?.scrollIntoView({block:'start'}); }), remove);
+    remove.setAttribute('aria-label', `حذف ${label}`);
+    remove.title = 'حذف من المكتبة';
+    remove.className = 'repertoire-remove';
+    remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg>';
+    const load = button('', () => { choose(entry); document.querySelector('.mastery-setup')?.scrollIntoView({block:'start'}); });
+    load.className = 'repertoire-entry';
+    const mark = element('span', entry.color === 'w' ? 'W' : 'B');
+    mark.className = 'repertoire-mark '+(entry.color === 'w' ? 'white-mark' : 'black-mark');
+    const copy = element('span','');
+    copy.append(element('strong',catalog.get(entry.id).name),element('small',color));
+    load.append(mark,copy);
+    row.append(load, remove);
     return row;
   }));
   if (!saved.length) $('saved-openings').append(element('p', 'اختياراتك هتظهر هنا بعد الحفظ.'));
@@ -183,8 +200,13 @@ function render(message, result = '') {
     id => opening.lines.find(line => line.id === id).name);
   $('line-field').hidden = opening.lines.length <= 1;
   renderSetup();
-  renderOpeningInfo(opening);
-  $('active-opening').textContent = opening.name;
+  const identity = lineIdentity(activeId, activeLine);
+  const displayOpening = identity.opening;
+  renderOpeningInfo(displayOpening);
+  $('active-opening').textContent = displayOpening.name;
+  $('active-category').textContent = identity.category.name;
+  $('active-category').hidden = identity.category === displayOpening;
+  $('active-variation').textContent = identity.variation;
   $('training-mode-label').textContent = practice ? 'TEST' : 'LEARN';
   $('progress-fill').style.width = (activeLine.moves.length ? 100 * ply / activeLine.moves.length : 0) + '%';
   renderBoard();
@@ -219,6 +241,7 @@ function render(message, result = '') {
   $('next-ply').disabled = practice || (ply === activeLine.moves.length && !atFork);
   $('next-label').textContent = atFork ? 'Choose reply' : 'Next';
   if (atFork) $('turn-status').textContent = 'اختار الرد التالي';
+  $('response-heading').textContent = opponentTurn ? (chess.turn() === 'w' ? 'White Responses' : 'Black Responses') : 'Alternative Lines';
   $('response-caption').textContent = atFork ? 'اختار نقلة من الفروع التالية عشان تكمّل التدريب.' : opponentTurn ? 'جرّب رد مختلف للخصم وشوف إزاي الخطة بتتغيّر.' : 'اختار تفريعة بديلة في نفس الافتتاحية.';
   function switchBranch(entry, target, note) {
     activeId = entry.id;
@@ -231,11 +254,15 @@ function render(message, result = '') {
     const row = document.createElement('div');
     row.dataset.main = String(next.move.san === activeLine.moves[ply]);
     const copy = document.createElement('div');
-    const target = catalog.get(next.id);
+    const target = lineIdentity(next.id, next.line);
     const history = activeLine.moves.slice(0, ply).join(' ');
     const alternate = entries.find(entry => entry.line.moves.slice(0, entry.ply - 1).join(' ') !== history);
-    copy.append(element('strong', next.id === activeId ? next.line.name : target.name + ' · ' + next.line.name), element('small',
-      next.line.notes?.[next.ply] ?? next.line.idea ?? next.line.name));
+    const title = element('strong', target.opening.name);
+    title.dir = 'ltr';
+    const variation = element('span',target.variation);
+    variation.className = 'branch-variation';
+    variation.dir = 'ltr';
+    copy.append(title, variation, element('small',next.line.notes?.[next.ply] ?? next.line.idea ?? target.variation));
     if (alternate) {
       const switchOrder = button('Transposition', () => {
         switchBranch(alternate, alternate.ply - 1, 'وصلت لنفس الوضع بترتيب نقلات مختلف.');
@@ -247,18 +274,20 @@ function render(message, result = '') {
       switchBranch(next, next.ply);
     });
     jump.dir = 'ltr';
+    jump.setAttribute('aria-label', 'اعرض '+next.move.san+' · '+target.opening.name);
+    jump.className = 'branch-move';
     row.append(copy, jump);
     return row;
   }));
-  $('opening-summary').textContent = opening.summary;
-  $('line-idea').textContent = activeLine.idea && activeLine.idea !== opening.summary ? activeLine.idea : '';
+  $('opening-summary').textContent = displayOpening.summary;
+  $('line-idea').textContent = activeLine.idea && activeLine.idea !== displayOpening.summary ? activeLine.idea : '';
   $('line-idea').hidden = !$('line-idea').textContent;
   $('white-plan').textContent = activeLine.white ?? '';
   $('black-plan').textContent = activeLine.black ?? '';
   $('white-plan-card').hidden = !activeLine.white;
   $('black-plan-card').hidden = !activeLine.black;
-  $('opening-source').hidden = !opening.source;
-  if (opening.source) $('opening-source').href = opening.source;
+  $('opening-source').hidden = !displayOpening.source;
+  if (displayOpening.source) $('opening-source').href = displayOpening.source;
   $('review-question').hidden = !activeLine.question;
   $('review-prompt').textContent = activeLine.question ?? '';
   $('review-answer').textContent = activeLine.answer ?? '';
@@ -274,9 +303,9 @@ function render(message, result = '') {
   $('decision-jump').onclick = () => go(activeLine.start ?? 0);
   const links = [];
   function addLink(label,href,external=false) { const a=element('a',label);a.href=href;if(external){a.target='_blank';a.rel='noopener noreferrer';}links.push(a); }
-  const video=activeLine.video ?? opening.video;
+  const video=activeLine.video ?? displayOpening.video;
   if(video) addLink(video[0],video[1],true);
-  const model={0:'italian',2:'london',4:'french'}[opening.index];
+  const model={0:'italian',2:'london',4:'french'}[displayOpening.index];
   if(model) addLink('Model Game','index.html#model-games/'+model);
   if(activeLine.related) addLink(activeLine.related[1],'opening-mastery.html?opening='+encodeURIComponent(activeLine.related[0])+'&color='+state.color);
   addLink('Position Evaluation','index.html#position-evaluation');
