@@ -2,7 +2,7 @@ import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {patterns} from './checkmate-patterns-data.js?v=210';
 
-import {mateInTwo} from './mate-in-two-data.js';
+import {mateInTwo} from './mate-in-two-data.js?v=211';
 
 import {decisionTest} from './decision-test-data.js?v=2';
 import {defenses} from './mate-defense-data.js';
@@ -198,7 +198,8 @@ function select(square) {
   if (currentTask() === 'two' && move) {
     if (replies && move.san.endsWith('#')) {
       solve(move.san, 'أحسنت، حضرت الشبكة وكمّلت المات.');
-    } else if (!replies && move.san === answer) {
+    } else if (!replies && Object.hasOwn(order[index].keys,move.san)) {
+      answer=move.san;
       chess.move(answer);
       replies = order[index].keys[answer];
       const options = Object.keys(replies);
