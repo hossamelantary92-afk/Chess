@@ -1,12 +1,13 @@
 import './app.js?v=259';
 import './safety.js?v=288';
 import './tactics-lab.js?v=306';
-import './academy.js?v=311';
+import './academy.js?v=312';
 import './fundamentals.js?v=303';
 import './middlegame.js?v=305';
 import './chess-guide.js?v=288';
 import {groups as studyGroups} from './study-lines.js';
 const home = document.getElementById('homeCards');
+for(const key of ['academy','game-tips']){const duplicates=[...home.querySelectorAll(`[data-learning-card="${key}"]`)];duplicates.slice(0,-1).forEach(el=>el.remove());}
 const cards = new Map(
   [...home.querySelectorAll('[data-learning-card]')].map(card => [card.dataset.learningCard, card])
 );
