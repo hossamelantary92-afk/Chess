@@ -1,8 +1,8 @@
 import './app.js?v=259';
 import './safety.js?v=288';
 import './tactics-lab.js?v=293';
-import './academy.js?v=281';
-import './fundamentals.js?v=279';
+import './academy.js?v=303';
+import './fundamentals.js?v=303';
 import './middlegame.js?v=288';
 import './chess-guide.js?v=288';
 import {groups as studyGroups} from './study-lines.js';
