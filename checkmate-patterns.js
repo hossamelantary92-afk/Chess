@@ -1,3 +1,4 @@
+import {moveSound,playSound} from './rook-sound.js?v=320';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {patterns} from './checkmate-patterns-data.js?v=210';
@@ -189,7 +190,7 @@ function select(square) {
   const move = candidates.find(item => item.san === answer) ?? candidates.find(item => item.san.endsWith('#')) ?? candidates.find(item => item.promotion === 'q') ?? candidates[0];
   if(mode==='three' && move){
     if(!Object.hasOwn(threeNode,move.san)){ $('matePatternStatus').textContent='النقلة لا تضمن المات في العدد المتبقي. احسب ردود الخصم.';return; }
-    const responses=threeNode[move.san];chess.move(move.san);selected=null;
+    const responses=threeNode[move.san];moveSound(chess.move(move.san));selected=null;
     if(chess.isCheckmate()){complete=true;render('أحسنت، كش مات.');return;}
     const options=Object.keys(responses);const reply=options[branch%options.length];chess.move(reply);threeNode=responses[reply];render('رد الخصم · '+reply);return;
   }
@@ -199,7 +200,7 @@ function select(square) {
     return;
   }
   if (currentTask() === 'defend' && move) {
-    chess.move(move.san);
+    moveSound(chess.move(move.san));
     const mate = chess.moves().find(reply => reply.endsWith('#'));
     if (mate) chess.move(mate);
     selected = null;
