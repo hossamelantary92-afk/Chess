@@ -11,7 +11,7 @@ const links = [
   ['opening-exam', 'اختبار الافتتاحيات', '١٠ مواقف بالأبيض والأسود', '♞', 'training.html#exam'],
   ['checkmate-patterns', 'Checkmate Patterns', 'اتعرّف على شكل المات وجرّبه على الرقعة', '♛', '#checkmate-patterns'],
   ['draws', 'Stalemate & Other Draws', 'تجنّب الخنق وأنقذ التعادل', '♚', '#draws'],
-  ['practical-endgames', 'Practical Endgames', 'اتدرّب على التبديل ونهايات البيادق والرخ', '♜', '#practical-endgames'],
+  ['practical-endgames', 'Practical Endgames', 'النهايات العملية والتعادل والتبديل', '♜', '#practical-endgames'],
   ['calculation', 'Calculation Trainer', 'احسب ردّ الخصم وقيّم النتيجة', '♞', '#calculation'],
   ['personal-analysis','Personal Game Analysis','استورد مباراة PGN وراجع نقلاتك','♟','personal-analysis.html'],
   ['model-games', 'مباريات نموذجية', '٣ مباريات من الافتتاح للحسم', '♜', '#model-games'],
@@ -28,11 +28,11 @@ for (const [key, title, description, icon, href] of links) {
 }
 
 const stages = [
-  {id:'resources', title:'الأساسيات', cards:['academy','basics','vision','game-tips','psychology','bullet']},
+  {id:'resources', title:'الأساسيات', cards:['academy','game-tips','psychology','bullet']},
   {id:'opening', title:'الافتتاحيات', cards:['opening-mastery']},
   {id:'middlegame', title:'منتصف اللعبة', cards:['middlegame','position-evaluation','safety','plans','piece-activity','practical-decisions']},
   {id:'tactical', title:'التكتيكات والحساب', cards:['tactics','tactics-guide','calculation','mixed']},
-  {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','draws','mates','checkmate-patterns']},
+  {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','mates','checkmate-patterns']},
   {id:'games', title:'دراسة المباريات', cards:['model-games','personal-analysis']},
   {id:'progress', title:'التقييم وخطة التدريب', cards:[]}
 ];
@@ -57,7 +57,7 @@ for (const stage of stages) {
 
 // The unified Opening Mastery is the only opening entry on the homepage.
  // Keep the old lesson routes available from inside Mastery, not as orphan tiles.
-for (const key of ['openings','opening-traps']) {
+for (const key of ['openings','opening-traps','basics','vision','draws']) {
   const card=cards.get(key);
   if(card && card.parentElement===home) card.remove();
   cards.delete(key);
@@ -83,7 +83,7 @@ const topics = {
   'opening-exam':['Opening Test','اختبر اختياراتك بالأبيض والأسود'], middlegame:['Middlegame','اختار خطتك بعد الافتتاح'],
   safety:['Piece Safety','راجع تهديدات الخصم وأمان قطعك'], tactics:['Tactics Lab','حلّ الموقف على الرقعة'],
   endings:['Endgames','اتدرّب على نهايات اللعب'], mates:['Checkmate','اقفل مربعات هروب الملك'],
-  academy:['Chess Academy','افهم القطع وقواعد اللعب'], basics:['First Steps','ابدأ بأساسيات الرقعة'],
+  academy:['Chess Academy','حركة القطع والقواعد وإتقان الرقعة ومسار التعلم'], basics:['First Steps','ابدأ بأساسيات الرقعة'],
   vision:['Board Vision','اتدرّب على أسماء المربعات'], 'game-tips':['Game Tips','راجع قراراتك أثناء المباراة'],
   mixed:['Mixed Practice','جرّب مواقف من أكتر من موضوع'], 'model-games':['Model Games','تابع مباراة نقلة بنقلة']
 };
@@ -143,9 +143,9 @@ for (const [key, card] of cards) {
 for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],['assessmentTitle','progress'],['trainingPlanTitle','progress']]){const old=document.getElementById(id)?.closest('.home-summary');const grid=home.querySelector('.learning-stage-'+group+' .learning-grid');if(old&&grid){const link=old.querySelector('a');if(link){const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=link.getAttribute('href');const title=document.createElement('h3');title.textContent=old.querySelector('h2').textContent;const desc=document.createElement('small');desc.textContent=old.querySelector('p')?.textContent||'';card.append(title,desc);grid.append(card);old.remove()}}}
 
 const unifiedGroups=[
- ['resources','Chess Fundamentals','قواعد اللعب والقطع والتدريب الأساسي',['academy','basics','vision']],
+ ['resources','Chess Fundamentals','قواعد اللعب والقطع والتدريب الأساسي',['academy']],
  ['tactical','Chess Tactics','شرح الأنماط والتدريب والحساب',['tactics-guide','tactics','calculation','mixed']],
- ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames','draws']],
+ ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames']],
  ['finish','Checkmate Mastery','القفلات وأنماط الكش مات',['mates','checkmate-patterns']],
  ['games','Game Academy','المباريات النموذجية ومباريات الأساتذة',['model-games']]
 ];
