@@ -203,6 +203,11 @@ if(activeStage?.id==='resources'){
  document.body.classList.add('resources-category');
 }
 if(activeStage){
+ document.body.classList.add('rook-category');
+ for(const unit of home.querySelectorAll('.unified-unit')){
+  const content=unit.querySelector('.unified-unit-content');
+  if(content?.children.length===1)unit.replaceWith(...content.children);
+ }
  const heading=document.createElement('div');heading.className='category-heading';
  const back=document.createElement('a');back.href='index.html#home';back.textContent='→ الرئيسية';
  const title=document.createElement('h2');title.textContent=activeStage.title;
