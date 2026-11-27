@@ -28,6 +28,15 @@ for (const [key, title, description, icon, href] of links) {
   cards.set(key, card);
 }
 
+// Use a direct route, independent of legacy setup listeners.
+const legacyTactics=cards.get('tactics');
+if(legacyTactics){
+ const lab=document.createElement('a');
+ lab.className='home-card learning-link';
+ lab.href='index.html?section=tactical#tactics-lab';
+ lab.innerHTML='<div class="home-card-top"><b aria-hidden="true">♞</b></div><h3>Tactics Lab</h3><small>مكتبة التكتيكات الكاملة · اختر الفكرة والمستوى واللون</small>';
+ legacyTactics.remove();cards.set('tactics',lab);
+}
 const stages = [
   {id:'resources', title:'الأساسيات', cards:['academy','game-tips']},
   {id:'opening', title:'الافتتاحيات', cards:['opening-mastery']},
