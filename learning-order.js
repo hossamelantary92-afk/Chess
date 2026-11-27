@@ -33,7 +33,7 @@ const stages = [
   {id:'opening', title:'الافتتاحيات', cards:['opening-mastery']},
   {id:'middlegame', title:'منتصف اللعبة', cards:['middlegame','position-evaluation','safety','plans','piece-activity','practical-decisions']},
   {id:'tactical', title:'التكتيكات والحساب', cards:['tactics','tactics-guide','calculation','mixed']},
-  {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','mates','checkmate-patterns']},
+  {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','draws','mates','checkmate-patterns']},
   {id:'games', title:'دراسة المباريات', cards:['model-games','hero-lessons','personal-analysis']},
   {id:'progress', title:'التقييم وخطة التدريب', cards:['psychology','bullet']}
 ];
@@ -58,7 +58,7 @@ for (const stage of stages) {
 
 // The unified Opening Mastery is the only opening entry on the homepage.
  // Keep the old lesson routes available from inside Mastery, not as orphan tiles.
-for (const key of ['openings','opening-traps','basics','vision','draws']) {
+for (const key of ['openings','opening-traps','basics','vision']) {
   const card=cards.get(key);
   if(card && card.parentElement===home) card.remove();
   cards.delete(key);
@@ -146,7 +146,7 @@ for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],
 const unifiedGroups=[
  ['resources','Chess Fundamentals','قواعد اللعب والقطع والتدريب الأساسي',['academy']],
  ['tactical','Chess Tactics','شرح الأنماط والتدريب والحساب',['tactics-guide','tactics','calculation','mixed']],
- ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames']],
+ ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames','draws']],
  ['finish','Checkmate Mastery','القفلات وأنماط الكش مات',['mates','checkmate-patterns']],
  ['games','Game Academy','المباريات النموذجية ومباريات الأساتذة',['model-games','hero-lessons']]
 ];
