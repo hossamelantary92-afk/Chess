@@ -29,13 +29,13 @@ for (const [key, title, description, icon, href] of links) {
 }
 
 const stages = [
-  {id:'resources', title:'الأساسيات', cards:['academy','game-tips','psychology','bullet']},
+  {id:'resources', title:'الأساسيات', cards:['academy','game-tips']},
   {id:'opening', title:'الافتتاحيات', cards:['opening-mastery']},
   {id:'middlegame', title:'منتصف اللعبة', cards:['middlegame','position-evaluation','safety','plans','piece-activity','practical-decisions']},
   {id:'tactical', title:'التكتيكات والحساب', cards:['tactics','tactics-guide','calculation','mixed']},
   {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','mates','checkmate-patterns']},
   {id:'games', title:'دراسة المباريات', cards:['model-games','hero-lessons','personal-analysis']},
-  {id:'progress', title:'التقييم وخطة التدريب', cards:[]}
+  {id:'progress', title:'التقييم وخطة التدريب', cards:['psychology','bullet']}
 ];
 
 for (const card of cards.values()) {
