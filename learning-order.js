@@ -211,7 +211,7 @@ if(activeStage){
  const heading=document.createElement('div');heading.className='category-heading';
  const back=document.createElement('a');back.href='index.html#home';back.textContent='→ الرئيسية';
  const title=document.createElement('h2');title.textContent=activeStage.title;
- heading.append(back,title);home.before(heading);home.classList.add('category-content');
+ heading.append(title,back);home.before(heading);home.classList.add('category-content');
 }
 
 document.documentElement.classList.remove('rook-loading','rook-deep');
