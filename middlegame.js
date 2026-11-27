@@ -1,3 +1,4 @@
+import {moveSound,playSound} from './rook-sound.js?v=320';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {lessons} from './middlegame-data.js?v=277';
@@ -263,7 +264,7 @@ function currentReplies() {
 function finish(san, completed) {
   const first = phase === 'move';
   const explanation = currentReplies()[san];
-  lastMove = chess.move(san);
+  lastMove = chess.move(san);moveSound(lastMove);
   selected = null;
   if (evaluation) {
     phase = 'done';
@@ -347,7 +348,7 @@ $('midReviewReset').onclick = () => {
 
 $('midOpponent').onclick = () => {
   if (phase !== 'reply' || !followup) return;
-  lastMove = chess.move(followup.opponent);
+  lastMove = chess.move(followup.opponent);moveSound(lastMove);
   phase = 'followup';
   $('midOpponent').hidden = true;
   $('midStep').textContent = followup.question;
@@ -372,7 +373,7 @@ $('midTrap').onclick = () => {
     $('midHint').hidden = true;
     $('midExample').hidden = true;
   }
-  lastMove = chess.move(moves[trapPly++]);
+  lastMove = chess.move(moves[trapPly++]);moveSound(lastMove);
   const finished = trapPly === moves.length;
   $('midStep').textContent = `خط الفخ · ${trapPly}/${moves.length}`;
   $('midFeedback').textContent = finished ? lesson.consequence : 'بصّ على الرقعة وتوقّع النقلة اللي جاية.';
