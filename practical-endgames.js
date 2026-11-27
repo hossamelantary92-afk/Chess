@@ -1,3 +1,4 @@
+import {moveSound,playSound} from './rook-sound.js?v=320';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
@@ -75,7 +76,7 @@ function queenChoose(sq){
  if(qGame.get(sq)?.color==='w'){qSelected=qSelected===sq?null:sq;queenDraw();return;}
  if(!qSelected)return;
  const m=qGame.moves({square:qSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
- qGame.move(m.san);qSelected=null;
+ moveSound(qGame.move(m.san));qSelected=null;
  if(!qGame.isGameOver()){const reply=queenDefense(qGame);if(reply)qGame.move(reply);}
  $('queenStatus').textContent=qGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(qGame.history().length/2)+' نقلة.':qGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الوزير.':'استمر في تضييق مساحة الملك وتقريب ملكك.';
  queenDraw();
@@ -113,7 +114,7 @@ function rookMateChoose(sq){
  if(rGame.get(sq)?.color==='w'){rSelected=rSelected===sq?null:sq;rookMateDraw();return;}
  if(!rSelected)return;
  const m=rGame.moves({square:rSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
- rGame.move(m.san);rSelected=null;
+ moveSound(rGame.move(m.san));rSelected=null;
  if(!rGame.isGameOver()){const reply=rookMateDefense(rGame);if(reply)rGame.move(reply);}
  $('rookMateStatus').textContent=rGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(rGame.history().length/2)+' نقلة.':rGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الرخ.':'استمر في تضييق مساحة الملك وتقريب ملكك.';
  rookMateDraw();
@@ -151,7 +152,7 @@ function bishopsMateChoose(sq){
  if(bbGame.get(sq)?.color==='w'){bbSelected=bbSelected===sq?null:sq;bishopsMateDraw();return;}
  if(!bbSelected)return;
  const m=bbGame.moves({square:bbSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
- bbGame.move(m.san);bbSelected=null;
+ moveSound(bbGame.move(m.san));bbSelected=null;
  if(!bbGame.isGameOver()){const reply=bishopsMateDefense(bbGame);if(reply)bbGame.move(reply);}
  $('bishopsMateStatus').textContent=bbGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(bbGame.history().length/2)+' نقلة.':bbGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الفيل.':'نسّق الفيلين وقرّب ملكك لدفع الخصم نحو الركن.';
  bishopsMateDraw();
@@ -189,7 +190,7 @@ function knightBishopMateChoose(sq){
  if(bnGame.get(sq)?.color==='w'){bnSelected=bnSelected===sq?null:sq;knightBishopMateDraw();return;}
  if(!bnSelected)return;
  const m=bnGame.moves({square:bnSelected,verbose:true}).find(x=>x.to===sq);if(!m)return;
- bnGame.move(m.san);bnSelected=null;
+ moveSound(bnGame.move(m.san));bnSelected=null;
  if(!bnGame.isGameOver()){const reply=knightBishopMateDefense(bnGame);if(reply)bnGame.move(reply);}
  $('knightBishopMateStatus').textContent=bnGame.isCheckmate()?'أحسنت! حققت المات في '+Math.ceil(bnGame.history().length/2)+' نقلة.':bnGame.isDraw()?'تعادل — أعد المحاولة وتجنب الخنق أو فقد الفيل أو الحصان.':'نسّق الملك والفيل والحصان وادفع الخصم إلى ركن لون الفيل.';
  knightBishopMateDraw();
@@ -332,7 +333,7 @@ function play(san) {
     for (const move of alternative) chess.move(move);
     outcome = 'alternative';
   } else if (san === line[step]) {
-    chess.move(san);
+    moveSound(chess.move(san));
     step++;
     if (step < line.length) {
       const reply = line[step++];
