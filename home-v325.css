@@ -26,8 +26,7 @@ body:not(.training-view):not(.rook-category) .rook-home {
 }
 
 body:not(.training-view):not(.rook-category) main {
-  box-sizing: content-box;
-  max-width: 1160px;
+  max-width: 1260px;
 }
 
 body:not(.training-view):not(.rook-category) main > .intro {
