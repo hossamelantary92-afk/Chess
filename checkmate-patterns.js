@@ -1,4 +1,4 @@
-import {moveSound,playSound} from './rook-sound.js?v=323';
+import {moveSound,playSound} from './rook-sound.js?v=324';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {patterns} from './checkmate-patterns-data.js?v=210';
