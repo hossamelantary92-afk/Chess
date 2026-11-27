@@ -42,7 +42,7 @@ const legacyTactics=cards.get('tactics');
 if(legacyTactics){
  const lab=document.createElement('a');
  lab.className='home-card learning-link';
- lab.href='index.html?section=tactical#tactics-lab';
+ lab.href='index.html?v=327&section=tactical#tactics-lab';
  lab.innerHTML='<div class="home-card-top"><b aria-hidden="true">♞</b></div><h3>Tactics Lab</h3><small>مكتبة التكتيكات الكاملة · اختر الفكرة والمستوى واللون</small>';
  legacyTactics.remove();cards.set('tactics',lab);
 }
@@ -226,7 +226,7 @@ for(const node of stageNodes){
   const link = document.createElement('a');
   link.className = 'category-entry';
   link.dataset.stage = stage.id;
-  link.href = 'index.html?section=' + encodeURIComponent(stage.id);
+  link.href = 'index.html?v=327&section=' + encodeURIComponent(stage.id);
   const title = document.createElement('span');
   title.className = 'category-title';
   title.textContent = stage.title;

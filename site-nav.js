@@ -4,9 +4,9 @@ const back = document.querySelector('.rook-back');
 const home = document.querySelector('.rook-home');
 const page = location.pathname.split('/').pop();
 const section = new URLSearchParams(location.search).get('section');
-const homeHref = 'index.html#home';
+const homeHref = 'index.html?v=327#home';
 const defaultParent = back.getAttribute('href');
-const sectionHref = id => `index.html?section=${id}`;
+const sectionHref = id => `index.html?v=327&section=${id}`;
 
 const routeSections = {
   academy: 'resources',
