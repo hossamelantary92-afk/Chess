@@ -158,11 +158,12 @@ for (const [key, card] of cards) {
 // Consolidate existing standalone home links without changing their destinations.
 for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],['assessmentTitle','progress'],['trainingPlanTitle','progress']]){const old=document.getElementById(id)?.closest('.home-summary');const grid=home.querySelector('.learning-stage-'+group+' .learning-grid');if(old&&grid){const link=old.querySelector('a');if(link){const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=link.getAttribute('href');const title=document.createElement('h3');title.textContent=old.querySelector('h2').textContent;const desc=document.createElement('small');desc.textContent=old.querySelector('p')?.textContent||'';card.append(title,desc);grid.append(card);old.remove()}}}
 
-// Normalize every lesson tile, including standalone links added above.
+// Add artwork only to tiles missing an icon.
 const standaloneIcons={'master-games.html':'M7 3h10v5a5 5 0 0 1-10 0zM12 13v5M7 21h10','personal-coach.html':'M4 4h16v12H9l-5 4zM8 8h8M8 12h5','assessment.html':'M5 3h14v18H5zM8 12l3 3 5-6','training.html#plan':'M4 6h16v15H4zM8 3v6M16 3v6M4 11h16M8 15h3M13 15h3'};
 for(const card of home.querySelectorAll('.lesson-row')){
  const key=[...cards].find(([,v])=>v===card)?.[0];
  const d=rowIcons[key]||standaloneIcons[card.getAttribute('href')]||'M4 4h16v16H4zM8 9h8M8 14h8';
+ if(card.querySelector('.home-card-top b')?.innerHTML.trim())continue;
  let top=card.querySelector('.home-card-top');if(!top){top=document.createElement('div');top.className='home-card-top';card.prepend(top);}
  let icon=top.querySelector('b');if(!icon){icon=document.createElement('b');top.prepend(icon);}
  icon.setAttribute('aria-hidden','true');icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="${d}"/></svg>`;
