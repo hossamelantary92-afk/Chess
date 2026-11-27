@@ -1,7 +1,7 @@
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=276';
-import {exercises} from './safety.js?v=58';
+import {exercises} from './safety.js?v=288';
 const englishTheme = {...advancedThemes,
   'قطعة غير محمية': 'Hanging Piece',
   'الشوكة': 'Fork',
