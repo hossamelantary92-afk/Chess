@@ -71,6 +71,7 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 }
 
 #homeCards .category-entry {
+  --card-surface: #12261d;
   --card-art: none;
   --card-art-width: 136px;
   --card-art-column: 112px;
@@ -87,9 +88,12 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
   border: 1px solid var(--rook-border, #665738);
   border-radius: 14px;
   background:
-    linear-gradient(90deg, #12261d, transparent 9%, transparent 40%, #12261d) left var(--card-art-inset) center / var(--card-art-width) 100% no-repeat,
+    linear-gradient(var(--card-surface), transparent 13%, transparent 79%, var(--card-surface))
+      left var(--card-art-inset) center / var(--card-art-width) 100% no-repeat,
+    linear-gradient(90deg, var(--card-surface), #12261d66 12%, transparent 26%, transparent 45%, var(--card-surface) 94%)
+      left var(--card-art-inset) center / var(--card-art-width) 100% no-repeat,
     var(--card-art) left var(--card-art-inset) center / var(--card-art-width) auto no-repeat,
-    #12261d;
+    var(--card-surface);
   color: #f6e6c4;
   font-size: clamp(17px, 2vw, 25px);
   font-weight: 650;
