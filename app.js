@@ -1,3 +1,4 @@
+import { basics } from './basics-lessons.js';
 import {moveSound,playSound} from './rook-sound.js?v=329';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
@@ -31,11 +32,11 @@ tactics[0]=['الشوكة','4k3/8/3q4/8/4N3/8/8/6K1 w - - 0 1','Nxd6+','الحص
 tactics[2]=['السيخ','4r3/8/4k3/8/8/8/8/K2R4 w - - 0 1','Re1+','ضع الرخ على e1: الملك على e6 يتعرض للكش، والرخ على e8 خلفه.'];
 tactics[4]=['إزالة المدافع','6k1/5p2/6q1/8/2B5/8/8/K7 w - - 0 1','Bxf7+','خذ بيدق f7 بالكش لإزالة قطعة تدافع عن g6. هذا تدريب على التعرف إلى المدافع، وليس تسلسلًا يضمن ربح الوزير.'];
 const endings=[['مات بالوزير','7k/8/5KQ1/8/8/8/8/8 w - - 0 1','Qg7#','حاصر الملك تدريجيًا وقرّب ملكك. تجنب الخنق: إذا لم يكن الملك في كش ولا يملك نقلة قانونية فالوضع تعادل.'],['مات بالرخ','7k/5K2/8/8/8/8/8/R7 w - - 0 1','Rh1#','قرّب ملكك لدعم الرخ، وادفع الملك إلى الحافة. الرخ وحده يحتاج مساعدة الملك.'],['ترقية البيدق','7k/4P3/6K1/8/8/8/8/8 w - - 0 1','e8=Q#','أوصل البيدق إلى الصف الثامن. الترقية لوزير شائعة، لكنها ليست الاختيار الصحيح في كل وضع.'],['المعارضة','4k3/8/4K3/4P3/8/8/8/8 w - - 0 1','Kf6','الملكان بينهما مربع واحد. في هذا الوضع تحرّك إلى f6 لتهديد التقدم من الجناح. فكّر دائمًا في صاحب الدور ومربعات البيدق المفتاحية.']];
-const basics=[['القطع وقيمتها','القيم في الجدول تقريبية؛ نشاط القطعة وأمان الملك قد يكونان أهم. الملك لا قيمة عددية له، والهدف كش مات.'],['الحركة والكش','الفيل قطريًا، الرخ أفقيًا ورأسيًا، الوزير يجمع الحركتين، والحصان على شكل L ويقفز. الملك مربع واحد. ممنوع ترك ملكك في كش. جرّب تحريك القطع قانونيًا على الرقعة.'],['التبييت','يتحرك الملك مربعين نحو الرخ، ويقفز الرخ للجانب الآخر. يلزم ألا يكون أي منهما تحرك، وأن يخلو الطريق؛ ولا يجوز التبييت من كش أو عبر مربع مهاجَم أو إليه.'],['الترقية والأخذ بالتجاوز','البيدق يترقى عند بلوغ آخر صف إلى وزير أو رخ أو فيل أو حصان. الأخذ بالتجاوز متاح مباشرة بعد تقدم بيدق الخصم مربعين واستقراره بجانب بيدقك بالشروط القانونية.'],['التعادل','الخنق: لا نقلة قانونية والملك ليس في كش. توجد أيضًا أوضاع ميتة، واتفاق، ومطالبة بتكرار الوضع ثلاث مرات أو قاعدة 50 نقلة؛ تفاصيل المطالبة تختلف عن التعادل التلقائي.']];
 // Keep lesson indices stable for saved progress and direct links.
 const lessonOrder={
   openings:[3,0,1,9,6,4,5,8,10,11,12,2,7],
-  endings:[1,0,3,2]
+  endings:[1,0,3,2],
+  basics:[1,0,2,3,4]
 };
 function lessonIndices(key,lessons){
   return lessonOrder[key]??lessons.map((_,index)=>index);
@@ -66,7 +67,89 @@ function feedback(t){$('#feedback').textContent=t}
 function action(text,fn,primary=false){const b=document.createElement('button');polishAction(b,text);if(primary)b.classList.add('primary');b.onclick=fn;$('#actions').append(b);return b}
 function renderPaths(){['#paths','#nav'].forEach((el,n)=>{$(el).innerHTML='';paths.slice(0,n?4:6).forEach(([key,icon,name,en])=>{const b=document.createElement('button');b.className=section===key?'active':'';b.setAttribute('aria-pressed',section===key); b.innerHTML=n?name:`<b>${icon}</b><span>${name}<small>${en}</small></span>`;b.onclick=()=>{if(key==='openings'){location.assign('opening-mastery.html');return}section=key;idx=lessonOrder[key]?.[0]??0;load()};$(el).append(b)})})}
 function collection(){return section==='openings'?openings:section==='mates'?mates:section==='tactics'?tactics:section==='endings'?endings:basics}
-function load(){$('#pieceGlossary').hidden=section!=='basics'||idx!==0;clearVisionResponse();$('#extraAnswers')?.remove();clearInterval(timer);deadline=0;renderPaths();$('#selectors').innerHTML='';$('#extra').innerHTML='';$('#actions').innerHTML='';$('#moves').textContent='';feedback('');selected=null;ply=0;practice=false;visionHighlight='';const p=paths.find(x=>x[0]===section);$('#category').textContent=p[3];$('#title').textContent=p[2];if(section==='vision'){loadVision();return}const lessons=collection();lessonIndices(section,lessons).forEach(i=>{const b=document.createElement('button');b.textContent=lessons[i][0];b.className=i===idx?'active':'';b.setAttribute('aria-pressed',i===idx);b.onclick=()=>{idx=i;load()};$('#selectors').append(b)});const d=collection()[idx];chess=new Chess(section==='mates'||section==='tactics'||section==='endings'?d[1]:undefined);$('#task').textContent=d[0];$('#desc').textContent=section==='openings'?d[3]:section==='basics'?d[1]:d[3];if(section==='openings'){const sel=document.createElement('select');sel.innerHTML='<option value="w">أتدرّب بالأبيض</option><option value="b">أتدرّب بالأسود</option>';sel.value=side;sel.onchange=()=>{side=sel.value;resetOpening()};$('#extra').append(sel);action('شاهد النقلة ←',nextMove,true);action('تدرّب بنفسك',()=>{practice=true;resetOpening();feedback('دورك: العب النقلة المدروسة على الرقعة.')});action('تلميح',hint)}else if(section==='basics'){action('فهمت الدرس ✓',()=>{complete();feedback('أحسنت! جرّب الدرس التالي. خُد وقتك على الرقعة.');},true);action('تراجع نقلة',()=>{chess.undo();renderBoard()})}else{action('تلميح',hint);action('اعرض الحل',()=>{const move=chess.move(d[2]);if(move){renderBoard();feedback(`الحل: ${d[2]} — أعد التدريب لتجرب بنفسك.`);$('#actions').innerHTML='';action('أعد المحاولة',load,true)}})}renderBoard();persist()}
+function load(){$('#pieceGlossary').hidden=section!=='basics'||idx!==0;clearVisionResponse();$('#extraAnswers')?.remove();clearInterval(timer);deadline=0;renderPaths();$('#selectors').innerHTML='';$('#extra').innerHTML='';$('#actions').innerHTML='';$('#moves').textContent='';feedback('');selected=null;ply=0;practice=false;visionHighlight='';const p=paths.find(x=>x[0]===section);$('#category').textContent=p[3];$('#title').textContent=p[2];if(section==='vision'){loadVision();return}const lessons=collection();lessonIndices(section,lessons).forEach(i=>{const b=document.createElement('button');b.textContent=section==='basics'?lessons[i].title:lessons[i][0];b.className=i===idx?'active':'';b.setAttribute('aria-pressed',i===idx);b.onclick=()=>{if(section==='basics'){location.hash=`train/basics/${i}/learn`;return}idx=i;load()};$('#selectors').append(b)});const d=collection()[idx];chess=new Chess(section==='mates'||section==='tactics'||section==='endings'?d[1]:undefined);$('#task').textContent=section==='basics'?d.title:d[0];$('#desc').textContent=section==='basics'?d.summary:d[3];if(section==='openings'){const sel=document.createElement('select');sel.innerHTML='<option value="w">أتدرّب بالأبيض</option><option value="b">أتدرّب بالأسود</option>';sel.value=side;sel.onchange=()=>{side=sel.value;resetOpening()};$('#extra').append(sel);action('شاهد النقلة ←',nextMove,true);action('تدرّب بنفسك',()=>{practice=true;resetOpening();feedback('دورك: العب النقلة المدروسة على الرقعة.')});action('تلميح',hint)}else if(section==='basics'){renderBasics(d)}else{action('تلميح',hint);action('اعرض الحل',()=>{const move=chess.move(d[2]);if(move){renderBoard();feedback(`الحل: ${d[2]} — أعد التدريب لتجرب بنفسك.`);$('#actions').innerHTML='';action('أعد المحاولة',load,true)}})}renderBoard();persist()}
+let basicExample;
+let basicExampleFen;
+function loadBasicExample(example){
+  basicExample=example;
+  chess=new Chess(example.fen);
+  basicExampleFen=chess.fen();
+  selected=null;
+  feedback('');
+  $('#moveCaption').textContent='';
+  renderBoard();
+}
+
+function renderBasics(lesson){
+  $('#title').textContent=lesson.title;
+  $('#category').textContent='الأساسيات';
+  const content=$('#extra');
+  const heading=document.createElement('h4');
+  heading.textContent='القواعد الأساسية';
+  const rules=document.createElement('ul');
+  for(const point of lesson.points){
+    const item=document.createElement('li');
+    item.textContent=point;
+    rules.append(item);
+  }
+  const examples=document.createElement('fieldset');
+  examples.className='basics-examples';
+  const legend=document.createElement('legend');
+  legend.textContent='أمثلة على الرقعة';
+  const note=document.createElement('p');
+  note.setAttribute('aria-live','polite');
+  const demo=document.createElement('button');
+  demo.textContent='اعرض النقلة على الرقعة';
+  demo.onclick=()=>{
+    loadBasicExample(basicExample);
+    moveSound(chess.move(basicExample.move));
+    renderBoard();
+    $('#moveCaption').textContent=basicExample.note;
+    $('#board').scrollIntoView({block:'nearest'});
+  };
+  examples.append(legend);
+  for(const example of lesson.examples){
+    const button=document.createElement('button');
+    button.textContent=example.title;
+    button.setAttribute('aria-pressed',String(example===lesson.examples[0]));
+    button.onclick=()=>{
+      for(const option of examples.querySelectorAll('[aria-pressed]'))option.setAttribute('aria-pressed',String(option===button));
+      loadBasicExample(example);
+      note.textContent=`الوضع الحالي · ${example.title}`;
+    };
+    examples.append(button);
+  }
+  note.textContent=`الوضع الحالي · ${lesson.examples[0].title}`;
+  examples.append(note,demo);
+  const quiz=document.createElement('fieldset');
+  quiz.className='basics-quiz';
+  const question=document.createElement('legend');
+  question.textContent=lesson.quiz.question;
+  const result=document.createElement('p');
+  result.setAttribute('role','status');
+  quiz.append(question);
+  lesson.quiz.options.forEach((label,index)=>{
+    const button=document.createElement('button');
+    button.textContent=label;
+    button.setAttribute('aria-pressed','false');
+    button.onclick=()=>{
+      for(const option of quiz.querySelectorAll('button'))option.setAttribute('aria-pressed',String(option===button));
+      const correct=index===lesson.quiz.correct;
+      result.textContent=(correct?'إجابة صحيحة. ':'راجع الإجابة. ')+lesson.quiz.explanation;
+    };
+    quiz.append(button);
+  });
+  quiz.append(result);
+  content.append(heading,rules,examples,quiz);
+  loadBasicExample(lesson.examples[0]);
+  action('فهمت الدرس ✓',()=>{
+    complete();
+    feedback('تم حفظ إكمال الدرس.');
+  },true);
+  action('تراجع نقلة',()=>{chess.undo();selected=null;$('#moveCaption').textContent='';renderBoard();feedback('')});
+  const next=lessonOrder.basics[lessonOrder.basics.indexOf(idx)+1];
+  if(next!==undefined)action('الدرس التالي',()=>{location.hash=`train/basics/${next}/learn`});
+}
 let openingBranchId='';
 function openingBranch(){return openingBranches[idx]?.lines.find(branch=>branch.id===openingBranchId)}
 function line(){return (openingBranch()?.moves??openings[idx][2]).split(' ')}
@@ -86,20 +169,20 @@ function nextMove(){if(ply>=line().length){complete();feedback('اكتمل ال�
 function hint(){if(section==='openings'){feedback(`النقلة المدروسة: ${line()[ply]||'اكتمل الخط'}`)}else{const d=collection()[idx],m=new Chess(d[1]).move(d[2]);selected=m.from;renderBoard();feedback('القطعة المحددة هي بداية الحل. فكّر في المربع الذي ستذهب إليه.')}}
 const glyph={wk:'♚',wq:'♛',wr:'♜',wb:'♝',wn:'♞',wp:'♟',bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟'};
 function renderBoard(){const fs=flipped?[...files].reverse():[...files],rs=flipped?[1,2,3,4,5,6,7,8]:[8,7,6,5,4,3,2,1];let legal=[];if(selected&&section!=='vision')legal=chess.moves({square:selected,verbose:true}).map(m=>m.to);rs.forEach((r,ri)=>fs.forEach((f,fi)=>{const sq=f+r,b=squareAt($('#board'),ri*8+fi);const dark=(files.indexOf(f)+r)%2===1;let markup='';b.className=(dark?'dark ':'')+(sq===selected?'selected ':'')+(sq===visionHighlight?'target ':'')+(legal.includes(sq)?'legal':'')+(section==='vision'&&visionResult?.square===sq?' answer-'+visionResult.kind:'');b.setAttribute('aria-label',sq);b.setAttribute('role','gridcell');if(section!=='vision'){const p=chess.get(sq);if(p)markup=`<img class="piece ${p.color==='w'?'white':''}" src="pieces/${p.color+p.type.toUpperCase()}.svg" alt="${p.color==='w'?'أبيض':'أسود'} ${ {k:'ملك',q:'وزير',r:'رخ',b:'فيل',n:'حصان',p:'بيدق'}[p.type]}" draggable="false">`}if(coords&&(ri===7||fi===0))markup+=`${fi===0?'<small class="rank">'+r+'</small>':''}${ri===7?'<small class="file">'+f+'</small>':''}`;if(section==='vision'&&visionResult?.square===sq){markup+=`<span class="square-verdict" aria-hidden="true">${visionResult.kind==='correct'?'✓':'×'}</span>`;b.setAttribute('aria-label',sq+(visionResult.kind==='correct'?' — إجابة صحيحة':' — إجابة خاطئة'))}b.onclick=()=>clickSquare(sq);paintSquare(b,markup)}));$('#boardLabel').textContent=section==='vision'?(flipped?'منظور الأسود':'منظور الأبيض'):(chess.turn()==='w'?'الأبيض':'الأسود')+' يلعب'}
-function clickSquare(sq){if(section==='vision'){if(visionMode==='find')answerVision(sq===target,sq);return}if(section==='openings'&&!practice){feedback('اختَر «شاهد النقلة» للشرح أو «تدرّب بنفسك» لتحريك القطع.');return}if(!selected){if(chess.get(sq)?.color===chess.turn()){selected=sq;renderBoard()}return}if(chess.get(sq)?.color===chess.turn()){selected=sq;renderBoard();return}let move;const previous=chess.fen();try{move=chess.move({from:selected,to:sq,promotion:'q'})}catch{}moveSound(move);selected=null;if(!move){feedback('النقلة غير قانونية. اختَر قطعة ثم مربعًا مسموحًا.');renderBoard();return}if(section==='basics'){feedback(move.san);renderBoard();return}stats.attempts++;const expected=section==='openings'?line()[ply]:collection()[idx][2];if(move.san!==expected&&!(section==='mates'&&chess.isCheckmate())){chess.load(previous);const englundTrap=section==='openings'&&ply===6&&!openingBranchId&&expected==='Nc3'&&move.san==='Bf4'&&openings[idx][1]==='Englund Gambit';
+function clickSquare(sq){if(section==='vision'){if(visionMode==='find')answerVision(sq===target,sq);return}if(section==='openings'&&!practice){feedback('اختَر «شاهد النقلة» للشرح أو «تدرّب بنفسك» لتحريك القطع.');return}if(!selected){if(chess.get(sq)?.color===chess.turn()){selected=sq;renderBoard()}return}if(chess.get(sq)?.color===chess.turn()){selected=sq;renderBoard();return}let move;const previous=chess.fen();try{move=chess.move({from:selected,to:sq,promotion:'q'})}catch{}moveSound(move);selected=null;if(!move){feedback('النقلة غير قانونية. اختَر قطعة ثم مربعًا مسموحًا.');renderBoard();return}if(section==='basics'){$('#moveCaption').textContent=previous===basicExampleFen&&move.san===basicExample.move?basicExample.note:move.san;renderBoard();return}stats.attempts++;const expected=section==='openings'?line()[ply]:collection()[idx][2];if(move.san!==expected&&!(section==='mates'&&chess.isCheckmate())){chess.load(previous);const englundTrap=section==='openings'&&ply===6&&!openingBranchId&&expected==='Nc3'&&move.san==='Bf4'&&openings[idx][1]==='Englund Gambit';
 feedback(englundTrap?'بعد Bf4، الأسود يقدر يلعب Qb4+ بكش ويهاجم الفيل على f4 وبيدق b2. جرّب تطوير الحصان إلى c3.':section==='openings'?'نقلة قانونية، لكنها خارج الخط الذي نتدرّب عليه. جرّب تاني أو اطلب تلميحًا.':'نقلة قانونية، لكن جرّب نقلة تحقق فكرة التمرين.');persist();renderBoard();return}stats.correct++;if(section==='openings'){ply++;if(ply<line().length){chess.move(line()[ply++])}renderMoves();if(ply>=line().length){complete();feedback('أحسنت! أتقنت هذا الخط. جرّبه باللون الآخر.')}else feedback('صحيح! الخصم ردّ، ودورك تكمل.')}else{complete();feedback(chess.isCheckmate()?'كش مات! قفلة ممتازة. ♛':'صحيح! نفّذت فكرة التمرين.');$('#actions').innerHTML='';action('التمرين التالي ←',nextLesson,true);action('إعادة',load)}persist();renderBoard()}
 function loadVision(){$('#task').textContent='اعرف المربع من أول نظرة';$('#desc').textContent='تدرّب على إحداثيات الرقعة. ابدأ بالحروف والأرقام، ثم أخفِها وزوّد التحدي. مراجعتك تشمل المربعات اللي بتغلط فيها.';$('#extra').innerHTML='<select id="mode"><option value="find">فين المربع؟</option><option value="name">اسم المربع إيه؟</option><option value="color">لون المربع؟</option></select><select id="duration"><option value="0">تدريب حر</option><option value="30">تحدي 30 ثانية</option><option value="60">تحدي 60 ثانية</option></select><select id="orientation"><option value="w">منظور الأبيض</option><option value="b">منظور الأسود</option><option value="mix">منظور عشوائي</option></select>';$('#mode').value=visionMode;$('#mode').onchange=()=>{visionMode=$('#mode').value;newVision()};$('#orientation').onchange=newVision;action('ابدأ التدريب',startVision,true);action('السؤال التالي',newVision);newVision()}
 function startVision(){clearInterval(timer);score=0;total=0;const dur=Number($('#duration').value);deadline=dur?Date.now()+dur*1000:0;newVision();if(dur)timer=setInterval(()=>{const remain=Math.ceil((deadline-Date.now())/1000);if(remain<=0){clearInterval(timer);clearVisionResponse();deadline=0;$('#task').textContent='انتهى التحدي!';$('#feedback').textContent=`${score} إجابات صحيحة من ${total} محاولات. اضغط ابدأ لتجربة جديدة.`;$('#extraAnswers')?.remove();target='';visionHighlight='';renderBoard()}else $('#boardLabel').textContent=`متبقي ${remain} ثانية · ${score} صحيح`},250)}
 function newVision(){clearVisionResponse();const all=[...files].flatMap(f=>Array.from({length:8},(_,i)=>f+(i+1)));const weak=Object.keys(stats.weak).filter(k=>stats.weak[k]>0);target=Math.random()<.4&&weak.length?weak[Math.floor(Math.random()*weak.length)]:all[Math.floor(Math.random()*64)];const o=$('#orientation')?.value;flipped=o==='b'||(o==='mix'&&Math.random()<.5);visionHighlight=visionMode==='name'?target:'';started=Date.now();$('#task').textContent=visionMode==='find'?`فين المربع ${target}؟`:visionMode==='color'?`لون المربع ${target}؟`:'المربع المحدد اسمه إيه؟';$('#extraAnswers')?.remove();if(visionMode!=='find'){const box=document.createElement('div');box.id='extraAnswers';box.style.cssText='display:flex;gap:7px;flex-wrap:wrap;margin-top:12px';const options=visionMode==='color'?['فاتح','داكن']:[target,...all.filter(sq=>sq!==target).sort(()=>Math.random()-.5).slice(0,5)].sort(()=>Math.random()-.5);options.forEach(v=>{const b=document.createElement('button');b.textContent=v;b.onclick=()=>{const isDark=(files.indexOf(target[0])+Number(target[1]))%2===1;answerVision(visionMode==='name'?v===target:v===(isDark?'داكن':'فاتح'))};box.append(b)});$('#extra').after(box)}feedback('');renderBoard()}
 function clearVisionResponse(){clearTimeout(visionAdvance);clearTimeout(visionFlash);visionAdvance=null;visionFlash=null;visionResult=null;visionLocked=false}
 function answerVision(ok,square=target){if(!target||visionLocked)return;visionLocked=true;visionResult={square,kind:ok?'correct':'wrong'};stats.attempts++;total++;if(ok){stats.correct++;score++;stats.times.push(Date.now()-started);if(stats.times.length>500)stats.times.shift();stats.weak[target]=Math.max(0,(stats.weak[target]||0)-1);persist();feedback('صحيح! ✓');renderBoard();visionAdvance=setTimeout(()=>{if(section==='vision'&&target)newVision()},1200)}else{stats.weak[target]=(stats.weak[target]||0)+1;persist();feedback('إجابة غير صحيحة × — جرّب تاني.');renderBoard();visionFlash=setTimeout(()=>{visionResult=null;visionLocked=false;if(section==='vision')renderBoard()},1000)}}
-$('#flip').onclick=()=>{flipped=!flipped;renderBoard()};$('#coords').onclick=()=>{coords=!coords;renderBoard()};$('#reset').onclick=()=>{if(section==='openings'&&practice)resetOpening();else load()};
+$('#flip').onclick=()=>{flipped=!flipped;renderBoard()};$('#coords').onclick=()=>{coords=!coords;renderBoard()};$('#reset').onclick=()=>{if(section==='openings'&&practice)resetOpening();else if(section==='basics')loadBasicExample(basicExample);else load()};
 export {openings,mates,tactics,endings};
 
 // Focused training and home navigation.
 let isTraining=false, setupSection='openings', lastSession=null;
 try{lastSession=JSON.parse(localStorage.getItem('rook-session')||'null')}catch{}
-const pathSummary={openings:'اختار افتتاح ولون التدريب. لو الدرس فيه أكتر من خط، تقدر تختار تفريعة من داخل الدرس.',mates:'٨ قفلات لتتعرّف على أنماط كش مات.',tactics:'تدرّب على الشوكة والتثبيت والهجوم المكتشف.',vision:'احفظ المربعات من منظور الأبيض والأسود.',endings:'ابدأ بالمات بالرخ والوزير، ثم تدرّب على المعارضة وترقية البيدق.',basics:'ابدأ بالقواعد وحركة القطع والمفاهيم الأساسية.'};
+const pathSummary={openings:'اختار افتتاح ولون التدريب. لو الدرس فيه أكتر من خط، تقدر تختار تفريعة من داخل الدرس.',mates:'٨ قفلات لتتعرّف على أنماط كش مات.',tactics:'تدرّب على الشوكة والتثبيت والهجوم المكتشف.',vision:'احفظ المربعات من منظور الأبيض والأسود.',endings:'ابدأ بالمات بالرخ والوزير، ثم تدرّب على المعارضة وترقية البيدق.',basics:'اختار درسًا فيه شرح، مثال على الرقعة، وسؤال سريع.'};
 const baseLoad=load,baseRenderBoard=renderBoard,baseFeedback=feedback,basePersist=persist;
 function saveSession(){if(!isTraining)return;lastSession={section,idx,ply,side,practice,...(section==='openings'&&openingBranchId?{branch:openingBranchId}:{})};try{localStorage.setItem('rook-session',JSON.stringify(lastSession))}catch{}}
 persist=function(){basePersist();renderHomeStats()};
@@ -195,9 +278,50 @@ function renderOpeningActions(){$('#actions').innerHTML='';if(practice){action('
 load=function(){$('#openingBranches')?.remove();if(section!=='openings'||!openingBranch())openingBranchId='';document.body.dataset.section=section;baseLoad();if(section==='openings'){$('#title').textContent=openings[idx][0];if(!$('#focusMode')){const m=document.createElement('span');m.id='focusMode';$('#boardLabel').after(m)}renderOpeningBranches();renderOpeningActions();renderMoves();feedback(openingExplanation())}else{$('#moveCaption').textContent='';$('#focusMode')?.remove();$('#playback').innerHTML=''}saveSession()};
 function renderHomeStats(){}
 function showHome(){clearVisionResponse();isTraining=false;clearInterval(timer);document.body.classList.remove('training-view');$('#homeDashboard').hidden=false;document.querySelector('.workspace').hidden=true;renderHomeStats();window.scrollTo(0,0)}
-function showTraining(){isTraining=true;document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=false;$('#category').textContent=paths.find(p=>p[0]===section)[3];window.scrollTo(0,0);saveSession()}
+function showTraining(){isTraining=true;document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=false;$('#category').textContent=section==='basics'?'الأساسيات':paths.find(p=>p[0]===section)[3];window.scrollTo(0,0);saveSession()}
 function startSection(key,index=0,mode=false,restorePly,branch=''){section=key;idx=index;openingBranchId=branch;if(section==='openings')flipped=side==='b';load();showTraining();if(section==='openings'){practice=mode;if(practice){resetOpening();for(;ply<restorePly&&ply<line().length;){chess.move(line()[ply++])}if(ply<line().length&&chess.turn()!==side)moveSound(chess.move(line()[ply++]));renderBoard();renderMoves();feedback('دورك: كمّل الخط على الرقعة.')}else jumpTo(restorePly??(openingBranchId?openingBranch()?.start:0)??0);renderOpeningActions()}saveSession()}
-function showSetup(key){if(key==='openings'){location.assign('opening-mastery.html');return}setupSection=key;const p=paths.find(p=>p[0]===key);$('#setupModal h2').textContent=p[2];$('#setupDesc').textContent=pathSummary[key];const col=key==='openings'?openings:key==='mates'?mates:key==='tactics'?tactics:key==='endings'?endings:key==='basics'?basics:[['حفظ مربعات الرقعة']];$('#setupLesson').innerHTML='';const order=key==='basics'?[1,0,2,3,4]:lessonIndices(key,col);order.forEach(i=>{const d=col[i];const o=document.createElement('option');o.value=i;o.textContent=d[0];$('#setupLesson').append(o)});$('#setupLesson').value=isTraining&&key===section?idx:(lessonOrder[key]?.[0]??0);$('#setupSide').value=side;$('#setupSideLabel').hidden=key!=='openings';$('#setupPractice').hidden=key!=='openings';$('#setupLearn').textContent=key==='openings'?'ابدأ التعلّم':'ابدأ التدريب';$('#setupModal').showModal()}
+function showSetup(key){
+  if(key==='openings'){location.assign('opening-mastery.html');return}
+  setupSection=key;
+  const isBasics=key==='basics';
+  const dialog=$('#setupModal');
+  const select=$('#setupLesson');
+  const list=$('#setupBasicLessons');
+  const lessons=key==='mates'?mates:key==='tactics'?tactics:key==='endings'?endings:isBasics?basics:[['حفظ مربعات الرقعة']];
+  const order=lessonIndices(key,lessons);
+  dialog.querySelector('h2').textContent=isBasics?'دروس الأساسيات':paths.find(path=>path[0]===key)[2];
+  $('#setupDesc').textContent=pathSummary[key];
+  select.replaceChildren(...order.map(i=>new Option(isBasics?lessons[i].title:lessons[i][0],i)));
+  select.value=isTraining&&key===section?idx:order[0];
+  select.closest('label').hidden=isBasics;
+  list.hidden=!isBasics;
+  list.querySelectorAll('label').forEach(label=>label.remove());
+  if(isBasics){
+    for(const i of order){
+      const lesson=lessons[i];
+      const label=document.createElement('label');
+      const radio=document.createElement('input');
+      radio.type='radio';
+      radio.name='setup-basic-lesson';
+      radio.value=i;
+      radio.checked=radio.value===select.value;
+      radio.addEventListener('change',()=>{select.value=radio.value});
+      const copy=document.createElement('span');
+      const title=document.createElement('strong');
+      const summary=document.createElement('small');
+      title.textContent=lesson.title;
+      summary.textContent=lesson.summary;
+      copy.append(title,summary);
+      label.append(radio,copy);
+      list.append(label);
+    }
+  }
+  $('#setupSide').value=side;
+  $('#setupSideLabel').hidden=true;
+  $('#setupPractice').hidden=true;
+  $('#setupLearn').textContent=isBasics?'افتح الدرس':'ابدأ التدريب';
+  dialog.showModal();
+}
 $('#setupClose').onclick=()=>$('#setupModal').close();$('#setupModal').onclick=e=>{if(e.target===$('#setupModal'))$('#setupModal').close()};function beginSetup(mode){
   side=$('#setupSide').value;
   const key=setupSection,index=Number($('#setupLesson').value);
@@ -217,7 +341,7 @@ function route(){
   const match=location.hash.match(/^#train\/(openings|mates|tactics|vision|endings|basics)\/(\d+)\/(learn|practice)(?:\/([a-z0-9-]+))?$/);
   if(!match){if(/^#fundamentals(?:\/[a-z0-9-]+)?$/.test(location.hash)){clearVisionResponse();isTraining=false;clearInterval(timer);document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=true;return}showHome();return}
   const key=match[1],n=Number(match[2]),mode=match[3]==='practice';
-  const max=key==='openings'?openings.length:key==='mates'?8:key==='tactics'?6:key==='endings'?4:key==='basics'?5:1;
+  const max=key==='openings'?openings.length:key==='mates'?8:key==='tactics'?6:key==='endings'?4:key==='basics'?basics.length:1;
   const index=Math.min(n,max-1);
   const branch=key==='openings'&&openingBranches[index]?.lines.some(item=>item.id===match[4])?match[4]:'';
   const resume=lastSession&&lastSession.section===key&&lastSession.idx===index&&lastSession.practice===mode&&(lastSession.branch||'')===branch?{...lastSession}:null;
@@ -230,5 +354,8 @@ window.addEventListener('hashchange',route);renderHomeStats();route();
 
 keepView('setup', () => $('#setupModal').open ? {section:setupSection, lesson:$('#setupLesson').value, side:$('#setupSide').value} : null, saved => {
   if (!paths.some(path=>path[0]===saved.section)) return;
-  if(saved.section==='openings')return; showSetup(saved.section); $('#setupLesson').value=saved.lesson; $('#setupSide').value=saved.side;
+  if(saved.section==='openings')return; showSetup(saved.section); const select=$('#setupLesson');
+  if([...select.options].some(option=>option.value===String(saved.lesson)))select.value=saved.lesson;
+  for(const radio of $('#setupBasicLessons').querySelectorAll('input'))radio.checked=radio.value===select.value;
+  $('#setupSide').value=saved.side;
 });
