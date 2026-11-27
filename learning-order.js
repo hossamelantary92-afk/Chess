@@ -1,7 +1,7 @@
-import './app.js?v=334';
+import './app.js?v=335';
 import './safety.js?v=329';
 import './tactics-lab.js?v=329';
-import './academy.js?v=329';
+import './academy.js?v=335';
 import './fundamentals.js?v=332';
 import './middlegame.js?v=329';
 import './chess-guide.js?v=329';

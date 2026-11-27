@@ -280,6 +280,10 @@ function renderHomeStats(){}
 function showHome(){clearVisionResponse();isTraining=false;clearInterval(timer);document.body.classList.remove('training-view');$('#homeDashboard').hidden=false;document.querySelector('.workspace').hidden=true;renderHomeStats();window.scrollTo(0,0)}
 function showTraining(){isTraining=true;document.body.classList.add('training-view');$('#homeDashboard').hidden=true;document.querySelector('.workspace').hidden=false;$('#category').textContent=section==='basics'?'الأساسيات':paths.find(p=>p[0]===section)[3];window.scrollTo(0,0);saveSession()}
 function startSection(key,index=0,mode=false,restorePly,branch=''){section=key;idx=index;openingBranchId=branch;if(section==='openings')flipped=side==='b';load();showTraining();if(section==='openings'){practice=mode;if(practice){resetOpening();for(;ply<restorePly&&ply<line().length;){chess.move(line()[ply++])}if(ply<line().length&&chess.turn()!==side)moveSound(chess.move(line()[ply++]));renderBoard();renderMoves();feedback('دورك: كمّل الخط على الرقعة.')}else jumpTo(restorePly??(openingBranchId?openingBranch()?.start:0)??0);renderOpeningActions()}saveSession()}
+export function openBasicsLessons(){
+  showSetup('basics');
+}
+
 function showSetup(key){
   if(key==='openings'){location.assign('opening-mastery.html');return}
   setupSection=key;
