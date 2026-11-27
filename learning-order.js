@@ -239,4 +239,14 @@ if(activeStage){
  heading.append(title,back);home.before(heading);home.classList.add('category-content');
 }
 
+// Ensure standalone icons remain visible after category layout is assembled.
+for(const card of home.querySelectorAll('a.lesson-row')){
+ const href=card.getAttribute('href');
+ const d=standaloneIcons[href]||standaloneIcons[href?.replace(/^\.\//,'')];
+ if(!d)continue;
+ card.classList.add('standalone-artwork');
+ let top=card.querySelector('.home-card-top');
+ if(!top){top=document.createElement('div');top.className='home-card-top';card.prepend(top);}
+ top.innerHTML=`<b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg></b>`;
+}
 document.documentElement.classList.remove('rook-loading','rook-deep');
