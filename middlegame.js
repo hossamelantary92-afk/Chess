@@ -148,6 +148,8 @@ function updateProgress() {
 
 function load(item) {
   lesson = item;
+  lastMove = null;
+  playedMove = null;
   chess = new Chess(item.fen);
   for (const san of item.line.trim().split(/\s+/).filter(Boolean)) lastMove = chess.move(san);
   side = chess.turn();
@@ -332,8 +334,8 @@ function drawReview() {
   draw();
 }
 
-$('midReviewPrev').onclick = () => { reviewPly--; drawReview(); };
-$('midReviewNext').onclick = () => { reviewPly++; drawReview(); };
+$('midReviewPrev').onclick = () => { if(reviewLine && reviewPly>0){reviewPly--; drawReview();} };
+$('midReviewNext').onclick = () => { if(reviewLine && reviewPly<reviewLine.length){reviewPly++; drawReview();} };
 $('midReviewReset').onclick = () => {
   chess = new Chess(initialPosition.fen);
   lastMove = chess.move(playedMove);
@@ -344,6 +346,7 @@ $('midReviewReset').onclick = () => {
 };
 
 $('midOpponent').onclick = () => {
+  if (phase !== 'reply' || !followup) return;
   lastMove = chess.move(followup.opponent);
   phase = 'followup';
   $('midOpponent').hidden = true;
@@ -385,7 +388,7 @@ $('midNext').onclick = () => {
   location.hash = `${section}/${items[index].id}`;
 };
 $('midHint').onclick = () => { $('midFeedback').textContent = phase === 'followup' ? followup.hint : lesson.hint; };
-$('midExample').onclick = () => finish(Object.keys(currentReplies())[0], false);
+$('midExample').onclick = () => { if (phase === 'move' || phase === 'followup') finish(Object.keys(currentReplies())[0], false); };
 
 function route() {
   const match = location.hash.match(/^#(middlegame|position-evaluation|piece-activity|opening-traps|practical-decisions)(?:\/([a-z0-9-]+))?$/);
