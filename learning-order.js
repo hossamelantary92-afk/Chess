@@ -1,6 +1,6 @@
 import './app.js?v=259';
 import './safety.js?v=288';
-import './tactics-lab.js?v=293';
+import './tactics-lab.js?v=306';
 import './academy.js?v=303';
 import './fundamentals.js?v=303';
 import './middlegame.js?v=305';
