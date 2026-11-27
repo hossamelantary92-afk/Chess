@@ -73,16 +73,17 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 #homeCards .category-entry {
   --card-art: none;
   --card-art-width: 136px;
-  --card-art-inset: 16px;
+  --card-art-column: 112px;
+  --card-edge: 20px;
+  --card-art-inset: calc(var(--card-edge) + 42px);
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 32px;
+  grid-template-columns: minmax(0, 1fr) var(--card-art-column) 32px;
   align-items: center;
   gap: 10px;
   min-width: 0;
   min-height: 126px;
-  padding: 18px 20px;
-  padding-inline-end: calc(var(--card-art-width) + var(--card-art-inset));
+  padding: 18px var(--card-edge);
   border: 1px solid var(--rook-border, #665738);
   border-radius: 14px;
   background:
@@ -111,6 +112,7 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 }
 
 #homeCards .category-entry .group-chevron {
+  grid-column: 3;
   direction: ltr;
   display: grid;
   place-items: center;
@@ -161,9 +163,9 @@ body:not(.training-view):not(.rook-category) #homeDashboard .training-links a {
 
   #homeCards .category-entry {
     --card-art-width: 113px;
-    --card-art-inset: 14px;
+    --card-art-column: 88px;
+    --card-edge: 15px;
     min-height: 105px;
-    padding-inline-start: 15px;
   }
 }
 
