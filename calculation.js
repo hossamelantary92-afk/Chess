@@ -1,3 +1,4 @@
+import {moveSound,playSound} from './rook-sound.js?v=320';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
@@ -171,7 +172,7 @@ function play(san) {
     $('calcFeedback').textContent = 'رد قانوني، لكن افحص الرد التاني. إيه اللي ممكن يهدده أو يغيّره في خطتك؟';
     return;
   }
-  chess.move(san);
+  moveSound(chess.move(san));
   selected = null;
   stage = stage === 1 && branch.moves.length === 2 ? 3 : stage + 1;
   render({focus:true});
