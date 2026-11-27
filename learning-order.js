@@ -1,9 +1,9 @@
-import './app.js?v=321';
+import './app.js?v=323';
 import './safety.js?v=288';
-import './tactics-lab.js?v=321';
+import './tactics-lab.js?v=323';
 import './academy.js?v=315';
-import './fundamentals.js?v=320';
-import './middlegame.js?v=321';
+import './fundamentals.js?v=323';
+import './middlegame.js?v=323';
 import './chess-guide.js?v=288';
 import {groups as studyGroups} from './study-lines.js';
 const home = document.getElementById('homeCards');
