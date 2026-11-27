@@ -262,7 +262,8 @@ if(activeStage){
  const placement={'Openings & Essentials':'opening','Middlegame':'middlegame','Checkmate Patterns':'finish','Bullet':'progress'};
  const labels={'Openings & Essentials':'دروس الافتتاح والأساسيات','Middlegame':'دروس استراتيجية إضافية','Checkmate Patterns':'دروس أنماط المات','Bullet':'Bullet'};
  const grid=home.querySelector('.learning-stage-'+activeStage.id+' .learning-grid');
- for(const [group,titles] of Object.entries(studyGroups)){
+ const redistributed={...studyGroups,'Openings & Essentials':[],'Middlegame':[...studyGroups.Middlegame,'Pieces Working Together'],'Game Study':['Read and Play a Game']};placement['Game Study']='games';labels['Game Study']='تطبيق ودراسة المباريات';
+ for(const [group,titles] of Object.entries(redistributed)){
   if(placement[group]!==activeStage.id||!grid)continue;
   const unit=document.createElement('details');unit.className='study-topic-group';
   const summary=document.createElement('summary');summary.textContent=labels[group];summary.setAttribute('aria-label',labels[group]);
@@ -275,7 +276,7 @@ if(activeStage){
    const href='study.html#'+encodeURIComponent(title);
    if([...grid.querySelectorAll('a')].some(a=>a.getAttribute('href')===href))continue;
    const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=href;
-   card.innerHTML='<div class="home-card-top"><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="'+(group==='Bullet'?rowIcons.bullet:group==='Checkmate Patterns'?rowIcons.mates:group==='Middlegame'?rowIcons.plans:rowIcons['opening-mastery'])+'"/></svg></b></div><h3></h3><small>شرح وتطبيق واختبار</small>';
+   card.innerHTML='<div class="home-card-top"><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="'+(group==='Bullet'?rowIcons.bullet:group==='Checkmate Patterns'?rowIcons.mates:group==='Middlegame'?rowIcons.plans:group==='Game Study'?rowIcons['model-games']:rowIcons['opening-mastery'])+'"/></svg></b></div><h3></h3><small>شرح وتطبيق واختبار</small>';
    card.querySelector('h3').textContent=title;content.append(card);
   }
   if(!content.children.length)unit.remove();
