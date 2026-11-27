@@ -76,7 +76,6 @@ panel.innerHTML = `
       <li><strong>الحساب.</strong> قارن نقلتين مرشحتين. احسب أقوى رد عملي للخصم، وقيّم الرقعة بعد التبادل قبل تنفيذ القرار.</li>
     </ul>
   </details>
-  <nav class="training-links mid-nav" aria-label="مراجع منتصف اللعب"><a id="midRelated" lang="en"></a><a href="#plans" lang="en">Plans</a><a href="#tactics-guide" lang="en">Tactics</a></nav>
   <details id="openingChoices" class="unit-card mid-checklist" hidden>
     <summary lang="en">Opening Choices</summary>
     <div id="openingChoiceList"></div>
@@ -415,8 +414,6 @@ function route() {
   $('midFoundations').hidden = section !== 'middlegame';
   $('midPickerLabel').textContent = evaluation ? 'الموقف' : 'الدرس';
   $('midPlans').setAttribute('aria-label', evaluation ? 'اختيار الأولوية' : 'اختيار الخطة');
-  $('midRelated').textContent = evaluation || activity ? 'Middlegame' : 'Position Evaluation';
-  $('midRelated').href = evaluation || activity ? '#middlegame' : '#position-evaluation';
   const picker = $('midLesson');
   picker.replaceChildren();
   if (evaluation) {
