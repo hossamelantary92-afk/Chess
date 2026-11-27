@@ -1,24 +1,13 @@
 import {keepView} from './refresh.js';
 import {Chess} from './chess.js';
 import {drawDiagram} from './diagram.js';
-import {groups,examples} from './study-lines.js';
+import {examples} from './study-lines.js';
 
 const $ = id => document.getElementById(id);
 let lessons;
 const names = {r:'رخ',b:'فيل',n:'حصان',p:'بيدق',q:'وزير',k:'ملك'};
 const board = $('studyBoard');
 let setupLength, title, game, moves, ply, selected, side, last;let mode="learn";function setMode(next, restart=true){mode=next;for(const [id,value] of [["learnMode","learn"],["practiceMode","practice"],["quizMode","quiz"]])$(id).setAttribute("aria-pressed",String(mode===value));$("explanation").hidden=mode!=="learn";$("lead").hidden=mode==="quiz";$("exercise").hidden=mode==="learn";$("next").hidden=mode==="quiz"&&ply===0;if(mode==="learn")$("explanation").open=true;if(restart)reset()}for(const [id,value] of [["learnMode","learn"],["practiceMode","practice"],["quizMode","quiz"]])$(id).onclick=()=>setMode(value);
-for (const [group,titles] of Object.entries(groups)) {
-  const section = document.createElement('details');
-  const heading = document.createElement('summary');
-  heading.lang='en'; heading.textContent=group; section.append(heading);
-  for (const title of titles) {
-    const a=document.createElement('a');
-    a.href='#'+encodeURIComponent(title); a.textContent=title; a.lang='en';
-    section.append(a);
-  }
-  $('catalog').append(section);
-}
 function render() {
   drawDiagram(board,game.fen(),last,side==='b');
   for(const tile of board.children) {
@@ -88,10 +77,6 @@ function openLesson(){
   $('explanation').open=mode==='learn';
   $('variant').replaceChildren(...examples[title].map((_,i)=>new Option(String(i+1),String(i))));
   $('variantLabel').hidden=examples[title].length===1;
-  for(const a of $('catalog').querySelectorAll('a')){
-    if(a.textContent===title){a.setAttribute('aria-current','page');a.parentElement.open=true}
-    else a.removeAttribute('aria-current');
-  }
   setMode(mode);
 }
 $('variant').onchange=reset;$('next').onclick=()=>advance();$('again').onclick=reset;
@@ -107,19 +92,6 @@ fetch('./study-text.json').then(response=>{
   return response.json();
 }).then(data=>{lessons=data;renderText()}).catch(()=>{
   $('lead').textContent='الشرح ما اتحمّلش. تقدر تجرّب الموقف أو تحدّث الصفحة عشان تقرأه.';
-});
-$('catalog').addEventListener('click',event=>{
-  const link=event.target.closest('a');
-  if(!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button!==0)return;
-  event.preventDefault();
-  if(location.hash!==link.hash){
-    history.pushState(null,'',link.hash);
-    openLesson();
-  }
-  const heading=$('lessonTitle');
-  heading.tabIndex=-1;
-  heading.focus({preventScroll:true});
-  heading.scrollIntoView({block:'start'});
 });
 
 keepView('lesson', () => ({variant:$('variant').value, history:game.history().slice(setupLength), ply, explanation:$('explanation').open,mode}), saved => {
