@@ -200,3 +200,5 @@ if(activeStage){
  const title=document.createElement('h2');title.textContent=activeStage.title;
  heading.append(back,title);home.before(heading);home.classList.add('category-content');
 }
+
+document.documentElement.classList.remove('rook-loading','rook-deep');
