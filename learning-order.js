@@ -195,6 +195,13 @@ for(const node of stageNodes){
   const link=document.createElement('a');link.className='category-entry';link.href='index.html?section='+encodeURIComponent(stage.id);link.append(...summary.childNodes);const arrow=link.querySelector('.group-chevron');if(arrow)arrow.textContent='‹';node.replaceWith(link);
  }
 }
+if(activeStage?.id==='resources'){
+ const grid=home.querySelector('.learning-stage-resources .learning-grid');
+ const unit=grid?.querySelector('.unified-unit');
+ if(unit){const content=unit.querySelector('.unified-unit-content');if(content)unit.replaceWith(...content.children);}
+ const academy=cards.get('academy');if(academy){academy.querySelector('h3').textContent='Chess Fundamentals';academy.querySelector('small').textContent='قواعد اللعب وحركة القطع وإتقان الرقعة';}
+ document.body.classList.add('resources-category');
+}
 if(activeStage){
  const heading=document.createElement('div');heading.className='category-heading';
  const back=document.createElement('a');back.href='index.html#home';back.textContent='→ الرئيسية';
