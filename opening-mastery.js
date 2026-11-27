@@ -18,7 +18,7 @@ const linked = linkedId ? normalizeSelection({color: linkedColor, first: linkedF
 // Explicit lesson links still open their requested color and opening.
 const restored = normalizeSelection(stored?.view);
 const state = valid(linked) ? linked : valid(restored) ? restored : {color: 'w', first: 'e4', id: '0', line: '', ply: 0, mode: 'learn'};
-if (valid(linked)) history.replaceState(history.state, '', location.pathname);
+if (valid(linked)) { const cleanUrl=new URL(location.href); for(const name of ['opening','color','line','mode'])cleanUrl.searchParams.delete(name); history.replaceState(history.state, '', cleanUrl.pathname+cleanUrl.search+cleanUrl.hash); }
 const saved = Array.isArray(stored?.saved) ? stored.saved.map(normalizeSelection).filter(valid) : [];
 let activeId = studyLines(state.id,state.color).some(e=>e.id===state.activeId) ? state.activeId : state.id;
 let activeLine = catalog.get(activeId).lines.find(line => line.id === state.line) ?? catalog.get(activeId).lines[0];
@@ -28,7 +28,7 @@ if(activeId==='open-game'&&state.id==='open-game'){
 }
 let mode = ['learn','test','dynamic'].includes(state.mode) ? state.mode : 'learn';
 let chess, ply, lastMove, selected, practice = mode !== 'learn';
-const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.map(m=>({...m,origin:normalizeSelection(m.origin)})).filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
+const mistakes = Array.isArray(stored?.mistakes) ? stored.mistakes.filter(m=>m&&typeof m==='object').map(m=>({...m,origin:normalizeSelection(m.origin)})).filter(m=>valid(m.origin)&&catalog.has(m.activeId)&&Number.isInteger(m.ply)&&Array.isArray(m.prefix)&&m.ply===m.prefix.length&&catalog.get(m.activeId).lines.some(l=>l.id===m.line&&l.moves.length>m.ply&&m.prefix.every((san,i)=>l.moves[i]===san))) : [];
 let reviewTarget = typeof state.reviewTarget==='string'?state.reviewTarget:null;
 
 const mistakeKey=m=>m.origin.color+'|'+m.origin.id+'|'+m.prefix.join(' ');
