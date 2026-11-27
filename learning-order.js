@@ -2,7 +2,7 @@ import './app.js?v=316';
 import './safety.js?v=288';
 import './tactics-lab.js?v=306';
 import './academy.js?v=315';
-import './fundamentals.js?v=319';
+import './fundamentals.js?v=320';
 import './middlegame.js?v=305';
 import './chess-guide.js?v=288';
 import {groups as studyGroups} from './study-lines.js';
