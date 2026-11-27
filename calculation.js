@@ -1,4 +1,4 @@
-import {moveSound,playSound} from './rook-sound.js?v=320';
+import {moveSound,playSound} from './rook-sound.js?v=323';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
