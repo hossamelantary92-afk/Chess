@@ -322,6 +322,7 @@ function chooseSquare(square) {
 }
 
 function play(san) {
+  if(!started||outcome)return;
   const exercise = exercises[index];
   if(exam){const ok=san===line[0];chess.move(san);step=1;outcome=ok?'complete':'exam-wrong';recordExam(ok);selected=null;render(ok?'إجابة مطابقة للخط التعليمي.':`النقلة التعليمية: ${line[0]}. قد توجد بدائل صحيحة غير مقيمة.`);return;}
   const alternative = step === 0 && exercise.alternative?.split(' ');
@@ -353,6 +354,7 @@ function play(san) {
 }
 
 function open(next) {
+  if(!Number.isInteger(next)||!exercises[next])return;
   index = next;
   picker.value = index;
   chess = new Chess(exercises[index].fen);
@@ -406,7 +408,7 @@ window.addEventListener('hashchange', route);
 route();
 
 keepView('endgame', () => panel.hidden || exam ? null : {index, started, step, outcome}, saved => {
-  if (!exercises[saved.index]) return;
+  if (!saved || !Number.isInteger(saved.index) || !exercises[saved.index] || !Number.isInteger(saved.step) || saved.step<0 || saved.step>exercises[saved.index].line.split(' ').length || (saved.outcome==='alternative'&&!exercises[saved.index].alternative)) return;
   open(saved.index);
   started = saved.started;
   outcome = saved.outcome;
