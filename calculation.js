@@ -10,7 +10,7 @@ const panel = document.createElement('section');
 panel.id = 'calculationPanel';
 panel.hidden = true;
 panel.innerHTML = `
-  <nav class="training-links mid-nav"><a href="#home">الرئيسية</a><a href="#middlegame">منتصف اللعب</a></nav>
+  <nav class="training-links mid-nav"><a href="#home">الرئيسية</a></nav>
   <div class="lesson-head"><h2 lang="en">Calculation Trainer</h2></div>
   <p>قارن نقلتين، احسب رد الخصم، وقيّم الوضع. جرّب الخطّين قبل ما تنتقل للموقف التالي.</p>
   <label for="calcPicker">الموقف</label>
