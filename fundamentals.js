@@ -1,4 +1,4 @@
-import {playSound,moveSound,soundEnabled,setSound} from './rook-sound.js?v=323';
+import {playSound,moveSound,soundEnabled,setSound} from './rook-sound.js?v=324';
 import {squareAt,paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';import {skills,itemId} from './fundamentals-data.js?v=264';
 const $=s=>document.querySelector(s),files='abcdefgh',pieceNames={p:'بيدق',n:'حصان',b:'فيل',r:'رخ',q:'وزير',k:'ملك'};let memory;try{memory=JSON.parse(localStorage.getItem('rook-fundamentals')||'{}')}catch{memory={}}memory={practice:[],exams:{},...memory};memory.practice=Array.isArray(memory.practice)?[...new Set(memory.practice.filter(x=>typeof x==='string'))]:[];if(!memory.exams||typeof memory.exams!=='object'||Array.isArray(memory.exams))memory.exams={};let skill=skills[0],c=new Chess(),index=0,mode='learn',selected=null,done=false,flipped=false,hintUsed=false,pending=null,results=[],examQueue=[],positionStart='';
