@@ -1,7 +1,7 @@
 import {keepView} from './refresh.js';
 import {Chess} from './chess.js';import {references,units,lessons,games,masterModels} from './academy-data.js?v=264';
 const $=s=>document.querySelector(s),files='abcdefgh';let state;try{state=JSON.parse(localStorage.getItem('rook-academy')||'{}')}catch{state={}}state={passed:[],review:[],preparation:[],...state};for(const k of ['passed','review','preparation'])state[k]=Array.isArray(state[k])?[...new Set(state[k].filter(x=>typeof x==='string'))]:[];let active=null,studyGame=null,c=new Chess(),step=0,flipped=false,quizSolved=false,tabMode='path',branch=false;
-const panel=document.createElement('section');panel.id='academyPanel';panel.hidden=true;panel.innerHTML=`<div class="lesson-head academy-compact-head"><h2>مسار التأسيس</h2><button class="premium-btn" id="academyHome">الرئيسية</button></div><div id="academyProgress"></div><div id="academyContent"></div></section>`;$('#homeDashboard').after(panel);
+const panel=document.createElement('section');panel.id='academyPanel';panel.hidden=true;panel.innerHTML=`<div class="academy-compact-head"><h2>مسار التأسيس</h2><button class="premium-btn" id="academyHome">الرئيسية</button></div><div id="academyProgress"></div><div id="academyContent"></div></section>`;$('#homeDashboard').after(panel);
 const entry=document.createElement('button');entry.className='home-card academy-entry';entry.dataset.learningCard='academy';entry.innerHTML='<div class="home-card-top" aria-hidden="true"><b>♔</b></div><h3>مسار التأسيس</h3><small>دروس، تمارين على الرقعة، واختبارات</small>';entry.onclick=()=>location.hash='academy';$('#homeCards').prepend(entry);
 function save(){try{localStorage.setItem('rook-academy',JSON.stringify(state))}catch{}let practical=0;try{practical=Object.values(JSON.parse(localStorage.getItem('rook-fundamentals')||'{}').exams||{}).filter(e=>e.score===3).length}catch{}$('#academyProgress').textContent=`مراحل مراجعة: ${preparation.filter(p=>state.preparation.includes(p.id)).length}/${preparation.length} · مهارات مجتازة: ${practical}/14`}
 function button(label,fn,primary=false){const b=document.createElement('button');const glyph=label.includes('راجعت')?'M5 12l4 4 10-10':label.includes('رقعة')||label.includes('مربعات')?'M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18':label.includes('اختبار')?'M5 4h14v16H5zM8 9h8M8 13h8M8 17h4':'M9 5l7 7-7 7';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.setAttribute('class','academy-action-icon');const p=document.createElementNS(svg.namespaceURI,'path');p.setAttribute('d',glyph);svg.append(p);const span=document.createElement('span');span.textContent=label;b.append(span,svg);b.className='premium-btn'+(primary?' primary':'');b.onclick=fn;return b}
@@ -29,7 +29,7 @@ function route(){
   document.querySelector('.workspace').hidden=true;
   $('#safetyPanel').hidden=true;
   $('#tacticsLab').hidden=true;
-  panel.querySelector('.lesson-head h2').textContent=heroesOpen?'دروس الأبطال':'مسار التأسيس';if(heroesOpen)masters();else if(academyOpen)path();
+  panel.querySelector('.academy-compact-head h2').textContent=heroesOpen?'دروس الأبطال':'مسار التأسيس';if(heroesOpen)masters();else if(academyOpen)path();
   window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',route);route();
