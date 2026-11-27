@@ -45,8 +45,8 @@ $('#homeCards').append(gameTipsEntry);
 
 keepView('academy', () => panel.hidden ? null : {tabMode, lesson:active?.id, game:studyGame?.id, step, branch}, saved => {
   if (saved.tabMode === 'books') return books();
-  if(location.hash==='#hero-lessons'){masters();if(saved.game==='opera'){location.replace('master-games.html');return}if(games.some(item=>item.id===saved.game))game(saved.game);return}if(saved.tabMode==='masters'||saved.game)return path();
-  if (lessons.some(item=>item.id===saved.lesson)) lesson(saved.lesson);
+  if(location.hash==='#hero-lessons'){masters();if(saved.game==='opera'){location.replace('master-games.html');return}if(games.some(item=>item.id===saved.game)){game(saved.game);branch=Boolean(saved.branch&&studyGame.branch);step=Math.max(0,Math.min(Number.isInteger(saved.step)?saved.step:0,studyGame.line.length+(branch?studyGame.branch.length:0)));playback()}return}if(saved.tabMode==='masters'||saved.game)return path();
+  if (saved.lesson==='s3') lesson(saved.lesson);
   else if (games.some(item=>item.id===saved.game)) game(saved.game);
   if (active || studyGame) { branch=saved.branch; step=saved.step; if(document.getElementById('academyBoard')) playback(); }
 });
