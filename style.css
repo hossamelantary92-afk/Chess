@@ -61,16 +61,6 @@ body:not(.training-view) header{height:72px}body:not(.training-view) .brand smal
 }
 #labBoard .answer-wrong .square-verdict { background: #772f2d; }
 
-.fund-glossary-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 6px 12px;
-  border: 1px solid #56674d;
-  border-radius: 10px;
-  color: #b0d39f;
-  font-size: .9rem;
-}
 #pieceGlossary { margin: 14px 0; }
 #pieceGlossary h4 { margin: 0 0 8px; }
 #pieceGlossary p { margin: 8px 0; }
