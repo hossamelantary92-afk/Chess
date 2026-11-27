@@ -14,6 +14,7 @@ const links = [
   ['practical-endgames', 'Practical Endgames', 'النهايات العملية والتعادل والتبديل', '♜', '#practical-endgames'],
   ['calculation', 'Calculation Trainer', 'احسب ردّ الخصم وقيّم النتيجة', '♞', '#calculation'],
   ['personal-analysis','Personal Game Analysis','استورد مباراة PGN وراجع نقلاتك','♟','personal-analysis.html'],
+  ['hero-lessons','دروس الأبطال','دروس تاريخية وعدسات لدراسة الأساتذة','♛','#hero-lessons'],
   ['model-games', 'مباريات نموذجية', '٣ مباريات من الافتتاح للحسم', '♜', '#model-games'],
   ['plans', 'Plans', 'اختار هدف ونفّذ خطة تناسب الوضع', '♜', '#plans'],
   ['tactics-guide', 'Tactics', 'تعرّف على أسماء التكتيكات وأفكارها', '♝', '#tactics-guide']
@@ -33,7 +34,7 @@ const stages = [
   {id:'middlegame', title:'منتصف اللعبة', cards:['middlegame','position-evaluation','safety','plans','piece-activity','practical-decisions']},
   {id:'tactical', title:'التكتيكات والحساب', cards:['tactics','tactics-guide','calculation','mixed']},
   {id:'finish', title:'النهايات والكش مات', cards:['endings','practical-endgames','mates','checkmate-patterns']},
-  {id:'games', title:'دراسة المباريات', cards:['model-games','personal-analysis']},
+  {id:'games', title:'دراسة المباريات', cards:['model-games','hero-lessons','personal-analysis']},
   {id:'progress', title:'التقييم وخطة التدريب', cards:[]}
 ];
 
@@ -147,7 +148,7 @@ const unifiedGroups=[
  ['tactical','Chess Tactics','شرح الأنماط والتدريب والحساب',['tactics-guide','tactics','calculation','mixed']],
  ['finish','Endgame Mastery','النهايات الأساسية والعملية والتعادل',['endings','practical-endgames']],
  ['finish','Checkmate Mastery','القفلات وأنماط الكش مات',['mates','checkmate-patterns']],
- ['games','Game Academy','المباريات النموذجية ومباريات الأساتذة',['model-games']]
+ ['games','Game Academy','المباريات النموذجية ومباريات الأساتذة',['model-games','hero-lessons']]
 ];
 for(const [stage,title,description,keys] of unifiedGroups){
  const grid=home.querySelector('.learning-stage-'+stage+' .learning-grid');
