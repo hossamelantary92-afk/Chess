@@ -18,7 +18,7 @@ body:not(.training-view):not(.rook-category) > header .brand small {
   color: var(--rook-gold);
 }
 
-body:not(.training-view):not(.rook-category) #progress {
+body:not(.training-view):not(.rook-category) .rook-home {
   min-height: 44px;
   background: #1b2c23;
   border: 1px solid var(--rook-border);
@@ -125,7 +125,7 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 }
 
 #homeCards .category-entry:focus-visible,
-body:not(.training-view):not(.rook-category) #progress:focus-visible {
+body:not(.training-view):not(.rook-category) .rook-home:focus-visible {
   outline: 2px solid #f4d896;
   outline-offset: 3px;
 }

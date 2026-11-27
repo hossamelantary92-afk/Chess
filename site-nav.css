@@ -1,0 +1,57 @@
+body > .rook-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  box-sizing: border-box;
+  min-height: 58px;
+  overflow: visible;
+}
+
+.rook-site-header:has(> .rook-header-nav) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-inline: 4%;
+  background: #242521;
+  border-bottom: 1px solid #42443d;
+}
+
+.rook-site-header .brand {
+  text-decoration: none;
+}
+
+.rook-site-header > .brand {
+  color: #f0f2ed;
+}
+
+.rook-site-header .rook-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.rook-header-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border: 1px solid #525b50;
+  border-radius: 10px;
+  background: #303932;
+  color: #f0f2ed;
+  font: 650 13px/1.4 system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.rook-header-nav a[hidden] {
+  display: none;
+}
+
+.rook-header-nav a:focus-visible,
+.rook-site-header .brand:focus-visible {
+  outline: 2px solid #e7c78a;
+  outline-offset: 2px;
+}

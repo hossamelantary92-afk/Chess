@@ -1,7 +1,7 @@
-import './app.js?v=324';
+import './app.js?v=326';
 import './safety.js?v=288';
 import './tactics-lab.js?v=324';
-import './academy.js?v=315';
+import './academy.js?v=326';
 import './fundamentals.js?v=324';
 import './middlegame.js?v=324';
 import './chess-guide.js?v=288';
@@ -250,9 +250,8 @@ if(activeStage){
   if(content?.children.length===1)unit.replaceWith(...content.children);
  }
  const heading=document.createElement('div');heading.className='category-heading';
- const back=document.createElement('a');back.href='index.html#home';back.textContent='→ الرئيسية';
  const title=document.createElement('h2');title.textContent=activeStage.title;
- heading.append(title,back);home.before(heading);home.classList.add('category-content');
+ heading.append(title);home.before(heading);home.classList.add('category-content');
 }
 
 // Ensure standalone icons remain visible after category layout is assembled.
