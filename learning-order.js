@@ -1,4 +1,4 @@
-import './app.js?v=259';
+import './app.js?v=316';
 import './safety.js?v=288';
 import './tactics-lab.js?v=306';
 import './academy.js?v=315';
