@@ -1,0 +1,173 @@
+body:not(.training-view):not(.rook-category) {
+  --rook-night: #0a1511;
+  --rook-green: #11241c;
+  --rook-gold: #e7c78a;
+  --rook-border: #665738;
+  background: radial-gradient(ellipse at top, #183024, var(--rook-night) 58%) !important;
+  color: #f4ecda;
+}
+
+body:not(.training-view):not(.rook-category) > header {
+  background: var(--rook-night);
+  border-color: #453b28;
+  padding-inline: max(4%, calc((100% - 1160px) / 2));
+}
+
+body:not(.training-view):not(.rook-category) > header .brand,
+body:not(.training-view):not(.rook-category) > header .brand small {
+  color: var(--rook-gold);
+}
+
+body:not(.training-view):not(.rook-category) #progress {
+  min-height: 44px;
+  background: #1b2c23;
+  border: 1px solid var(--rook-border);
+  color: var(--rook-gold);
+}
+
+body:not(.training-view):not(.rook-category) main {
+  box-sizing: content-box;
+  max-width: 1160px;
+}
+
+body:not(.training-view):not(.rook-category) main > .intro {
+  box-sizing: border-box;
+  min-height: clamp(230px, 33vw, 380px) !important;
+  margin: clamp(16px, 3vw, 32px) 0 20px;
+  padding: clamp(20px, 5vw, 64px) !important;
+  border: 1px solid var(--rook-border);
+  border-radius: 20px;
+  background:
+    linear-gradient(270deg, #0e2119 2%, #0e2119 35%, #0e21198c 57%, transparent 82%),
+    url('assets/v325/hero.webp') left center / auto 115% no-repeat,
+    var(--rook-green);
+  box-shadow: 0 16px 40px #0005;
+}
+
+body:not(.training-view):not(.rook-category) .intro .hero-copy {
+  flex: 0 1 58%;
+  min-width: 0;
+  text-align: start;
+}
+
+body:not(.training-view):not(.rook-category) .intro .hero-copy h1 {
+  margin: 0 0 8px;
+  color: var(--rook-gold);
+  font-size: clamp(29px, 6vw, 68px);
+  line-height: 1.2;
+}
+
+body:not(.training-view):not(.rook-category) .intro .hero-copy p {
+  margin: 0;
+  color: #e3dbca;
+  font-size: clamp(14px, 2vw, 21px);
+  line-height: 1.65;
+}
+
+#homeCards:not(.category-content) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 24px;
+}
+
+#homeCards .category-entry {
+  --card-art: none;
+  --card-art-width: 136px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 126px;
+  padding: 18px 20px;
+  border: 1px solid var(--rook-border, #665738);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, transparent 36%, #12261d) left center / var(--card-art-width) 100% no-repeat,
+    var(--card-art) left center / var(--card-art-width) auto no-repeat,
+    #12261d;
+  color: #f6e6c4;
+  font-size: clamp(17px, 2vw, 25px);
+  font-weight: 650;
+  text-decoration: none;
+  line-height: 1.45;
+  transition: border-color .18s, box-shadow .18s;
+}
+
+#homeCards .category-entry[data-stage="resources"] { --card-art: url('assets/v325/resources.webp'); }
+#homeCards .category-entry[data-stage="opening"] { --card-art: url('assets/v325/opening.webp'); }
+#homeCards .category-entry[data-stage="middlegame"] { --card-art: url('assets/v325/middlegame.webp'); }
+#homeCards .category-entry[data-stage="tactical"] { --card-art: url('assets/v325/tactical.webp'); }
+#homeCards .category-entry[data-stage="finish"] { --card-art: url('assets/v325/finish.webp'); }
+#homeCards .category-entry[data-stage="games"] { --card-art: url('assets/v325/games.webp'); }
+#homeCards .category-entry[data-stage="progress"] { --card-art: url('assets/v325/progress.webp'); }
+
+#homeCards .category-title {
+  max-width: 65%;
+  overflow-wrap: anywhere;
+  text-shadow: 0 2px 8px #000;
+}
+
+#homeCards .category-entry .group-chevron {
+  direction: ltr;
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  margin-inline-start: 0;
+  height: 32px;
+  border: 1px solid #b99a6180;
+  border-radius: 50%;
+  background: #101c16e8;
+  color: #e7c78a;
+  font-size: 23px;
+  line-height: 1;
+}
+
+#homeCards .category-entry:focus-visible,
+body:not(.training-view):not(.rook-category) #progress:focus-visible {
+  outline: 2px solid #f4d896;
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  #homeCards .category-entry:hover {
+    border-color: #d4b678;
+    box-shadow: 0 5px 18px #0006;
+  }
+}
+
+body:not(.training-view):not(.rook-category) #homeDashboard .home-summary {
+  background: #13241c;
+  border-color: #4d4933;
+  color: #f4ecda;
+}
+
+body:not(.training-view):not(.rook-category) #homeDashboard .training-links a {
+  border-color: var(--rook-border);
+  color: var(--rook-gold);
+  background: #1b2c23;
+}
+
+@media (max-width: 650px) {
+  body:not(.training-view):not(.rook-category) main > .intro {
+    min-height: 205px !important;
+    background-size: auto, auto 100%, auto;
+  }
+
+  #homeCards:not(.category-content) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #homeCards .category-entry {
+    --card-art-width: 113px;
+    min-height: 105px;
+    padding-inline: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #homeCards .category-entry {
+    transition: none;
+  }
+}
