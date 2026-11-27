@@ -1,4 +1,4 @@
-import {moveSound,playSound} from './rook-sound.js?v=328';
+import {moveSound,playSound} from './rook-sound.js?v=329';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
@@ -11,7 +11,6 @@ const panel = document.createElement('section');
 panel.id = 'calculationPanel';
 panel.hidden = true;
 panel.innerHTML = `
-  <nav class="training-links mid-nav"><a href="#home">الرئيسية</a></nav>
   <div class="lesson-head"><h2 lang="en">Calculation Trainer</h2></div>
   <p>قارن نقلتين، احسب رد الخصم، وقيّم الوضع. جرّب الخطّين قبل ما تنتقل للموقف التالي.</p>
   <label for="calcPicker">الموقف</label>

@@ -1,4 +1,4 @@
-import {moveSound,playSound} from './rook-sound.js?v=328';
+import {moveSound,playSound} from './rook-sound.js?v=329';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {patterns} from './checkmate-patterns-data.js?v=210';
@@ -15,7 +15,6 @@ const panel = document.createElement('section');
 panel.id = 'matePatternsPanel';
 panel.hidden = true;
 panel.innerHTML = `
-  <nav class="training-links mid-nav"><a href="#home">الرئيسية</a></nav>
   <div class="lesson-head"><h2 lang="en">Checkmate Patterns</h2></div>
   <p>ادرس شكل المات، وجرّبه في وضع جديد. في التدريب المختلط، اسم النمط يظهر بعد الحل.</p><details class="unit-card" id="mateFoundations"><summary>مبادئ الكش مات</summary><article><h3>الكش ليس ماتًا</h3><ul><li>ابدأ بتحديد القطعة التي تعطي الكش.</li><li>افحص ردود الملك، وأخذ قطعة الكش، وحجب الخط إذا كان ممكنًا.</li><li>كش الحصان لا يُحجب؛ والكش المزدوج يتطلب تحريك الملك.</li></ul><details><summary>أي رد لا يصلح وحده ضد كش حصان؟</summary><p>حجب الكش بقطعة — الحصان يقفز؛ لا يوجد خط بينه وبين الملك يمكن حجبه.</p></details></article><article><h3>مات الصف الأخير</h3><ul><li>الملك المحبوس ببيادقه قد يتعرض لمات رخ أو وزير على الصف الأخير.</li><li>لا تفترض المات إذا أمكن الحجب أو أخذ قطعة الهجوم.</li><li>فتح مربع تنفّس قد يفيد، لكنه يجب أن يكون آمنًا وألا يسمح بخطر أهم.</li></ul><details><summary>لماذا قد تكون h3 مفيدة أحيانًا؟</summary><p>لتوفير مربع هروب للملك إذا كان آمنًا — مربع التنفس علاج محتمل لمشكلة محددة، وليس قاعدة آلية في كل وضع.</p></details></article><article><h3>التضحية تحتاج حسابًا</h3><ul><li>لا تُقلّد تضحيات الأبطال من غير تحقق من وصول القطع ومنع الهروب.</li><li>قبل التضحية احسب الأخذ والرفض، ثم تابع النقلات الإجبارية.</li><li>القطعة الأقل قيمة قد تعطي المات إذا تعاونت معها بقية القطع.</li></ul><details><summary>وجدت تضحية وزير جميلة لكن الخصم يستطيع رفضها بأمان. ما القرار؟</summary><p>أراجع الحساب ولا أعتبرها فوزًا إجباريًا — الخصم غير ملزم بقبول التضحية؛ يجب فحص البدائل.</p></details></article></details>
   <details class="rook-mode-settings"><summary>إعدادات تدريب الكش مات</summary><div class="training-links mid-nav rook-mode-grid" aria-label="طريقة التدريب">

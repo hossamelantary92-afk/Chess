@@ -1,4 +1,4 @@
-import {moveSound,playSound} from './rook-sound.js?v=328';
+import {moveSound,playSound} from './rook-sound.js?v=329';
 import {keepView} from './refresh.js';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
@@ -208,7 +208,7 @@ $('#setupClose').onclick=()=>$('#setupModal').close();$('#setupModal').onclick=e
   if(lastSession&&lastSession.section===key&&lastSession.idx===index&&(lastSession.branch||'')===branch)lastSession={...lastSession,side};
   location.hash=destination;
 }
-$('#setupLearn').onclick=()=>beginSetup(false);$('#setupPractice').onclick=()=>beginSetup(true);$('#homeBack').onclick=()=>location.hash='home';$('#changeLesson').onclick=()=>showSetup(section);
+$('#setupLearn').onclick=()=>beginSetup(false);$('#setupPractice').onclick=()=>beginSetup(true);$('#changeLesson').onclick=()=>showSetup(section);
 
 paths.forEach(([key,icon,name,en])=>{const b=document.createElement('button');b.className='home-card';b.dataset.learningCard=key;const count=key==='openings'?openings.length:key==='mates'?mates.length:key==='tactics'?tactics.length:key==='endings'?endings.length:key==='basics'?basics.length:3;b.innerHTML=`<div class="home-card-top"><b>${icon}</b><span>${count} ${key==='vision'?'أنماط تدريب':'دروس'}</span></div><h3>${name}</h3><small>${en}</small>`;b.onclick=()=>showSetup(key);$('#homeCards').append(b)});
 function route(){
@@ -226,7 +226,7 @@ function route(){
 }
 window.addEventListener('hashchange',route);renderHomeStats();route();
 
-[['#homeBack','الرئيسية','home'],['#changeLesson','تغيير الدرس','settings'],['#flip','قلب الرقعة','flip'],['#coords','الإحداثيات','grid'],['#reset','إعادة','reset'],['#setupClose','إغلاق','close']].forEach(([id,label,icon])=>premiumButton($(id),label,icon));
+[['#changeLesson','تغيير الدرس','settings'],['#flip','قلب الرقعة','flip'],['#coords','الإحداثيات','grid'],['#reset','إعادة','reset'],['#setupClose','إغلاق','close']].forEach(([id,label,icon])=>premiumButton($(id),label,icon));
 
 keepView('setup', () => $('#setupModal').open ? {section:setupSection, lesson:$('#setupLesson').value, side:$('#setupSide').value} : null, saved => {
   if (!paths.some(path=>path[0]===saved.section)) return;

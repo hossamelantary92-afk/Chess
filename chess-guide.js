@@ -26,7 +26,6 @@ const guide = document.createElement('section');
 guide.id = 'chessGuide';
 guide.hidden = true;
 guide.innerHTML = `
-  <nav class="training-links mid-nav"><a href="#home">الرئيسية</a></nav>
   <section id="guidePlans" aria-labelledby="guidePlansTitle" hidden>
     <div class="lesson-head"><h2 id="guidePlansTitle" lang="en">Plans</h2></div>
     <div class="unit-card guide-decision">

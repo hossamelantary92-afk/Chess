@@ -1,10 +1,10 @@
-import './app.js?v=328';
-import './safety.js?v=288';
-import './tactics-lab.js?v=328';
-import './academy.js?v=326';
-import './fundamentals.js?v=328';
-import './middlegame.js?v=328';
-import './chess-guide.js?v=288';
+import './app.js?v=329';
+import './safety.js?v=329';
+import './tactics-lab.js?v=329';
+import './academy.js?v=329';
+import './fundamentals.js?v=329';
+import './middlegame.js?v=329';
+import './chess-guide.js?v=329';
 import {groups as studyGroups} from './study-lines.js';
 const home = document.getElementById('homeCards');
 for(const key of ['academy','game-tips']){const duplicates=[...home.querySelectorAll(`[data-learning-card="${key}"]`)];duplicates.slice(0,-1).forEach(el=>el.remove());}
@@ -42,7 +42,7 @@ const legacyTactics=cards.get('tactics');
 if(legacyTactics){
  const lab=document.createElement('a');
  lab.className='home-card learning-link';
- lab.href='index.html?v=327&section=tactical#tactics-lab';
+ lab.href='index.html?v=329&section=tactical#tactics-lab';
  lab.innerHTML='<div class="home-card-top"><b aria-hidden="true">♞</b></div><h3>Tactics Lab</h3><small>مكتبة التكتيكات الكاملة · اختر الفكرة والمستوى واللون</small>';
  legacyTactics.remove();cards.set('tactics',lab);
 }
@@ -226,7 +226,7 @@ for(const node of stageNodes){
   const link = document.createElement('a');
   link.className = 'category-entry';
   link.dataset.stage = stage.id;
-  link.href = 'index.html?v=327&section=' + encodeURIComponent(stage.id);
+  link.href = 'index.html?v=329&section=' + encodeURIComponent(stage.id);
   const title = document.createElement('span');
   title.className = 'category-title';
   title.textContent = stage.title;

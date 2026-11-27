@@ -20,7 +20,7 @@ panel.id = 'modelGamesPanel';
 panel.hidden = true;
 panel.innerHTML = `
   <nav class="training-links mid-nav" aria-label="التنقل في دراسة المباريات">
-    <a href="#home">الرئيسية</a><a href="#model-games" id="modelListLink" hidden>كل المباريات</a>
+    <a href="#model-games" id="modelListLink" hidden>كل المباريات</a>
   </nav>
   <div id="modelList">
     <div class="lesson-head"><h2 lang="en">Model Games</h2></div>

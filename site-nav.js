@@ -4,9 +4,9 @@ const back = document.querySelector('.rook-back');
 const home = document.querySelector('.rook-home');
 const page = location.pathname.split('/').pop();
 const section = new URLSearchParams(location.search).get('section');
-const homeHref = 'index.html?v=327#home';
+const homeHref = 'index.html?v=329#home';
 const defaultParent = back.getAttribute('href');
-const sectionHref = id => `index.html?v=327&section=${id}`;
+const sectionHref = id => `index.html?v=329&section=${id}`;
 
 const routeSections = {
   academy: 'resources',
@@ -20,6 +20,8 @@ const routeSections = {
   'piece-activity': 'middlegame',
   'practical-decisions': 'middlegame',
   'tactics-lab': 'tactical',
+  'mixed-lab': 'tactical',
+  'tactics-exam': 'tactical',
   'tactics-guide': 'tactical',
   calculation: 'tactical',
   'practical-endgames': 'finish',
