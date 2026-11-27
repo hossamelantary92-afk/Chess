@@ -244,7 +244,7 @@ function route() {
 window.addEventListener('hashchange',route);
 route();
 
-keepView('model', () => panel.hidden || !active ? null : {stopIndex, ply, flipped}, saved => {
-  if (!active?.stops[saved.stopIndex] || saved.ply>line.length) return;
+keepView('model', () => panel.hidden || $('modelStudy').hidden || !active ? null : {stopIndex, ply, flipped}, saved => {
+  if (!saved || !Number.isInteger(saved.stopIndex) || !Number.isInteger(saved.ply) || saved.ply<0 || !active?.stops[saved.stopIndex] || saved.ply>line.length) return;
   stopIndex=saved.stopIndex; flipped=saved.flipped; positionAt(saved.ply);
 });
