@@ -113,6 +113,12 @@ for (const stage of stages) {
 
 // All tile artwork shares a 24-unit canvas and inherits the same stroke.
 const rowIcons = {
+ academy:'M3 5h8v15H3zM13 5h8v15h-8zM6 9h2M16 9h2',
+ middlegame:'M4 4h16v16H4zM4 12h16M12 4v16',
+ endings:'M5 3h4v4h6V3h4v7l-3 3v5H8v-5l-3-3zM6 21h12',
+ 'personal-analysis':'M4 4h12v16H4zM7 8h6M7 12h4M15 15l6 6m-1-9a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
+ 'hero-lessons':'M7 3h10v5a5 5 0 0 1-10 0zM7 5H3v3q0 4 5 4M17 5h4v3q0 4-5 4M12 13v5M7 21h10',
+
   'opening-mastery':'M12 20V5m0 9-7-7m7 7 7-7M3 7h4M17 7h4M10 5h4',
   'opening-responses':'M3 8h16m-4-4 4 4-4 4M21 16H5m4-4-4 4 4 4',
   'opening-traps':'M4 19h5V6h9m-4-4 4 4-4 4M9 14h7l4 5m-5 0h5v-5',
@@ -152,6 +158,15 @@ for (const [key, card] of cards) {
 // Consolidate existing standalone home links without changing their destinations.
 for(const [id,group] of [['masterGamesTitle','games'],['coachTitle','progress'],['assessmentTitle','progress'],['trainingPlanTitle','progress']]){const old=document.getElementById(id)?.closest('.home-summary');const grid=home.querySelector('.learning-stage-'+group+' .learning-grid');if(old&&grid){const link=old.querySelector('a');if(link){const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=link.getAttribute('href');const title=document.createElement('h3');title.textContent=old.querySelector('h2').textContent;const desc=document.createElement('small');desc.textContent=old.querySelector('p')?.textContent||'';card.append(title,desc);grid.append(card);old.remove()}}}
 
+// Normalize every lesson tile, including standalone links added above.
+const standaloneIcons={'master-games.html':'M7 3h10v5a5 5 0 0 1-10 0zM12 13v5M7 21h10','personal-coach.html':'M4 4h16v12H9l-5 4zM8 8h8M8 12h5','assessment.html':'M5 3h14v18H5zM8 12l3 3 5-6','training.html#plan':'M4 6h16v15H4zM8 3v6M16 3v6M4 11h16M8 15h3M13 15h3'};
+for(const card of home.querySelectorAll('.lesson-row')){
+ const key=[...cards].find(([,v])=>v===card)?.[0];
+ const d=rowIcons[key]||standaloneIcons[card.getAttribute('href')]||'M4 4h16v16H4zM8 9h8M8 14h8';
+ let top=card.querySelector('.home-card-top');if(!top){top=document.createElement('div');top.className='home-card-top';card.prepend(top);}
+ let icon=top.querySelector('b');if(!icon){icon=document.createElement('b');top.prepend(icon);}
+ icon.setAttribute('aria-hidden','true');icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="${d}"/></svg>`;
+}
 const unifiedGroups=[
  ['resources','Chess Fundamentals','قواعد اللعب والقطع والتدريب الأساسي',['academy']],
  ['tactical','Chess Tactics','شرح الأنماط والتدريب والحساب',['tactics-guide','tactics','calculation','mixed']],
