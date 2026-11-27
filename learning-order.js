@@ -177,8 +177,8 @@ for(const stage of home.querySelectorAll('.learning-stage')){
  const unit=grid.firstElementChild;const content=unit.querySelector('.unified-unit-content');grid.replaceChildren(...content.children);
  }
 }
-const sectionIcons={resources:'♙',opening:'♘',middlegame:'♗',tactical:'♞',finish:'♜',games:'♛',progress:'♚'};
-for(const stage of stages){const heading=document.getElementById('learning-title-'+stage.id);const icon=document.createElement('span');icon.className='stage-icon';icon.setAttribute('aria-hidden','true');icon.textContent=sectionIcons[stage.id];heading.prepend(icon);}
+const sectionIcons={"resources":"<circle cx=\"12\" cy=\"7\" r=\"3\"/><path d=\"M9 10h6l2 8H7zM6 21h12\"/>","opening":"<path d=\"M5 19V5m0 14h14M8 15l5-5 4 2 4-7M17 5h4v4\"/>","middlegame":"<path d=\"M4 4h16v16H4zM4 12h16M12 4v16\"/><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"currentColor\"/>","tactical":"<path d=\"m13 2-8 12h6l-1 8 9-12h-7z\"/>","finish":"<path d=\"M5 3h4v4h6V3h4v7l-3 3v5H8v-5l-3-3zM6 21h12\"/>","games":"<path d=\"M4 5h16v14H4zM8 9h8M8 13h5M8 16h3\"/>","progress":"<path d=\"M4 20h16M7 16v-5M12 16V7M17 16V3\"/>"};
+for(const stage of stages){const heading=document.getElementById('learning-title-'+stage.id);const icon=document.createElement('span');icon.className='stage-icon';icon.setAttribute('aria-hidden','true');icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${sectionIcons[stage.id]}</svg>`;heading.prepend(icon);}
 
 // Preserve expanded categories during reloads and visits to lessons in this tab.
 const groupsOnHome=[...home.querySelectorAll('details')];
