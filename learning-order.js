@@ -1,3 +1,10 @@
+import './app.js?v=259';
+import './safety.js?v=288';
+import './tactics-lab.js?v=293';
+import './academy.js?v=281';
+import './fundamentals.js?v=279';
+import './middlegame.js?v=288';
+import './chess-guide.js?v=288';
 import {groups as studyGroups} from './study-lines.js';
 const home = document.getElementById('homeCards');
 const cards = new Map(
@@ -253,16 +260,17 @@ for(const card of home.querySelectorAll('a.lesson-row')){
 if(activeStage){
  const placement={'Openings & Essentials':'opening','Middlegame':'middlegame','Checkmate Patterns':'finish','Bullet':'progress'};
  const labels={'Openings & Essentials':'دروس الافتتاح والأساسيات','Middlegame':'دروس استراتيجية إضافية','Checkmate Patterns':'دروس أنماط المات','Bullet':'Bullet'};
- const grid=home.querySelector('.learning-grid');
+ const grid=home.querySelector('.learning-stage-'+activeStage.id+' .learning-grid');
  for(const [group,titles] of Object.entries(studyGroups)){
   if(placement[group]!==activeStage.id||!grid)continue;
   const unit=document.createElement('details');unit.className='study-topic-group';
-  const summary=document.createElement('summary');summary.textContent=labels[group];
+  const summary=document.createElement('summary');summary.textContent=labels[group];summary.setAttribute('aria-label',labels[group]);
   const content=document.createElement('div');content.className='study-topic-list';
   unit.append(summary,content);
   if(group==='Bullet'){const old=cards.get('bullet');if(old?.parentElement===grid){grid.insertBefore(unit,old);old.remove();}else grid.append(unit);}
   else grid.append(unit);
   for(const title of titles){
+   if(title==='Trust Your Intuition'&&group==='Middlegame')continue; // canonical entry: Chess Psychology in progress
    const href='study.html#'+encodeURIComponent(title);
    if([...grid.querySelectorAll('a')].some(a=>a.getAttribute('href')===href))continue;
    const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=href;
