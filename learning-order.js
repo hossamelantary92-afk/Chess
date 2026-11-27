@@ -252,16 +252,24 @@ for(const card of home.querySelectorAll('a.lesson-row')){
 }
 if(activeStage){
  const placement={'Openings & Essentials':'opening','Middlegame':'middlegame','Checkmate Patterns':'finish','Bullet':'progress'};
+ const labels={'Openings & Essentials':'دروس الافتتاح والأساسيات','Middlegame':'دروس استراتيجية إضافية','Checkmate Patterns':'دروس أنماط المات','Bullet':'Bullet'};
  const grid=home.querySelector('.learning-grid');
  for(const [group,titles] of Object.entries(studyGroups)){
   if(placement[group]!==activeStage.id||!grid)continue;
+  const unit=document.createElement('details');unit.className='study-topic-group';
+  const summary=document.createElement('summary');summary.textContent=labels[group];
+  const content=document.createElement('div');content.className='study-topic-list';
+  unit.append(summary,content);
+  if(group==='Bullet'){const old=cards.get('bullet');if(old?.parentElement===grid){grid.insertBefore(unit,old);old.remove();}else grid.append(unit);}
+  else grid.append(unit);
   for(const title of titles){
    const href='study.html#'+encodeURIComponent(title);
    if([...grid.querySelectorAll('a')].some(a=>a.getAttribute('href')===href))continue;
    const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=href;
-   card.innerHTML='<div class="home-card-top"><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4zM8 9h8M8 14h8"/></svg></b></div><h3></h3><small>شرح وتطبيق واختبار</small>';
-   card.querySelector('h3').textContent=title;grid.append(card);
+   card.innerHTML='<div class="home-card-top"><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="'+(group==='Bullet'?rowIcons.bullet:group==='Checkmate Patterns'?rowIcons.mates:group==='Middlegame'?rowIcons.plans:rowIcons['opening-mastery'])+'"/></svg></b></div><h3></h3><small>شرح وتطبيق واختبار</small>';
+   card.querySelector('h3').textContent=title;content.append(card);
   }
+  if(!content.children.length)unit.remove();
  }
 }
 document.documentElement.classList.remove('rook-loading','rook-deep');
