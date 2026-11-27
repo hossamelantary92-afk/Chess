@@ -1,3 +1,4 @@
+import {moveSound,playSound} from './rook-sound.js?v=320';
 import {squareAt, paintSquare} from './board-cells.js';
 import {Chess} from './chess.js';
 import {bank,themes,tacticalLessons,advancedThemes} from './tactics-bank.js?v=276';
@@ -98,7 +99,7 @@ function play(sq,promotionChoice){
   let move;
   try{move=c.move({from,to:sq,promotion:promotionChoice||'q'})}catch{}
   if(!move){
-    rejectMove(sq,'النقلة غير قانونية. افحص حركة القطعة وأمان الملك.');
+    playSound('invalid');rejectMove(sq,'النقلة غير قانونية. افحص حركة القطعة وأمان الملك.');
     return;
   }
   const p=queue[n];
@@ -109,7 +110,7 @@ function play(sq,promotionChoice){
       return;
     }
     verdict={square:sq,kind:'correct'};
-    last=move;
+    last=move;moveSound(move);
     $('#labSteps').textContent=move.san;
     finish();
     return;
@@ -123,7 +124,7 @@ function play(sq,promotionChoice){
   }
   if(alternative)usedAlternative=true;
   verdict={square:sq,kind:'correct'};
-  last=move;
+  last=move;moveSound(move);
   ply++;
   if(ply<activeLine.length)last=c.move(activeLine[ply++]);
   $('#labSteps').textContent=c.history().join('  ');
