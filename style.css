@@ -379,3 +379,15 @@ body[data-section="openings"] .coach #openingDecisionTitle { display: block; mar
 
 #matePatternBoard button:disabled { opacity: 1; cursor: default; }
 #matePatternsPanel [aria-pressed="true"] { border-color: var(--gold, #99b789); }
+
+/* V280: narrow-screen sizing without changing board colors or zoom accessibility. */
+@media (max-width: 650px) {
+  main, .workspace, .board-area, .coach, .unit-card, .academy-game-layout, .learning-grid, .unified-unit-content { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .academy-game-layout { grid-template-columns: minmax(0, 1fr); }
+  .training-view :is(select, textarea, input:not([type=checkbox]):not([type=radio]):not([type=range])) { font-size: 16px; max-width: 100%; box-sizing: border-box; }
+  .training-view :is(.premium-btn, .training-links a, .training-links button, .safety-actions button) { min-height: 44px; max-width: 100%; white-space: normal; overflow-wrap: anywhere; touch-action: manipulation; box-sizing: border-box; }
+  .training-view :is(.board, #academyBoard, #fundBoard, #calcBoard, #endgameBoard, #matePatternBoard) { max-width: 100%; min-width: 0; box-sizing: border-box; }
+  .training-view :is(.board, #academyBoard, #fundBoard, #calcBoard, #endgameBoard, #matePatternBoard) button { min-width: 0; min-height: 0; touch-action: manipulation; }
+  .training-view :is(.coach, .unit-card) p { overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) { .training-view :is(button,a) { transition: none !important; } }
