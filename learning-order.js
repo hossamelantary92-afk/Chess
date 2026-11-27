@@ -1,3 +1,4 @@
+import {groups as studyGroups} from './study-lines.js';
 const home = document.getElementById('homeCards');
 const cards = new Map(
   [...home.querySelectorAll('[data-learning-card]')].map(card => [card.dataset.learningCard, card])
@@ -248,5 +249,19 @@ for(const card of home.querySelectorAll('a.lesson-row')){
  let top=card.querySelector('.home-card-top');
  if(!top){top=document.createElement('div');top.className='home-card-top';card.prepend(top);}
  top.innerHTML=`<b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg></b>`;
+}
+if(activeStage){
+ const placement={'Openings & Essentials':'opening','Middlegame':'middlegame','Checkmate Patterns':'finish','Bullet':'progress'};
+ const grid=home.querySelector('.learning-grid');
+ for(const [group,titles] of Object.entries(studyGroups)){
+  if(placement[group]!==activeStage.id||!grid)continue;
+  for(const title of titles){
+   const href='study.html#'+encodeURIComponent(title);
+   if([...grid.querySelectorAll('a')].some(a=>a.getAttribute('href')===href))continue;
+   const card=document.createElement('a');card.className='home-card learning-link lesson-row';card.href=href;
+   card.innerHTML='<div class="home-card-top"><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4zM8 9h8M8 14h8"/></svg></b></div><h3></h3><small>شرح وتطبيق واختبار</small>';
+   card.querySelector('h3').textContent=title;grid.append(card);
+  }
+ }
 }
 document.documentElement.classList.remove('rook-loading','rook-deep');
