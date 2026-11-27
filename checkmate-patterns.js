@@ -314,12 +314,13 @@ keepView('mates', () => panel.hidden ? null : {
   mode, titles:order.map(item=>item.title), index, practice, branch, decisionPending,
   moves:chess.history(), complete, replies, answer
 }, saved => {
+  if(!saved||!['study','mixed','two','three','defend','test','decision'].includes(saved.mode)||!Array.isArray(saved.titles)||!Array.isArray(saved.moves)||!Number.isInteger(saved.index)||saved.index<0||saved.index>=saved.titles.length)return;
   chooseMode(saved.mode);
   const byTitle = new Map(order.map(item=>[item.title,item]));
   if (!saved.titles.every(title=>byTitle.has(title))) return;
   order=saved.titles.map(title=>byTitle.get(title)); index=saved.index;
   practice=saved.practice; branch=saved.branch; open();
-  for (const [i,move] of saved.moves.entries()) {if(mode==='three')threeNode=threeNode[move];chess.move(move);}
+  try { for (const move of saved.moves) {if(mode==='three'){if(!threeNode?.[move])throw Error('Invalid saved branch');threeNode=threeNode[move];}chess.move(move,{strict:true});} } catch {open();return;}
   complete=saved.complete; replies=saved.replies; answer=saved.answer;
   decisionPending=saved.decisionPending; render();
 });
