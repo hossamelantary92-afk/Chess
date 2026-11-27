@@ -73,19 +73,21 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 #homeCards .category-entry {
   --card-art: none;
   --card-art-width: 136px;
+  --card-art-inset: 16px;
   box-sizing: border-box;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
   align-items: center;
-  justify-content: flex-start;
   gap: 10px;
   min-width: 0;
   min-height: 126px;
   padding: 18px 20px;
+  padding-inline-end: calc(var(--card-art-width) + var(--card-art-inset));
   border: 1px solid var(--rook-border, #665738);
   border-radius: 14px;
   background:
-    linear-gradient(90deg, transparent 36%, #12261d) left center / var(--card-art-width) 100% no-repeat,
-    var(--card-art) left center / var(--card-art-width) auto no-repeat,
+    linear-gradient(90deg, #12261d, transparent 9%, transparent 40%, #12261d) left var(--card-art-inset) center / var(--card-art-width) 100% no-repeat,
+    var(--card-art) left var(--card-art-inset) center / var(--card-art-width) auto no-repeat,
     #12261d;
   color: #f6e6c4;
   font-size: clamp(17px, 2vw, 25px);
@@ -104,7 +106,6 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
 #homeCards .category-entry[data-stage="progress"] { --card-art: url('assets/v325/progress.webp'); }
 
 #homeCards .category-title {
-  max-width: 65%;
   overflow-wrap: anywhere;
   text-shadow: 0 2px 8px #000;
 }
@@ -113,7 +114,6 @@ body:not(.training-view):not(.rook-category) .intro .hero-copy p {
   direction: ltr;
   display: grid;
   place-items: center;
-  flex: 0 0 32px;
   margin-inline-start: 0;
   height: 32px;
   border: 1px solid #b99a6180;
@@ -161,8 +161,9 @@ body:not(.training-view):not(.rook-category) #homeDashboard .training-links a {
 
   #homeCards .category-entry {
     --card-art-width: 113px;
+    --card-art-inset: 14px;
     min-height: 105px;
-    padding-inline: 15px;
+    padding-inline-start: 15px;
   }
 }
 
