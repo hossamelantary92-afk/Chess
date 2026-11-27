@@ -391,3 +391,6 @@ body[data-section="openings"] .coach #openingDecisionTitle { display: block; mar
   .training-view :is(.coach, .unit-card) p { overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce) { .training-view :is(button,a) { transition: none !important; } }
+
+/* V318 readable Arabic prose */
+:where(main,article,section) :where(p,li){text-wrap:pretty;overflow-wrap:break-word;word-break:normal;line-height:1.7} :where(h1,h2,h3,h4){text-wrap:balance} #fundRule p{margin:0 0 10px;line-height:1.7;font-size:clamp(14px,4vw,18px);text-wrap:pretty} #fundRule p:last-child{margin-bottom:0} #fundLabel:empty,#fundFeedback:empty,#fundTask:empty{display:none!important} @media(max-width:600px){:where(.coach,.unit-card) p{font-size:clamp(14px,3.8vw,17px);line-height:1.7;text-wrap:pretty} #fundRule p{text-wrap:balance;text-align:start}}
