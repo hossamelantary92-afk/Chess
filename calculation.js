@@ -5,7 +5,7 @@ import {calculationExercises} from './calculation-data.js';
 
 const $ = id => document.getElementById(id);
 const pieceNames = {p:'بيدق', n:'حصان', b:'فيل', r:'رخ', q:'وزير', k:'ملك'};
-const stages = ['Candidate Moves', 'Best Reply', 'Continuation', 'Final Position'];
+const stages = ['Candidate Moves', 'Reply to Calculate', 'Continuation', 'Final Position'];
 const panel = document.createElement('section');
 panel.id = 'calculationPanel';
 panel.hidden = true;
@@ -161,6 +161,7 @@ function chooseSquare(square) {
 }
 
 function play(san) {
+  if(finished||stage===3)return;
   if (!moveChoices().includes(san)) {
     $('calcFeedback').textContent = stage === 2 ? 'جرّب نقلة المتابعة اللي بتحقق هدف الفرع.' : 'النقلة قانونية. جرّب واحدة من النقلات المحددة للمقارنة.';
     return;
@@ -186,6 +187,7 @@ function resetAttempt() {
 }
 
 function openExercise(next) {
+  if(!Number.isInteger(next)||!exercises[next])return;
   index = next;
   completed = new Set();
   $('calcPicker').value = index;
